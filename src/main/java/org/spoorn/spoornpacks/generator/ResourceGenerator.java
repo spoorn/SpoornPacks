@@ -9,6 +9,7 @@ import org.spoorn.spoornpacks.provider.assets.BlockStateBuilder;
 import org.spoorn.spoornpacks.provider.assets.ModelBlockBuilder;
 import org.spoorn.spoornpacks.provider.assets.ModelItemBuilder;
 import org.spoorn.spoornpacks.provider.data.BlockLootTableBuilder;
+import org.spoorn.spoornpacks.provider.data.RecipeBuilder;
 import org.spoorn.spoornpacks.provider.data.TagsBuilder;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
@@ -31,6 +32,7 @@ public class ResourceGenerator {
     }
 
     public Resource generate(ResourceBuilder resourceBuilder) {
+        log.info("Generating resources for {}", id);
         if (!(resourceBuilder instanceof DefaultResourceBuilder)) {
             throw new UnsupportedOperationException("ResourceBuilder is unsupported!");
         }
@@ -64,11 +66,18 @@ public class ResourceGenerator {
         for (Entry<String, List<String>> entry : blocks.entrySet()) {
             BlockType type = BlockType.fromString(entry.getKey());
             for (String name : entry.getValue()) {
+                String filename = name + "_" + type.getName();
                 switch (type) {
                     case LOG:
-                        fileGenerator.generateBlockStates(namespace, name, new BlockStateBuilder(namespace, name, type).defaultLog());
-                        fileGenerator.generateModelBlock(namespace, name, new ModelBlockBuilder(namespace, name, type).defaultLog());
-                        fileGenerator.generateLootTable(namespace, name, new BlockLootTableBuilder(namespace, name, type).defaultLog());
+                        fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultLog());
+                        fileGenerator.generateModelBlock(namespace, filename, new ModelBlockBuilder(namespace, name, type).defaultLog());
+                        fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultLog());
+                        minecraftLogs.value(namespace, name, type);
+                        break;
+                    case WOOD:
+                        fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultWood());
+                        fileGenerator.generateModelBlock(namespace, filename, new ModelBlockBuilder(namespace, name, type).defaultWood());
+                        fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultWood());
                         minecraftLogs.value(namespace, name, type);
                         break;
                     default:
@@ -86,9 +95,15 @@ public class ResourceGenerator {
         for (Entry<String, List<String>> entry : items.entrySet()) {
             ItemType type = ItemType.fromString(entry.getKey());
             for (String name : entry.getValue()) {
+                String filename = name + "_" + type.getName();
                 switch (type) {
                     case LOG:
-                        fileGenerator.generateModelItem(namespace, name, new ModelItemBuilder(namespace, name, type).defaultLog());
+                        fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultLog());
+                        minecraftLogs.value(namespace, name, type);
+                        break;
+                    case WOOD:
+                        fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultWood());
+                        fileGenerator.generateRecipe(namespace, filename, new RecipeBuilder(namespace, name, type.getName()).defaultWood());
                         minecraftLogs.value(namespace, name, type);
                         break;
                     default:

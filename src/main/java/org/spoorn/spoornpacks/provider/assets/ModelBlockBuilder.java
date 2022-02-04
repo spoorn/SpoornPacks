@@ -26,13 +26,20 @@ public class ModelBlockBuilder implements ResourceProvider {
 
     public ModelBlockBuilder defaultLog() {
         parentCubeColumn();
-        end();
-        side();
+        endWithSuffix("_" + type.getName() + "_top");
+        sideWithTypeSuffix();
+        return this;
+    }
+
+    public ModelBlockBuilder defaultWood() {
+        parentCubeColumn();
+        endWithSuffix("_" + BlockType.LOG.getName());
+        sideWithSuffix("_" + BlockType.LOG.getName());
         return this;
     }
 
     public ModelBlockBuilder parentCubeColumn() {
-        parent("block/cube_column");
+        parent("minecraft:block/cube_column");
         return this;
     }
 
@@ -46,17 +53,31 @@ public class ModelBlockBuilder implements ResourceProvider {
         return this;
     }
 
-    public ModelBlockBuilder end() {
-        String prefix = namespace + ":block/" + name + "_" + type.getName();
+    public ModelBlockBuilder endWithTypeSuffix() {
+        return end(this.namespace + ":block/" + this.name + "_" + this.type.getName());
+    }
+
+    public ModelBlockBuilder endWithSuffix(String suffix) {
+        return end(this.namespace + ":block/" + this.name + suffix);
+    }
+
+    public ModelBlockBuilder end(String end) {
         this.state.with("textures")
-                .put("end", prefix + "_top");
+                .put("end", end);
         return this;
     }
 
-    public ModelBlockBuilder side() {
-        String prefix = namespace + ":block/" + name;
+    public ModelBlockBuilder sideWithTypeSuffix() {
+        return side(this.namespace + ":block/" + this.name + "_" + this.type.getName());
+    }
+
+    public ModelBlockBuilder sideWithSuffix(String suffix) {
+        return side(this.namespace + ":block/" + this.name + suffix);
+    }
+
+    public ModelBlockBuilder side(String side) {
         this.state.with("textures")
-                .put("side", prefix + "_top");
+                .put("side", side);
         return this;
     }
 }

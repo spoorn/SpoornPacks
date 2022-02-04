@@ -2,7 +2,7 @@ package org.spoorn.spoornpacks.impl;
 
 import lombok.Getter;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
-import org.spoorn.spoornpacks.exception.DuplicateNameException;
+import org.spoorn.spoornpacks.client.exception.DuplicateNameException;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
 
@@ -59,6 +59,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         String typeName = type.getName();
         switch (type) {
             case LOG:
+            case WOOD:
                 updatedName += "_" + typeName;
                 validateUniqueBlock(updatedName);
                 break;
@@ -81,6 +82,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         String typeName = type.getName();
         switch (type) {
             case LOG:
+            case WOOD:
                 updatedName += "_" + typeName;
                 validateUniqueItem(updatedName);
                 break;

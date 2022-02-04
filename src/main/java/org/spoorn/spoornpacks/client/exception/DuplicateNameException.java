@@ -1,4 +1,4 @@
-package org.spoorn.spoornpacks.exception;
+package org.spoorn.spoornpacks.client.exception;
 
 public class DuplicateNameException extends Exception {
 

@@ -12,7 +12,7 @@ import net.minecraft.item.Item;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.api.ResourceFactory;
-import org.spoorn.spoornpacks.exception.DuplicateNameException;
+import org.spoorn.spoornpacks.client.exception.DuplicateNameException;
 import org.spoorn.spoornpacks.generator.ResourceGenerator;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
@@ -44,10 +44,11 @@ public class SpoornPacks implements ModInitializer {
         try {
             String defaultName = "pink_blossom";
             ResourceBuilder rb = ResourceFactory.create("spoornpink", defaultName)
-                    .addBlock(BlockType.LOG, "testLog")
                     .addBlock(BlockType.LOG)
                     .addItem(ItemType.LOG)
-                    .addItem(ItemType.LOG, "testItem");
+                    .addBlock(BlockType.WOOD)
+                    .addItem(ItemType.WOOD)
+                    ;
 
             Resource resource = RESOURCE_GENERATOR.generate(rb);
 

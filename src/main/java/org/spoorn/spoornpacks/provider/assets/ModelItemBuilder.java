@@ -29,6 +29,11 @@ public class ModelItemBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelItemBuilder defaultWood() {
+        parentBlock();
+        return this;
+    }
+
     public ModelItemBuilder parentBlock() {
         parent(namespace + ":block/" + name + "_" + type.getName());
         return this;

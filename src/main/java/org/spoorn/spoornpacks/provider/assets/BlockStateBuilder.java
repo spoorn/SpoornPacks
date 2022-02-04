@@ -31,6 +31,13 @@ public class BlockStateBuilder implements ResourceProvider {
         return this;
     }
 
+    public BlockStateBuilder defaultWood() {
+        yaxis();
+        zaxis();
+        xaxis();
+        return this;
+    }
+
     public BlockStateBuilder variants() {
         this.state.putObject("variants");
         return this;

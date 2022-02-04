@@ -42,6 +42,21 @@ public class BlockLootTableBuilder implements ResourceProvider {
         return this;
     }
 
+    public BlockLootTableBuilder defaultWood() {
+        Pool pool = Pool.builder()
+                .rolls(1)
+                .entries(List.of(
+                        LootTableParts.Entry.builder()
+                                .type("minecraft:item")
+                                .name(namespace + ":" + name + "_" + type.getName())
+                                .build()
+                )).conditions(List.of(
+                        survivesExplosionCondition()
+                )).build();
+        addPool(pool);
+        return this;
+    }
+
     public BlockLootTableBuilder type() {
         this.state.put("type", "minecraft:block");
         return this;
