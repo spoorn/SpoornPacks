@@ -2,27 +2,29 @@
   "schemaVersion": 1,
   "id": "spoornpacks",
   "version": "${version}",
-  "name": "Spoornpacks",
-  "description": "",
-  "authors": [],
+  "name": "SpoornPacks",
+  "description": "Library for automatic assets and data resource generation",
+  "authors": [
+    "spoorn"
+  ],
   "contact": {},
   "license": "LGPL-3.0",
   "icon": "assets/spoornpacks/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "org.spoorn.spoornpacks.client.SpoornpacksClient"
+      "org.spoorn.spoornpacks.client.SpoornPacksClient"
     ],
     "main": [
-      "org.spoorn.spoornpacks.Spoornpacks"
+      "org.spoorn.spoornpacks.SpoornPacks"
     ]
   },
   "mixins": [
     "spoornpacks.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.13.0",
+    "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "1.18.1"
+    "minecraft": "1.18.x"
   }
 }
