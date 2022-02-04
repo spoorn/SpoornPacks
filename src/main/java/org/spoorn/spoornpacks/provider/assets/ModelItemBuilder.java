@@ -3,7 +3,7 @@ package org.spoorn.spoornpacks.provider.assets;
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
-import org.spoorn.spoornpacks.type.BlockType;
+import org.spoorn.spoornpacks.type.ItemType;
 
 public class ModelItemBuilder implements ResourceProvider {
 
@@ -11,9 +11,9 @@ public class ModelItemBuilder implements ResourceProvider {
 
     private final String namespace;
     private final String name;
-    private final BlockType type;
+    private final ItemType type;
 
-    public ModelItemBuilder(String namespace, String name, BlockType type) {
+    public ModelItemBuilder(String namespace, String name, ItemType type) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;

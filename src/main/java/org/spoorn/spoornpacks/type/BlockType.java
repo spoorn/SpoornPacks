@@ -4,7 +4,8 @@ import lombok.ToString;
 
 @ToString
 public enum BlockType {
-    LOG("log");
+    LOG("log"),
+    WOOD("wood");
 
     private final String name;
 

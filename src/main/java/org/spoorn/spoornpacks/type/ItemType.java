@@ -1,7 +1,8 @@
 package org.spoorn.spoornpacks.type;
 
 public enum ItemType {
-    LOG("log");
+    LOG("log"),
+    WOOD("wood");
 
     private final String name;
 

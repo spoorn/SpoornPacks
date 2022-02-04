@@ -25,7 +25,7 @@ public class SpoornPacks implements ModInitializer {
     public static final String MODID = "SpoornPacks";
     public static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static DefaultPrettyPrinter PRETTY_PRINTER = new DefaultPrettyPrinter();
-    public static ResourceGenerator RESOURCE_GENERATOR = new ResourceGenerator();
+    public static ResourceGenerator RESOURCE_GENERATOR = new ResourceGenerator(SpoornPacks.MODID);
 
     static {
         OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);

@@ -20,18 +20,21 @@ import java.nio.file.Paths;
 @Log4j2
 public class FileGenerator {
 
-    private static final String ASSETS_PREFIX = "spoornpacks/resources/assets/";
-    private static final String DATA_PREFIX = "spoornpacks/resources/data/";
+    private static final String SPOORNPACKS_PREFIX = "spoornpacks/";
+    private static final String ASSETS_PREFIX = "/resources/assets/";
+    private static final String DATA_PREFIX = "/resources/data/";
     private static final String JSON_SUFFIX = ".json";
 
-    // TODO: Allow force rewrites
-    FileGenerator() {
+    private final String id;
 
+    // TODO: Allow force rewrites
+    FileGenerator(String id) {
+        this.id = id;
     }
 
     public boolean generateBlockStates(String namespace, String name, BlockStateBuilder builder) throws IOException {
         try {
-            Path file = Paths.get(ASSETS_PREFIX + namespace + "/blockstates/" + name + JSON_SUFFIX);
+            Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + ASSETS_PREFIX + namespace + "/blockstates/" + name + JSON_SUFFIX);
             return writeFile(file, builder);
         } catch (Exception e) {
             log.error("Could not create blockstates/ file for namespace=" + namespace + ", name=" + name, e);
@@ -41,7 +44,7 @@ public class FileGenerator {
 
     public boolean generateModelBlock(String namespace, String name, ModelBlockBuilder builder) throws IOException {
         try {
-            Path file = Paths.get(ASSETS_PREFIX + namespace + "/models/block/" + name + JSON_SUFFIX);
+            Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + ASSETS_PREFIX + namespace + "/models/block/" + name + JSON_SUFFIX);
             return writeFile(file, builder);
         } catch (Exception e) {
             log.error("Could not create models/block file for namespace=" + namespace + ", name=" + name, e);
@@ -51,7 +54,7 @@ public class FileGenerator {
 
     public boolean generateModelItem(String namespace, String name, ModelItemBuilder builder) throws IOException {
         try {
-            Path file = Paths.get(ASSETS_PREFIX + namespace + "/models/item/" + name + JSON_SUFFIX);
+            Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + ASSETS_PREFIX + namespace + "/models/item/" + name + JSON_SUFFIX);
             return writeFile(file, builder);
         } catch (Exception e) {
             log.error("Could not create models/item file for namespace=" + namespace + ", name=" + name, e);
@@ -61,7 +64,7 @@ public class FileGenerator {
 
     public boolean generateLootTable(String namespace, String name, BlockLootTableBuilder builder) throws IOException {
         try {
-            Path file = Paths.get(DATA_PREFIX + namespace + "/loot_tables/blocks/" + name + JSON_SUFFIX);
+            Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + DATA_PREFIX + namespace + "/loot_tables/blocks/" + name + JSON_SUFFIX);
             return writeFile(file, builder);
         } catch (Exception e) {
             log.error("Could not create loot_tables/blocks file for namespace=" + namespace + ", name=" + name, e);
@@ -71,7 +74,7 @@ public class FileGenerator {
 
     public boolean generateRecipe(String namespace, String name, RecipeBuilder builder) throws IOException  {
         try {
-            Path file = Paths.get(DATA_PREFIX + namespace + "/recipes/" + name + JSON_SUFFIX);
+            Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + DATA_PREFIX + namespace + "/recipes/" + name + JSON_SUFFIX);
             return writeFile(file, builder);
         } catch (Exception e) {
             log.error("Could not create recipes/ file for namespace=" + namespace + ", name=" + name, e);
@@ -81,7 +84,7 @@ public class FileGenerator {
 
     public boolean generateTags(String namespace, String name, TagsBuilder builder) throws IOException {
         try {
-            Path file = Paths.get(DATA_PREFIX + namespace + "/tags/" + builder.getType() + "/" + name + JSON_SUFFIX);
+            Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + DATA_PREFIX + namespace + "/tags/" + builder.getType() + "/" + name + JSON_SUFFIX);
             return writeFile(file, builder);
         } catch (Exception e) {
             log.error("Could not create tags/ file for namespace=" + namespace + ", name=" + name, e);
