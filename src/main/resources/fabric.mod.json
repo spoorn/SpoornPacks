@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "spoornpacks",
+  "version": "${version}",
+  "name": "Spoornpacks",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "LGPL-3.0",
+  "icon": "assets/spoornpacks/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "org.spoorn.spoornpacks.client.SpoornpacksClient"
+    ],
+    "main": [
+      "org.spoorn.spoornpacks.Spoornpacks"
+    ]
+  },
+  "mixins": [
+    "spoornpacks.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.13.0",
+    "fabric": "*",
+    "minecraft": "1.18.1"
+  }
+}
