@@ -1,7 +1,7 @@
 package org.spoorn.spoornpacks.generator;
 
-import static org.spoorn.spoornpacks.SpoornPack.OBJECT_MAPPER;
-import static org.spoorn.spoornpacks.SpoornPack.PRETTY_PRINTER;
+import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
+import static org.spoorn.spoornpacks.SpoornPacks.PRETTY_PRINTER;
 import lombok.extern.log4j.Log4j2;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.provider.assets.BlockStateBuilder;

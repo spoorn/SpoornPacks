@@ -1,12 +1,12 @@
 package org.spoorn.spoornpacks.provider.data;
 
+import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.spoorn.spoornpacks.SpoornPack;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 
 public class RecipeBuilder implements ResourceProvider {
 
-    private final ObjectNode state = SpoornPack.OBJECT_MAPPER.createObjectNode();
+    private final ObjectNode state = OBJECT_MAPPER.createObjectNode();
 
     private final String namespace;
     private final String name;
