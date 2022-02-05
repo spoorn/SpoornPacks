@@ -12,11 +12,13 @@ public class ModelBlockBuilder implements ResourceProvider {
     private final String namespace;
     private final String name;
     private final BlockType type;
+    private final String defaultPrefix;
 
     public ModelBlockBuilder(String namespace, String name, BlockType type) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
+        this.defaultPrefix = this.namespace + ":block/" + this.name + "_";
     }
 
     @Override
@@ -38,8 +40,20 @@ public class ModelBlockBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelBlockBuilder defaultPlanks() {
+        parentCubeAll();
+        all();
+        particle();
+        return this;
+    }
+
     public ModelBlockBuilder parentCubeColumn() {
         parent("minecraft:block/cube_column");
+        return this;
+    }
+
+    public ModelBlockBuilder parentCubeAll() {
+        parent("minecraft:block/cube_all");
         return this;
     }
 
@@ -54,7 +68,7 @@ public class ModelBlockBuilder implements ResourceProvider {
     }
 
     public ModelBlockBuilder endWithTypeSuffix() {
-        return end(this.namespace + ":block/" + this.name + "_" + this.type.getName());
+        return end(defaultPrefix + this.type.getName());
     }
 
     public ModelBlockBuilder endWithSuffix(String suffix) {
@@ -68,7 +82,7 @@ public class ModelBlockBuilder implements ResourceProvider {
     }
 
     public ModelBlockBuilder sideWithTypeSuffix() {
-        return side(this.namespace + ":block/" + this.name + "_" + this.type.getName());
+        return side(defaultPrefix + this.type.getName());
     }
 
     public ModelBlockBuilder sideWithSuffix(String suffix) {
@@ -78,6 +92,16 @@ public class ModelBlockBuilder implements ResourceProvider {
     public ModelBlockBuilder side(String side) {
         this.state.with("textures")
                 .put("side", side);
+        return this;
+    }
+
+    public ModelBlockBuilder all() {
+        this.state.with("textures").put("all", defaultPrefix + this.type.getName());
+        return this;
+    }
+
+    public ModelBlockBuilder particle() {
+        this.state.with("textures").put("particle", defaultPrefix + this.type.getName());
         return this;
     }
 }

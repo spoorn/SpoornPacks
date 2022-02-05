@@ -1,3 +1,24 @@
 {
-  "block.spoornpink.white_blossom_log" : "White Blossom Log"
+  "biome.spoornpink.kiko_forest" : "Kiko Forest",
+  "biome.spoornpink.pink_forest" : "Pink Forest",
+  "block.spoornpink.pink_blossom_log" : "Pink Blossom Log",
+  "block.spoornpink.stripped_pink_blossom_log" : "Stripped Pink Blossom Log",
+  "block.spoornpink.pink_blossom_wood" : "Pink Blossom Wood",
+  "block.spoornpink.stripped_pink_blossom_wood" : "Stripped Pink Blossom Wood",
+  "block.spoornpink.pink_blossom_pressure_plate" : "Pink Blossom Pressure Plate",
+  "block.spoornpink.pink_blossom_button" : "Pink Blossom Button",
+  "block.spoornpink.pink_blossom_leaves" : "Pink Blossom Leaves",
+  "block.spoornpink.pink_blossom_sapling" : "Pink Blossom Sapling",
+  "block.spoornpink.potted_pink_blossom_sapling" : "Potted Pink Blossom Sapling",
+  "block.spoornpink.pink_blossom_planks" : "Pink Blossom Planks",
+  "block.spoornpink.pink_blossom_slab" : "Pink Blossom Slab",
+  "block.spoornpink.pink_blossom_stairs" : "Pink Blossom Stairs",
+  "block.spoornpink.pink_blossom_door" : "Pink Blossom Door",
+  "block.spoornpink.pink_blossom_fence" : "Pink Blossom Fence",
+  "block.spoornpink.pink_blossom_fence_gate" : "Pink Blossom Fence Gate",
+  "block.spoornpink.pink_blossom_trapdoor" : "Pink Blossom Trapdoor",
+  "block.spoornpink.dark_pink_blossom_leaves" : "Dark Pink Blossom Leaves",
+  "item.spoornpink.pink_blossom_boat" : "Pink Blossom Boat",
+  "block.spoornpink.pink_blossom_crafting_table" : "Pink Blossom Crafting Table",
+  "itemGroup.spoornpink.general" : "Cute is Pink"
 }

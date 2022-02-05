@@ -82,20 +82,15 @@ public class ResourcePackManagerMixin {
         //System.out.println("### profiles: " + this.profiles);
         //System.out.println("### packs: " + this.enabled);
 
-        SPClientResourcePackProvider clientProvider;
-        SPServerResourcePackProvider serverProvider;
-
         for (ResourcePackProvider provider : this.providers) {
             if (provider instanceof SPClientResourcePackProvider) {
                 //System.out.println("### client present");
-                clientProvider = (SPClientResourcePackProvider) provider;
-                clientProvider.addSubResourcePacks();
+                ((SPClientResourcePackProvider) provider).addSubResourcePacks();
             }
 
             if (provider instanceof SPServerResourcePackProvider) {
                 //System.out.println("### server present");
-                serverProvider = (SPServerResourcePackProvider) provider;
-                serverProvider.addSubResourcePacks();
+                ((SPServerResourcePackProvider) provider).addSubResourcePacks();
             }
         }
     }

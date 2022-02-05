@@ -46,12 +46,14 @@ public class SpoornPacks implements ModInitializer {
 
     public static void test() {
         try {
-            String defaultName = "white_blossom";
+            String defaultName = "pink_blossom";
             ResourceBuilder rb = ResourceFactory.create("spoornpink", defaultName)
                     .addBlock(BlockType.LOG)
                     .addItem(ItemType.LOG)
                     .addBlock(BlockType.WOOD)
                     .addItem(ItemType.WOOD)
+                    .addBlock(BlockType.PLANKS)
+                    .addItem(ItemType.PLANKS)
                     ;
 
             Resource resource = RESOURCE_GENERATOR.generate(rb);

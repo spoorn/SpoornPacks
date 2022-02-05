@@ -119,7 +119,6 @@ public class SPGroupResourcePack implements ResourcePack {
 
     @Override
     public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
-        log.info("### findresources {}, {}", namespace, this.subResourcePacks);
         List<SPResourcePack> subPacks = this.subResourcePacks.get(namespace);
 
         if (subPacks == null) {

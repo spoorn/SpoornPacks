@@ -16,12 +16,18 @@ import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 @Log4j2
 public class ResourceGenerator {
+
+    private static final String BLOCKS = "blocks";
+    private static final String ITEMS = "items";
+    private static final String MINECRAFT = "minecraft";
 
     private final FileGenerator fileGenerator;
 
@@ -67,61 +73,100 @@ public class ResourceGenerator {
     }
 
     private void handleBlocks(String namespace, Map<String, List<String>> blocks) throws IOException {
-        TagsBuilder minecraftLogs = new TagsBuilder("blocks");
+        TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
+        Map<String, List<String>> customLogs = new HashMap<>();
+
         for (Entry<String, List<String>> entry : blocks.entrySet()) {
             BlockType type = BlockType.fromString(entry.getKey());
             for (String name : entry.getValue()) {
                 String filename = name + "_" + type.getName();
                 switch (type) {
-                    case LOG:
+                    case LOG -> {
                         fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultLog());
                         fileGenerator.generateModelBlock(namespace, filename, new ModelBlockBuilder(namespace, name, type).defaultLog());
                         fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultLog());
                         minecraftLogs.value(namespace, name, type);
+                        customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         blocksRegistry.registerLog(filename);
-                        break;
-                    case WOOD:
+                    }
+                    case WOOD -> {
                         fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultWood());
                         fileGenerator.generateModelBlock(namespace, filename, new ModelBlockBuilder(namespace, name, type).defaultWood());
                         fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultWood());
                         minecraftLogs.value(namespace, name, type);
+                        customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         blocksRegistry.registerWood(filename);
-                        break;
-                    default:
-                        throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
+                    }
+                    case PLANKS -> {
+                        fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultPlanks());
+                        fileGenerator.generateModelBlock(namespace, filename, new ModelBlockBuilder(namespace, name, type).defaultPlanks());
+                        fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultPlanks());
+                        minecraftPlanks.value(namespace, name, type);
+                        blocksRegistry.registerPlanks(filename);
+                    }
+                    default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
         }
 
-        fileGenerator.generateTags("minecraft", "logs", minecraftLogs);
-        fileGenerator.generateTags("minecraft", "logs_that_burn", minecraftLogs);
+        fileGenerator.generateTags(MINECRAFT, "logs", minecraftLogs);
+        fileGenerator.generateTags(MINECRAFT, "logs_that_burn", minecraftLogs);
+        fileGenerator.generateTags(MINECRAFT, "planks", minecraftPlanks);
+
+        for (Entry<String, List<String>> entry : customLogs.entrySet()) {
+            TagsBuilder customLogTags = new TagsBuilder(BLOCKS);
+            for (String value : entry.getValue()) {
+                customLogTags.value(value);
+            }
+            fileGenerator.generateTags(namespace, entry.getKey() + "_logs", customLogTags);
+        }
     }
 
     private void handleItems(String namespace, Map<String, List<String>> items) throws IOException {
-        TagsBuilder minecraftLogs = new TagsBuilder("items");
+        TagsBuilder minecraftLogs = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftPlanks = new TagsBuilder(ITEMS);
+        Map<String, List<String>> customLogs = new HashMap<>();
+
         for (Entry<String, List<String>> entry : items.entrySet()) {
             ItemType type = ItemType.fromString(entry.getKey());
             for (String name : entry.getValue()) {
                 String filename = name + "_" + type.getName();
                 switch (type) {
-                    case LOG:
+                    case LOG -> {
                         fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultLog());
                         minecraftLogs.value(namespace, name, type);
+                        customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
-                        break;
-                    case WOOD:
+                    }
+                    case WOOD -> {
                         fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultWood());
                         fileGenerator.generateRecipe(namespace, filename, new RecipeBuilder(namespace, name, type.getName()).defaultWood());
                         minecraftLogs.value(namespace, name, type);
+                        customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
-                        break;
-                    default:
-                        throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
+                    }
+                    case PLANKS -> {
+                        fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultPlanks());
+                        fileGenerator.generateRecipe(namespace, filename, new RecipeBuilder(namespace, name, type.getName()).defaultPlanks());
+                        minecraftPlanks.value(namespace, name, type);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
+                    }
+                    default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
         }
 
-        fileGenerator.generateTags("minecraft", "logs", minecraftLogs);
-        fileGenerator.generateTags("minecraft", "logs_that_burn", minecraftLogs);
+        fileGenerator.generateTags(MINECRAFT, "logs", minecraftLogs);
+        fileGenerator.generateTags(MINECRAFT, "logs_that_burn", minecraftLogs);
+        fileGenerator.generateTags(MINECRAFT, "planks", minecraftPlanks);
+
+        for (Entry<String, List<String>> entry : customLogs.entrySet()) {
+            TagsBuilder customLogTags = new TagsBuilder(ITEMS);
+            for (String value : entry.getValue()) {
+                customLogTags.value(value);
+            }
+            fileGenerator.generateTags(namespace, entry.getKey() + "_logs", customLogTags);
+        }
     }
 }

@@ -38,6 +38,10 @@ public class BlockStateBuilder implements ResourceProvider {
         return this;
     }
 
+    public BlockStateBuilder defaultPlanks() {
+        return emptyModel();
+    }
+
     public BlockStateBuilder variants() {
         this.state.putObject("variants");
         return this;
@@ -61,6 +65,11 @@ public class BlockStateBuilder implements ResourceProvider {
                 .put("model", this.namespace + ":block/" + this.name + "_" + this.type.getName())
                 .put("x", 90)
                 .put("y", 90);
+        return this;
+    }
+
+    public BlockStateBuilder emptyModel() {
+        this.state.with("variants").with("").put("model", this.namespace + ":block/" + this.name + "_" + this.type.getName());
         return this;
     }
 }

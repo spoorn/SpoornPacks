@@ -4,6 +4,7 @@ import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
+import org.spoorn.spoornpacks.provider.data.RecipeParts.Ingredient;
 import org.spoorn.spoornpacks.provider.data.RecipeParts.Key;
 import org.spoorn.spoornpacks.type.BlockType;
 
@@ -16,11 +17,13 @@ public class RecipeBuilder implements ResourceProvider {
     private final String namespace;
     private final String name;
     private final String type;
+    private final String defaultPrefix;
 
     public RecipeBuilder(String namespace, String name, String type) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
+        this.defaultPrefix = this.namespace + ":" + this.name + "_";
     }
 
     @Override
@@ -33,14 +36,28 @@ public class RecipeBuilder implements ResourceProvider {
         group("bark");
         pattern(List.of("##", "##"));
         key("#", Key.builder()
-                .item(this.namespace + ":" + this.name + "_" + BlockType.LOG.getName())
+                .item(this.defaultPrefix + BlockType.LOG.getName())
                 .build());
         result(3);
         return this;
     }
 
+    public RecipeBuilder defaultPlanks() {
+        craftingShapelessType();
+        group("planks");
+        addIngredient(Ingredient.builder()
+                .tag(this.defaultPrefix + BlockType.LOG.getName() + "s")
+                .build());
+        result(4);
+        return this;
+    }
+
     public RecipeBuilder craftingShapedType() {
         return type("minecraft:crafting_shaped");
+    }
+
+    public RecipeBuilder craftingShapelessType() {
+        return type("minecraft:crafting_shapeless");
     }
 
     public RecipeBuilder type(String type) {
@@ -70,6 +87,11 @@ public class RecipeBuilder implements ResourceProvider {
         this.state.with("result")
                 .put("item", this.namespace + ":" + this.name + "_" + this.type)
                 .put("count", count);
+        return this;
+    }
+
+    public RecipeBuilder addIngredient(Ingredient ingredient) {
+        this.state.withArray("ingredients").addPOJO(ingredient);
         return this;
     }
 }

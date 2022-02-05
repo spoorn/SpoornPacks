@@ -15,11 +15,13 @@ public class BlockLootTableBuilder implements ResourceProvider {
     private final String namespace;
     private final String name;
     private final BlockType type;
+    private final String defaultPrefix;
 
     public BlockLootTableBuilder(String namespace, String name, BlockType type) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
+        this.defaultPrefix = this.namespace + ":" + this.name + "_";
     }
 
     @Override
@@ -28,36 +30,18 @@ public class BlockLootTableBuilder implements ResourceProvider {
     }
 
     public BlockLootTableBuilder defaultLog() {
-        Pool pool = Pool.builder()
-                .rolls(1)
-                .entries(List.of(
-                    LootTableParts.Entry.builder()
-                            .type("minecraft:item")
-                            .name(namespace + ":" + name + "_" + type.getName())
-                            .build()
-                )).conditions(List.of(
-                        survivesExplosionCondition()
-                )).build();
-        addPool(pool);
-        return this;
+        return defaultSurvivesExplosion();
     }
 
     public BlockLootTableBuilder defaultWood() {
-        Pool pool = Pool.builder()
-                .rolls(1)
-                .entries(List.of(
-                        LootTableParts.Entry.builder()
-                                .type("minecraft:item")
-                                .name(namespace + ":" + name + "_" + type.getName())
-                                .build()
-                )).conditions(List.of(
-                        survivesExplosionCondition()
-                )).build();
-        addPool(pool);
-        return this;
+        return defaultSurvivesExplosion();
     }
 
-    public BlockLootTableBuilder type() {
+    public BlockLootTableBuilder defaultPlanks() {
+        return defaultSurvivesExplosion();
+    }
+
+    public BlockLootTableBuilder typeBlock() {
         this.state.put("type", "minecraft:block");
         return this;
     }
@@ -76,5 +60,21 @@ public class BlockLootTableBuilder implements ResourceProvider {
         return LootTableParts.Condition.builder()
                 .condition("minecraft:survives_explosion")
                 .build();
+    }
+
+    private BlockLootTableBuilder defaultSurvivesExplosion() {
+        typeBlock();
+        Pool pool = Pool.builder()
+                .rolls(1)
+                .entries(List.of(
+                        LootTableParts.Entry.builder()
+                                .type("minecraft:item")
+                                .name(namespace + ":" + name + "_" + type.getName())
+                                .build()
+                )).conditions(List.of(
+                        survivesExplosionCondition()
+                )).build();
+        addPool(pool);
+        return this;
     }
 }

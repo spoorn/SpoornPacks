@@ -35,6 +35,13 @@ public class BlocksRegistry {
         return Registry.register(Registry.BLOCK, identifier, block);
     }
 
+    public Block registerPlanks(String id) {
+        Block block = new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
+        Identifier identifier = new Identifier(this.modid, id);
+        register.put(identifier, block);
+        return Registry.register(Registry.BLOCK, identifier, block);
+    }
+
     public Boolean canSpawnOnLeaves(BlockState state, BlockView world, BlockPos pos, EntityType<?> type) {
         return type == EntityType.OCELOT || type == EntityType.PARROT;
     }

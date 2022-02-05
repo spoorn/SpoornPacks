@@ -35,12 +35,15 @@ public class TagsBuilder implements ResourceProvider {
     }
 
     public TagsBuilder value(String namespace, String name, BlockType type) {
-        state.withArray("values").add(namespace + ":" + name + "_" + type.getName());
-        return this;
+        return value(namespace + ":" + name + "_" + type.getName());
     }
 
     public TagsBuilder value(String namespace, String name, ItemType type) {
-        state.withArray("values").add(namespace + ":" + name + "_" + type.getName());
+        return value(namespace + ":" + name + "_" + type.getName());
+    }
+
+    public TagsBuilder value(String value) {
+        this.state.withArray("values").add(value);
         return this;
     }
 }

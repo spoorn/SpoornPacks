@@ -10,4 +10,10 @@ public class RecipeParts {
     static class Key {
         String item;
     }
+
+    @Getter
+    @Builder
+    static class Ingredient {
+        String tag;
+    }
 }
