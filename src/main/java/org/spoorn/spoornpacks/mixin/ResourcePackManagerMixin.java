@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spoorn.spoornpacks.core.SPClientResourcePackProvider;
+import org.spoorn.spoornpacks.core.SPServerResourcePackProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +26,8 @@ import java.util.Set;
 @Mixin(ResourcePackManager.class)
 public class ResourcePackManagerMixin {
 
-    private static final SPClientResourcePackProvider clientProvider = new SPClientResourcePackProvider();
+    private static final SPClientResourcePackProvider CLIENT_PROVIDER = new SPClientResourcePackProvider();
+    private static final SPServerResourcePackProvider SERVER_PROVIDER = new SPServerResourcePackProvider();
 
     @Shadow private List<ResourcePackProfile> enabled;
     @Shadow private Map<String, ResourcePackProfile> profiles;
@@ -37,16 +39,13 @@ public class ResourcePackManagerMixin {
     @Redirect(method = "<init>(Lnet/minecraft/resource/ResourcePackProfile$Factory;[Lnet/minecraft/resource/ResourcePackProvider;)V",
             at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"))
     private <E> ImmutableSet<Object> injectSPResourcePack(E[] elements) {
-        System.out.println("### HERE!!");
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            //addedPack = serverProvider;
-            // TODO
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER
+            && (Arrays.stream(elements).noneMatch(element -> element instanceof SPServerResourcePackProvider))) {
+            return ImmutableSet.copyOf(ArrayUtils.add(elements, SERVER_PROVIDER));
         } else {
             boolean isForClient = Arrays.stream(elements).anyMatch(element -> element instanceof ClientBuiltinResourcePackProvider);
-            System.out.println("### ISFORCLIENT " + isForClient);
-            if (isForClient) {
-                System.out.println("### ADD OUR PROVIDER");
-                return ImmutableSet.copyOf(ArrayUtils.add(elements, clientProvider));
+            if (isForClient && Arrays.stream(elements).noneMatch(element -> element instanceof SPClientResourcePackProvider)) {
+                return ImmutableSet.copyOf(ArrayUtils.add(elements, CLIENT_PROVIDER));
             }
         }
         return ImmutableSet.copyOf(elements);
@@ -54,6 +53,7 @@ public class ResourcePackManagerMixin {
 
     @Inject(method = "scanPacks", at = @At(value = "TAIL"))
     private void debugPrints(CallbackInfo ci) {
+        System.out.println("### server? " + (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER));
         System.out.println("### providers: " + this.providers);
         System.out.println("### profiles: " + this.profiles);
         System.out.println("### packs: " + this.enabled);

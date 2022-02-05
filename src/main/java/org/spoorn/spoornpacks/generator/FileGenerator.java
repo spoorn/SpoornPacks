@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 @Log4j2
 public class FileGenerator {
 
-    private static final String SPOORNPACKS_PREFIX = "spoornpacks/";
+    public static final String SPOORNPACKS_PREFIX = "spoornpacks/";
     private static final String ASSETS_PREFIX = "/resources/assets/";
     private static final String DATA_PREFIX = "/resources/data/";
     private static final String JSON_SUFFIX = ".json";

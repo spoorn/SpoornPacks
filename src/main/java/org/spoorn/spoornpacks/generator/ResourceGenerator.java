@@ -1,6 +1,7 @@
 package org.spoorn.spoornpacks.generator;
 
 import lombok.extern.log4j.Log4j2;
+import net.minecraft.util.Identifier;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.impl.DefaultResourceBuilder;
@@ -24,15 +25,19 @@ public class ResourceGenerator {
 
     private final FileGenerator fileGenerator;
 
-    private final String id;
+    private final String modid;
+    private final BlocksRegistry blocksRegistry;
+    private final ItemsRegistry itemsRegistry;
 
-    public ResourceGenerator(String id) {
-        this.id = id;
-        this.fileGenerator = new FileGenerator(id);
+    public ResourceGenerator(String modid) {
+        this.modid = modid;
+        this.fileGenerator = new FileGenerator(modid);
+        this.blocksRegistry = new BlocksRegistry(modid);
+        this.itemsRegistry = new ItemsRegistry(modid);
     }
 
     public Resource generate(ResourceBuilder resourceBuilder) {
-        log.info("Generating resources for {}", id);
+        log.info("Generating resources for {}", modid);
         if (!(resourceBuilder instanceof DefaultResourceBuilder)) {
             throw new UnsupportedOperationException("ResourceBuilder is unsupported!");
         }
@@ -73,12 +78,14 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename, new ModelBlockBuilder(namespace, name, type).defaultLog());
                         fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultLog());
                         minecraftLogs.value(namespace, name, type);
+                        blocksRegistry.registerLog(filename);
                         break;
                     case WOOD:
                         fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultWood());
                         fileGenerator.generateModelBlock(namespace, filename, new ModelBlockBuilder(namespace, name, type).defaultWood());
                         fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultWood());
                         minecraftLogs.value(namespace, name, type);
+                        blocksRegistry.registerWood(filename);
                         break;
                     default:
                         throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
@@ -100,11 +107,13 @@ public class ResourceGenerator {
                     case LOG:
                         fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultLog());
                         minecraftLogs.value(namespace, name, type);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                         break;
                     case WOOD:
                         fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultWood());
                         fileGenerator.generateRecipe(namespace, filename, new RecipeBuilder(namespace, name, type.getName()).defaultWood());
                         minecraftLogs.value(namespace, name, type);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                         break;
                     default:
                         throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");

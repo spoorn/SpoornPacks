@@ -10,7 +10,7 @@ import org.spoorn.spoornpacks.registry.SpoornPacksRegistry;
 import java.util.function.Consumer;
 
 @Log4j2
-public class SPClientResourcePackProvider implements ResourcePackProvider {
+public class SPServerResourcePackProvider implements ResourcePackProvider {
 
     @Override
     public void register(Consumer<ResourcePackProfile> profileAdder, ResourcePackProfile.Factory factory) {
@@ -19,16 +19,16 @@ public class SPClientResourcePackProvider implements ResourcePackProvider {
             ResourcePackProfile profile = ResourcePackProfile.of(
                     name,
                     true,
-                    () -> new SPResourcePack(ResourceType.CLIENT_RESOURCES),
+                    () -> new SPResourcePack(ResourceType.SERVER_DATA),
                     factory,
-                    ResourcePackProfile.InsertionPosition.TOP,
+                    ResourcePackProfile.InsertionPosition.BOTTOM,
                     SpoornPacks.RESOURCE_PACK_SOURCE
             );
 
-            log.info("Registering client-side SpoornPacks ResourcePackProfile={}", profile);
+            log.info("Registering server-side SpoornPacks ResourcePackProfile={}", profile);
 
             profileAdder.accept(
-                new SPResourcePackProfile(profile)
+                    new SPResourcePackProfile(profile)
             );
         }
     }
