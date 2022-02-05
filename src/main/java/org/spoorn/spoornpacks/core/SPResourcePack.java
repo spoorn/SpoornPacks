@@ -85,16 +85,16 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
 
     @Override
     public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
-        System.out.println("### findresources " + namespace + "/" + prefix);
+        //System.out.println("### findresources " + namespace + "/" + prefix);
         List<Identifier> ids = new ArrayList<>();
         String path = prefix.replace("/", separator);
 
         Path namespacePath = getPath(type.getDirectory() + "/" + namespace);
 
-        System.out.println("### namespacepath: " + namespacePath);
+        //System.out.println("### namespacepath: " + namespacePath);
         if (namespacePath != null) {
             Path searchPath = namespacePath.resolve(path).toAbsolutePath().normalize();
-            System.out.println("### searchpath: " + searchPath);
+            //System.out.println("### searchpath: " + searchPath);
 
             if (Files.exists(searchPath)) {
                 try {
@@ -102,14 +102,14 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
                             .filter(Files::isRegularFile)
                             .filter((p) -> {
                                 String filename = p.getFileName().toString();
-                                System.out.println("### filename: " + filename);
+                                //System.out.println("### filename: " + filename);
                                 return !filename.endsWith(".mcmeta") && pathFilter.test(filename);
                             })
                             .map(namespacePath::relativize)
                             .map((p) -> p.toString().replace(separator, "/"))
                             .forEach((s) -> {
                                 try {
-                                    System.out.println("### path: " + s);
+                                    //System.out.println("### path: " + s);
                                     ids.add(new Identifier(namespace, s));
                                 } catch (InvalidIdentifierException e) {
                                     log.error(e.getMessage(), e);

@@ -35,7 +35,7 @@ public class ResourcePackManagerMixin {
     @Redirect(method = "<init>(Lnet/minecraft/resource/ResourcePackProfile$Factory;[Lnet/minecraft/resource/ResourcePackProvider;)V",
             at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"))
     private <E> ImmutableSet<Object> injectSPResourcePack(E[] elements) {
-        System.out.println("### injectSPResourcePack");
+        //System.out.println("### injectSPResourcePack");
         boolean isClient = false;
         boolean providerPresent = false;
 
@@ -62,11 +62,11 @@ public class ResourcePackManagerMixin {
 
         if (!providerPresent) {
             if (isClient) {
-                System.out.println("### adding client");
+                //System.out.println("### adding client");
                 clientProvider = new SPClientResourcePackProvider();
                 return ImmutableSet.copyOf(ArrayUtils.add(elements, clientProvider));
             } else {
-                System.out.println("### adding server");
+                //System.out.println("### adding server");
                 serverProvider = new SPServerResourcePackProvider();
                 return ImmutableSet.copyOf(ArrayUtils.add(elements, serverProvider));
             }
@@ -77,23 +77,23 @@ public class ResourcePackManagerMixin {
 
     @Inject(method = "scanPacks", at = @At(value = "TAIL"))
     private void debugPrints(CallbackInfo ci) {
-        System.out.println("### server? " + (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER));
-        System.out.println("### providers: " + this.providers);
-        System.out.println("### profiles: " + this.profiles);
-        System.out.println("### packs: " + this.enabled);
+        //System.out.println("### server? " + (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER));
+        //System.out.println("### providers: " + this.providers);
+        //System.out.println("### profiles: " + this.profiles);
+        //System.out.println("### packs: " + this.enabled);
 
         SPClientResourcePackProvider clientProvider;
         SPServerResourcePackProvider serverProvider;
 
         for (ResourcePackProvider provider : this.providers) {
             if (provider instanceof SPClientResourcePackProvider) {
-                System.out.println("### client present");
+                //System.out.println("### client present");
                 clientProvider = (SPClientResourcePackProvider) provider;
                 clientProvider.addSubResourcePacks();
             }
 
             if (provider instanceof SPServerResourcePackProvider) {
-                System.out.println("### server present");
+                //System.out.println("### server present");
                 serverProvider = (SPServerResourcePackProvider) provider;
                 serverProvider.addSubResourcePacks();
             }
