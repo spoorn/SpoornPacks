@@ -12,24 +12,31 @@ import java.util.function.Consumer;
 @Log4j2
 public class SPServerResourcePackProvider implements ResourcePackProvider {
 
+    public SPGroupResourcePack spGroupResourcePack;
+
+    public SPServerResourcePackProvider() {
+        this.spGroupResourcePack = new SPGroupResourcePack(ResourceType.SERVER_DATA);
+    }
+
     @Override
     public void register(Consumer<ResourcePackProfile> profileAdder, ResourcePackProfile.Factory factory) {
+        ResourcePackProfile profile = ResourcePackProfile.of(
+                SpoornPacks.MODID,
+                true,
+                () -> spGroupResourcePack,
+                factory,
+                ResourcePackProfile.InsertionPosition.BOTTOM,
+                SpoornPacks.RESOURCE_PACK_SOURCE
+        );
+
+        log.info("Registering server-side SpoornPacks ResourcePackProfile={}", profile);
+
+        profileAdder.accept(new SPResourcePackProfile(profile));
+    }
+
+    public void addSubResourcePacks() {
         for (String id : SpoornPacksRegistry.RESOURCES) {
-            String name = "spoornpacks:" + id;
-            ResourcePackProfile profile = ResourcePackProfile.of(
-                    name,
-                    true,
-                    () -> new SPResourcePack(ResourceType.SERVER_DATA),
-                    factory,
-                    ResourcePackProfile.InsertionPosition.BOTTOM,
-                    SpoornPacks.RESOURCE_PACK_SOURCE
-            );
-
-            log.info("Registering server-side SpoornPacks ResourcePackProfile={}", profile);
-
-            profileAdder.accept(
-                    new SPResourcePackProfile(profile)
-            );
+            this.spGroupResourcePack.addSubResourcePack(id);
         }
     }
 }

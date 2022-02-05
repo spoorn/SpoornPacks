@@ -1,8 +1,8 @@
 package org.spoorn.spoornpacks.core;
 
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
 import net.minecraft.resource.AbstractFileResourcePack;
 import net.minecraft.resource.ResourcePack;
@@ -13,7 +13,6 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import org.jetbrains.annotations.Nullable;
-import org.spoorn.spoornpacks.generator.FileGenerator;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,23 +25,25 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 @Log4j2
+@ToString
 public class SPResourcePack extends AbstractFileResourcePack implements ResourcePack {
 
     private static final String NAME = "spoornpacks";
+    private static final String MINECRAFT_NAMESPACE = "minecraft";
     private static final Pattern RESOURCE_PACK_PATH = Pattern.compile("[a-z0-9-_]+");
     private static final PackResourceMetadata DEFAULT_PACK_METADATA = new PackResourceMetadata(new TranslatableText("spoornpack.metadata.description"), ResourceType.CLIENT_RESOURCES.getPackVersion(SharedConstants.getGameVersion()));
 
-    private static final InputStream tst = InputStream.nullInputStream();
-
     private final ResourceType resourceType;
+    private final String id;
     private Set<String> namespaces;
     private final String separator;
     private final Path basePath;
 
-    public SPResourcePack(ResourceType resourceType) {
+    public SPResourcePack(String id, ResourceType resourceType, Path basePath, String separator) {
         super(null);
+        this.id = id;
         this.resourceType = resourceType;
-        this.basePath = FabricLoader.getInstance().getGameDir().resolve("spoornpacks").toAbsolutePath().normalize();
+        this.basePath = basePath.resolve(id).resolve("resources").toAbsolutePath().normalize();
         this.separator = basePath.getFileSystem().getSeparator();
     }
 
@@ -54,30 +55,6 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
         } else {
             return null;
         }
-    }
-
-    // Custom filename constructor, since separate resources by modid namespace
-    private String getFilename(ResourceType type, Identifier id) {
-        return String.format("%s/resources/%s/%s/%s", id.getNamespace(), type.getDirectory(), id.getNamespace(), id.getPath());
-    }
-
-    @Override
-    public InputStream open(ResourceType type, Identifier id) throws IOException {
-        return this.openFile(getFilename(type, id));
-    }
-
-    @Override
-    public boolean contains(ResourceType type, Identifier id) {
-        return this.containsFile(getFilename(type, id));
-    }
-
-    @Nullable
-    @Override
-    public InputStream openRoot(String fileName) throws IOException {
-        if (fileName.contains("/") || fileName.contains("\\")) {
-            throw new IllegalArgumentException("Root resources can only be filenames, not paths (no / allowed!)");
-        }
-        return this.openFile(fileName);
     }
 
     @Override
@@ -108,13 +85,16 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
 
     @Override
     public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
+        System.out.println("### findresources " + namespace + "/" + prefix);
         List<Identifier> ids = new ArrayList<>();
         String path = prefix.replace("/", separator);
 
-        Path namespacePath = getPath(namespace + "/resources/" + type.getDirectory() + "/" + namespace);
+        Path namespacePath = getPath(type.getDirectory() + "/" + namespace);
 
+        System.out.println("### namespacepath: " + namespacePath);
         if (namespacePath != null) {
             Path searchPath = namespacePath.resolve(path).toAbsolutePath().normalize();
+            System.out.println("### searchpath: " + searchPath);
 
             if (Files.exists(searchPath)) {
                 try {
@@ -122,12 +102,14 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
                             .filter(Files::isRegularFile)
                             .filter((p) -> {
                                 String filename = p.getFileName().toString();
+                                System.out.println("### filename: " + filename);
                                 return !filename.endsWith(".mcmeta") && pathFilter.test(filename);
                             })
                             .map(namespacePath::relativize)
                             .map((p) -> p.toString().replace(separator, "/"))
                             .forEach((s) -> {
                                 try {
+                                    System.out.println("### path: " + s);
                                     ids.add(new Identifier(namespace, s));
                                 } catch (InvalidIdentifierException e) {
                                     log.error(e.getMessage(), e);
@@ -145,7 +127,7 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
     @Override
     public Set<String> getNamespaces(ResourceType type) {
         if (this.namespaces == null) {
-            Path file = basePath;
+            Path file = getPath(type.getDirectory());
 
             if (!Files.isDirectory(file)) {
                 return Collections.emptySet();
@@ -168,6 +150,9 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
                 log.error("Could not get namespaces", e);
             }
 
+            // Allow minecraft tags from mods as well
+            // TODO: Optimize.  This will cause all SPResourcePacks to be invoked for "minecraft" tags
+            namespaces.add("minecraft");
             this.namespaces = namespaces;
         }
 

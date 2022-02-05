@@ -18,16 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spoorn.spoornpacks.core.SPClientResourcePackProvider;
 import org.spoorn.spoornpacks.core.SPServerResourcePackProvider;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @Mixin(ResourcePackManager.class)
 public class ResourcePackManagerMixin {
-
-    private static final SPClientResourcePackProvider CLIENT_PROVIDER = new SPClientResourcePackProvider();
-    private static final SPServerResourcePackProvider SERVER_PROVIDER = new SPServerResourcePackProvider();
 
     @Shadow private List<ResourcePackProfile> enabled;
     @Shadow private Map<String, ResourcePackProfile> profiles;
@@ -39,16 +35,43 @@ public class ResourcePackManagerMixin {
     @Redirect(method = "<init>(Lnet/minecraft/resource/ResourcePackProfile$Factory;[Lnet/minecraft/resource/ResourcePackProvider;)V",
             at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"))
     private <E> ImmutableSet<Object> injectSPResourcePack(E[] elements) {
-        boolean isForClient = Arrays.stream(elements).anyMatch(element -> element instanceof ClientBuiltinResourcePackProvider);
-        if (!isForClient
-            && (Arrays.stream(elements).noneMatch(element -> element instanceof SPServerResourcePackProvider))) {
-            return ImmutableSet.copyOf(ArrayUtils.add(elements, SERVER_PROVIDER));
-        } else {
-            //boolean isForClient = Arrays.stream(elements).anyMatch(element -> element instanceof ClientBuiltinResourcePackProvider);
-            if (Arrays.stream(elements).noneMatch(element -> element instanceof SPClientResourcePackProvider)) {
-                return ImmutableSet.copyOf(ArrayUtils.add(elements, CLIENT_PROVIDER));
+        System.out.println("### injectSPResourcePack");
+        boolean isClient = false;
+        boolean providerPresent = false;
+
+        SPClientResourcePackProvider clientProvider;
+        SPServerResourcePackProvider serverProvider;
+
+        for (int i = 0; i < elements.length; i++) {
+            E element = elements[i];
+            if (element instanceof ClientBuiltinResourcePackProvider) {
+                isClient = true;
+            }
+
+            if (element instanceof SPClientResourcePackProvider) {
+                isClient = true;
+                providerPresent = true;
+                break;
+            }
+
+            if (element instanceof SPServerResourcePackProvider) {
+                providerPresent = true;
+                break;
             }
         }
+
+        if (!providerPresent) {
+            if (isClient) {
+                System.out.println("### adding client");
+                clientProvider = new SPClientResourcePackProvider();
+                return ImmutableSet.copyOf(ArrayUtils.add(elements, clientProvider));
+            } else {
+                System.out.println("### adding server");
+                serverProvider = new SPServerResourcePackProvider();
+                return ImmutableSet.copyOf(ArrayUtils.add(elements, serverProvider));
+            }
+        }
+
         return ImmutableSet.copyOf(elements);
     }
 
@@ -58,5 +81,22 @@ public class ResourcePackManagerMixin {
         System.out.println("### providers: " + this.providers);
         System.out.println("### profiles: " + this.profiles);
         System.out.println("### packs: " + this.enabled);
+
+        SPClientResourcePackProvider clientProvider;
+        SPServerResourcePackProvider serverProvider;
+
+        for (ResourcePackProvider provider : this.providers) {
+            if (provider instanceof SPClientResourcePackProvider) {
+                System.out.println("### client present");
+                clientProvider = (SPClientResourcePackProvider) provider;
+                clientProvider.addSubResourcePacks();
+            }
+
+            if (provider instanceof SPServerResourcePackProvider) {
+                System.out.println("### server present");
+                serverProvider = (SPServerResourcePackProvider) provider;
+                serverProvider.addSubResourcePacks();
+            }
+        }
     }
 }
