@@ -39,12 +39,13 @@ public class ResourcePackManagerMixin {
     @Redirect(method = "<init>(Lnet/minecraft/resource/ResourcePackProfile$Factory;[Lnet/minecraft/resource/ResourcePackProvider;)V",
             at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"))
     private <E> ImmutableSet<Object> injectSPResourcePack(E[] elements) {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER
+        boolean isForClient = Arrays.stream(elements).anyMatch(element -> element instanceof ClientBuiltinResourcePackProvider);
+        if (!isForClient
             && (Arrays.stream(elements).noneMatch(element -> element instanceof SPServerResourcePackProvider))) {
             return ImmutableSet.copyOf(ArrayUtils.add(elements, SERVER_PROVIDER));
         } else {
-            boolean isForClient = Arrays.stream(elements).anyMatch(element -> element instanceof ClientBuiltinResourcePackProvider);
-            if (isForClient && Arrays.stream(elements).noneMatch(element -> element instanceof SPClientResourcePackProvider)) {
+            //boolean isForClient = Arrays.stream(elements).anyMatch(element -> element instanceof ClientBuiltinResourcePackProvider);
+            if (Arrays.stream(elements).noneMatch(element -> element instanceof SPClientResourcePackProvider)) {
                 return ImmutableSet.copyOf(ArrayUtils.add(elements, CLIENT_PROVIDER));
             }
         }
