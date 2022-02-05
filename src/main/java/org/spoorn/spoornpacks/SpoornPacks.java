@@ -9,11 +9,13 @@ import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.resource.ResourcePackSource;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.api.ResourceFactory;
 import org.spoorn.spoornpacks.client.exception.DuplicateNameException;
 import org.spoorn.spoornpacks.generator.ResourceGenerator;
+import org.spoorn.spoornpacks.registry.SpoornPacksRegistry;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
 
@@ -25,7 +27,9 @@ public class SpoornPacks implements ModInitializer {
     public static final String MODID = "SpoornPacks";
     public static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static DefaultPrettyPrinter PRETTY_PRINTER = new DefaultPrettyPrinter();
-    public static ResourceGenerator RESOURCE_GENERATOR = new ResourceGenerator(SpoornPacks.MODID);
+    public static ResourceGenerator RESOURCE_GENERATOR = SpoornPacksRegistry.registerResource("spoornpink");
+
+    public static ResourcePackSource RESOURCE_PACK_SOURCE = ResourcePackSource.nameAndSource("pack.source.spoornpacks");
 
     static {
         OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
