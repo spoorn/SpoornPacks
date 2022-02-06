@@ -11,7 +11,7 @@ public class TagsBuilder implements ResourceProvider {
 
     private final ObjectNode state = OBJECT_MAPPER.createObjectNode();
 
-    // "blocks" or "items"
+    // sub-directory under tags/
     @Getter
     private String type;
 

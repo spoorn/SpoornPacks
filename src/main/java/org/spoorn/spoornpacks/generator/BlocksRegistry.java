@@ -51,6 +51,17 @@ public class BlocksRegistry {
         return Registry.register(Registry.BLOCK, identifier, block);
     }
 
+    // TODO: Allow creating leaves of different mapcolors
+    public Block registerLeaves(String id) {
+        /*Block block = new LeavesBlock(AbstractBlock.Settings.of(Material.LEAVES, color).strength(0.2f).ticksRandomly()
+                .sounds(BlockSoundGroup.GRASS).nonOpaque().allowsSpawning(SPBlocks::canSpawnOnLeaves)
+                .suffocates((state, world, pos) -> false).blockVision((state, world, pos) -> false));*/
+        Block block = new LeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES));
+        Identifier identifier = new Identifier(this.modid, id);
+        register.put(identifier, block);
+        return Registry.register(Registry.BLOCK, identifier, block);
+    }
+
     public Block registerFence(String id) {
         Block block = new FenceBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE));
         Identifier identifier = new Identifier(this.modid, id);
@@ -67,7 +78,7 @@ public class BlocksRegistry {
         return Registry.register(Registry.BLOCK, identifier, block);
     }
 
-    public Boolean canSpawnOnLeaves(BlockState state, BlockView world, BlockPos pos, EntityType<?> type) {
+    public static Boolean canSpawnOnLeaves(BlockState state, BlockView world, BlockPos pos, EntityType<?> type) {
         return type == EntityType.OCELOT || type == EntityType.PARROT;
     }
 }

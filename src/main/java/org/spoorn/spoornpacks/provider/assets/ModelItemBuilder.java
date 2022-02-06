@@ -47,6 +47,11 @@ public class ModelItemBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelItemBuilder defaultLeaves() {
+        parent();
+        return this;
+    }
+
     public ModelItemBuilder defaultFence() {
         parent(defaultBlockWithTypePrefix + "_inventory");
         return this;

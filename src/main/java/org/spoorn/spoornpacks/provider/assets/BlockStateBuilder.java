@@ -54,6 +54,10 @@ public class BlockStateBuilder implements ResourceProvider {
         return emptyModel();
     }
 
+    public BlockStateBuilder defaultLeaves() {
+        return emptyModel();
+    }
+
     public BlockStateBuilder defaultFence() {
         addMultipart(Multipart.builder()
                 .apply(Apply.builder()

@@ -56,6 +56,14 @@ public class BlockLootTableBuilder implements ResourceProvider {
     public BlockLootTableBuilder defaultFenceGate() {
         return defaultSurvivesExplosion();
     }
+    
+    public BlockLootTableBuilder defaultLeaves() {
+        this.state = this.jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultPrefixWithType,
+                this.defaultPrefix + "_" + BlockType.SAPLING.getName()
+        );
+        return this;
+    }
 
     public BlockLootTableBuilder typeBlock() {
         this.state.put("type", "minecraft:block");

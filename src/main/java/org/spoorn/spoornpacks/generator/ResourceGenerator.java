@@ -83,8 +83,10 @@ public class ResourceGenerator {
     private void handleBlocks(String namespace, Map<String, List<String>> blocks) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftLeaves = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenFences = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftFenceGates = new TagsBuilder(BLOCKS);
+        TagsBuilder hoeMineable = new TagsBuilder(BLOCKS + "/mineable");
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : blocks.entrySet()) {
@@ -115,6 +117,14 @@ public class ResourceGenerator {
                         minecraftPlanks.value(namespace, name, type);
                         blocksRegistry.registerPlanks(filename);
                     }
+                    case LEAVES -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultLeaves());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultLeaves());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultLeaves());
+                        minecraftLeaves.value(namespace, name, type);
+                        hoeMineable.value(namespace, name, type);
+                        blocksRegistry.registerLeaves(filename);
+                    }
                     case FENCE -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultFence());
                         fileGenerator.generateModelBlock(namespace, filename + "_inventory", newModelBlockBuilder(namespace, name, type).defaultFenceInventory());
@@ -144,6 +154,8 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "planks", minecraftPlanks);
         fileGenerator.generateTags(MINECRAFT, "wooden_fences", minecraftWoodenFences);
         fileGenerator.generateTags(MINECRAFT, "fence_gates", minecraftFenceGates);
+        fileGenerator.generateTags(MINECRAFT, "leaves", minecraftLeaves);
+        fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(BLOCKS);
@@ -157,6 +169,7 @@ public class ResourceGenerator {
     private void handleItems(String namespace, Map<String, List<String>> items) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(ITEMS);
         TagsBuilder minecraftPlanks = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftLeaves = new TagsBuilder(ITEMS);
         TagsBuilder minecraftWoodenFences = new TagsBuilder(ITEMS);
         TagsBuilder minecraftFenceGates = new TagsBuilder(ITEMS);
         Map<String, List<String>> customLogs = new HashMap<>();
@@ -185,6 +198,11 @@ public class ResourceGenerator {
                         minecraftPlanks.value(namespace, name, type);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
+                    case LEAVES -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultLeaves());
+                        minecraftLeaves.value(namespace, name, type);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
+                    }
                     case FENCE -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultFence());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultFence());
@@ -206,6 +224,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "planks", minecraftPlanks);
         fileGenerator.generateTags(MINECRAFT, "wooden_fences", minecraftWoodenFences);
         fileGenerator.generateTags(MINECRAFT, "fence_gates", minecraftFenceGates);
+        fileGenerator.generateTags(MINECRAFT, "leaves", minecraftLeaves);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);

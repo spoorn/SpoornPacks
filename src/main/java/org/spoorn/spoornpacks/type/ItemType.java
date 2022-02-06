@@ -4,6 +4,8 @@ public enum ItemType {
     LOG("log"),
     WOOD("wood"),
     PLANKS("planks"),
+    LEAVES("leaves"),
+    SAPLING("sapling"),
     FENCE("fence"),
     FENCE_GATE("fence_gate");
 
