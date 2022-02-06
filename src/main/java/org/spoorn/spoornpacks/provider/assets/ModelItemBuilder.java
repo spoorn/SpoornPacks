@@ -33,23 +33,19 @@ public class ModelItemBuilder implements ResourceProvider {
     }
 
     public ModelItemBuilder defaultLog() {
-        parent();
-        return this;
+        return parent();
     }
 
     public ModelItemBuilder defaultWood() {
-        parent();
-        return this;
+        return parent();
     }
 
     public ModelItemBuilder defaultPlanks() {
-        parent();
-        return this;
+        return parent();
     }
 
     public ModelItemBuilder defaultLeaves() {
-        parent();
-        return this;
+        return parent();
     }
 
     public ModelItemBuilder defaultSapling() {
@@ -60,33 +56,31 @@ public class ModelItemBuilder implements ResourceProvider {
     }
 
     public ModelItemBuilder defaultFence() {
-        parent(defaultBlockWithTypePrefix + "_inventory");
-        return this;
+        return parent(defaultBlockWithTypePrefix + "_inventory");
     }
 
     public ModelItemBuilder defaultFenceGate() {
-        parent();
-        return this;
+        return parent();
     }
 
     public ModelItemBuilder defaultButton() {
-        parent(this.defaultBlockWithTypePrefix + "_inventory");
-        return this;
+        return parent(this.defaultBlockWithTypePrefix + "_inventory");
     }
 
     public ModelItemBuilder defaultSlab() {
-        parent();
-        return this;
+        return parent();
     }
 
     public ModelItemBuilder defaultPressurePlate() {
-        parent();
-        return this;
+        return parent();
+    }
+
+    public ModelItemBuilder defaultStairs() {
+        return parent();
     }
 
     public ModelItemBuilder parent() {
-        parent(defaultBlockWithTypePrefix);
-        return this;
+        return parent(defaultBlockWithTypePrefix);
     }
 
     public ModelItemBuilder parent(String parent) {

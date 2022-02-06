@@ -6,7 +6,8 @@
   "mixins": [
     "ResourcePackManagerMixin",
     "WoodenButtonBlockAccessor",
-    "PressurePlateBlockAccessor"
+    "PressurePlateBlockAccessor",
+    "StairsBlockAccessor"
   ],
   "client": [
   ],

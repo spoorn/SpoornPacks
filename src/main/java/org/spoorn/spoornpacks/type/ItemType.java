@@ -10,7 +10,8 @@ public enum ItemType {
     FENCE_GATE("fence_gate"),
     BUTTON("button"),
     SLAB("slab"),
-    PRESSURE_PLATE("pressure_plate");
+    PRESSURE_PLATE("pressure_plate"),
+    STAIRS("stairs");
 
     private final String name;
 

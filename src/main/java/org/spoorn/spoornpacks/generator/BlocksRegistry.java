@@ -13,6 +13,7 @@ import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.block.SPSaplingBlock;
 import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
 import org.spoorn.spoornpacks.mixin.PressurePlateBlockAccessor;
+import org.spoorn.spoornpacks.mixin.StairsBlockAccessor;
 import org.spoorn.spoornpacks.mixin.WoodenButtonBlockAccessor;
 
 import java.util.ArrayList;
@@ -96,6 +97,12 @@ public class BlocksRegistry {
 
     public Block registerPressurePlate(String id) {
         Block block = PressurePlateBlockAccessor.create(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE));
+        return registerBlock(id, block);
+    }
+
+    // TODO: Allow different types for the settings part of stairs block
+    public Block registerStairs(String id, Block defaultBlock) {
+        Block block = StairsBlockAccessor.create(defaultBlock.getDefaultState(), FabricBlockSettings.copyOf(defaultBlock));
         return registerBlock(id, block);
     }
     

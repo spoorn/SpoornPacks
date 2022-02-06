@@ -145,6 +145,15 @@ public class BlockStateBuilder implements ResourceProvider {
         return this;
     }
 
+    public BlockStateBuilder defaultStairs() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix + "_inner",
+                this.defaultBlockWithTypePrefix + "_outer",
+                this.defaultBlockWithTypePrefix
+        );
+        return this;
+    }
+
     public BlockStateBuilder yaxis() {
         this.state.with("variants").with("axis=y")
                 .put("model", defaultBlockWithTypePrefix);

@@ -16,8 +16,10 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     private final String namespace;
     private final String defaultName;
 
+    // We make blocks a tree map so we can conveniently process Planks before Stairs.
+    // This is because stair blocks depend on the plank blocks.  See StairBlock's constructor
     @Getter
-    private final Map<String, List<String>> blocks = new HashMap<>();
+    private final TreeMap<String, List<String>> blocks = new TreeMap<>();
     @Getter
     private final Map<String, List<String>> items = new HashMap<>();
     @Getter

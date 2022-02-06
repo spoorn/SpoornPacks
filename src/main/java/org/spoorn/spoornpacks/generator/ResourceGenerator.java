@@ -18,10 +18,7 @@ import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 @Log4j2
@@ -62,7 +59,8 @@ public class ResourceGenerator {
         DefaultResourceBuilder drb = (DefaultResourceBuilder) resourceBuilder;
 
         // Blocks
-        final Map<String, List<String>> blocks = drb.getBlocks();
+        final TreeMap<String, List<String>> blocks = drb.getBlocks();
+        
         try {
             handleBlocks(drb.getNamespace(), blocks, drb.getLeavesToSaplingOverrides(), drb.getSaplingConfiguredFeatures());
         } catch (IOException e) {
@@ -84,7 +82,7 @@ public class ResourceGenerator {
         return gen;
     }
 
-    private void handleBlocks(String namespace, Map<String, List<String>> blocks, Map<String, String> leavesToSaplingOverrides,
+    private void handleBlocks(String namespace, TreeMap<String, List<String>> blocks, Map<String, String> leavesToSaplingOverrides,
                               Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
@@ -97,8 +95,11 @@ public class ResourceGenerator {
         TagsBuilder minecraftWoodenButtons = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenSlabs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenPressurePlates = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftWoodenStairs = new TagsBuilder(BLOCKS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
+        // We make blocks a tree map so we can conveniently process Planks before Stairs.
+        // This is because stair blocks depend on the plank blocks.  See StairBlock's constructor
         for (Entry<String, List<String>> entry : blocks.entrySet()) {
             BlockType type = BlockType.fromString(entry.getKey());
             for (String name : entry.getValue()) {
@@ -176,8 +177,8 @@ public class ResourceGenerator {
                     case BUTTON -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultButton());
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultButton());
-                        fileGenerator.generateModelBlock(namespace, filename + "_inventory", newModelBlockBuilder(namespace, name, type, type.getName() + "_inventory").defaultButton());
-                        fileGenerator.generateModelBlock(namespace, filename + "_pressed", newModelBlockBuilder(namespace, name, type, type.getName() + "_pressed").defaultButton());
+                        fileGenerator.generateModelBlock(namespace, filename + "_inventory", newModelBlockBuilder(namespace, name, type, type.getName() + "_inventory").defaultButtonInventory());
+                        fileGenerator.generateModelBlock(namespace, filename + "_pressed", newModelBlockBuilder(namespace, name, type, type.getName() + "_pressed").defaultButtonPressed());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultButton());
                         minecraftWoodenButtons.value(namespace, name, type);
                         blocksRegistry.registerButton(filename);
@@ -198,6 +199,15 @@ public class ResourceGenerator {
                         minecraftWoodenPressurePlates.value(namespace, name, type);
                         blocksRegistry.registerPressurePlate(filename);
                     }
+                    case STAIRS -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultStairs());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultStairs());
+                        fileGenerator.generateModelBlock(namespace, filename + "_inner", newModelBlockBuilder(namespace, name, type, type.getName() + "_inner").defaultStairsInner());
+                        fileGenerator.generateModelBlock(namespace, filename + "_outer", newModelBlockBuilder(namespace, name, type, type.getName() + "_outer").defaultStairsOuter());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultStairs());
+                        minecraftWoodenStairs.value(namespace, name, type);
+                        blocksRegistry.registerStairs(filename, blocksRegistry.register.get(new Identifier(namespace, name + "_" + BlockType.PLANKS.getName())));
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
@@ -215,6 +225,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "wooden_buttons", minecraftWoodenButtons);
         fileGenerator.generateTags(MINECRAFT, "wooden_slabs", minecraftWoodenSlabs);
         fileGenerator.generateTags(MINECRAFT, "wooden_pressure_plates", minecraftWoodenPressurePlates);
+        fileGenerator.generateTags(MINECRAFT, "wooden_stairs", minecraftWoodenStairs);
 
         // TODO: Remove this if not needed.  Custom tags can be configurable at a higher level
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
@@ -236,6 +247,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftWoodenButtons = new TagsBuilder(ITEMS);
         TagsBuilder minecraftWoodenSlabs = new TagsBuilder(ITEMS);
         TagsBuilder minecraftWoodenPressurePlates = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftWoodenStairs = new TagsBuilder(ITEMS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : items.entrySet()) {
@@ -303,6 +315,12 @@ public class ResourceGenerator {
                         minecraftWoodenPressurePlates.value(namespace, name, type);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
+                    case STAIRS -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultStairs());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultStairs());
+                        minecraftWoodenStairs.value(namespace, name, type);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
@@ -318,6 +336,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "wooden_buttons", minecraftWoodenButtons);
         fileGenerator.generateTags(MINECRAFT, "wooden_slabs", minecraftWoodenSlabs);
         fileGenerator.generateTags(MINECRAFT, "wooden_pressure_plates", minecraftWoodenPressurePlates);
+        fileGenerator.generateTags(MINECRAFT, "wooden_stairs", minecraftWoodenStairs);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);

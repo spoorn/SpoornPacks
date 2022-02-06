@@ -79,31 +79,19 @@ public class ModelBlockBuilder implements ResourceProvider {
     }
     
     public ModelBlockBuilder defaultFenceGate() {
-        this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
-        );
-        return this;
+        return substitutePlanks();
     }
 
     public ModelBlockBuilder defaultFenceGateOpen() {
-        this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
-        );
-        return this;
+        return substitutePlanks();
     }
 
     public ModelBlockBuilder defaultFenceGateWall() {
-        this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
-        );
-        return this;
+        return substitutePlanks();
     }
 
     public ModelBlockBuilder defaultFenceGateWallOpen() {
-        this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
-        );
-        return this;
+        return substitutePlanks();
     }
 
     public ModelBlockBuilder defaultFenceInventory() {
@@ -125,48 +113,46 @@ public class ModelBlockBuilder implements ResourceProvider {
     }
 
     public ModelBlockBuilder defaultButton() {
-        this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
-        );
-        return this;
+        return substitutePlanks();
     }
 
     public ModelBlockBuilder defaultButtonInventory() {
-        this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
-        );
-        return this;
+        return substitutePlanks();
     }
 
     public ModelBlockBuilder defaultButtonPressed() {
-        this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
-        );
-        return this;
+        return substitutePlanks();
     }
 
     public ModelBlockBuilder defaultSlab() {
-        this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
-        );
-        return this;
+        return substitutePlanks();
     }
 
     public ModelBlockBuilder defaultSlabTop() {
-        this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
-        );
-        return this;
+        return substitutePlanks();
     }
 
     public ModelBlockBuilder defaultPressurePlate() {
-        this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
-        );
-        return this;
+        return substitutePlanks();
     }
 
     public ModelBlockBuilder defaultPressurePlateDown() {
+        return substitutePlanks();
+    }
+
+    public ModelBlockBuilder defaultStairs() {
+        return substitutePlanks();
+    }
+
+    public ModelBlockBuilder defaultStairsInner() {
+        return substitutePlanks();
+    }
+
+    public ModelBlockBuilder defaultStairsOuter() {
+        return substitutePlanks();
+    }
+    
+    private ModelBlockBuilder substitutePlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
