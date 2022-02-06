@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": ${string:1}
+    },
+    "powered=true": {
+      "model": ${string:2}
+    }
+  }
+}

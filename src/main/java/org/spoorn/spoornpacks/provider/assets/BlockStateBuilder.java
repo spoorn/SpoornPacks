@@ -141,6 +141,14 @@ public class BlockStateBuilder implements ResourceProvider {
         return this;
     }
 
+    public BlockStateBuilder defaultPressurePlate() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockWithTypePrefix,
+                this.defaultBlockWithTypePrefix + "_down"
+        );
+        return this;
+    }
+
     public BlockStateBuilder variants() {
         this.state.putObject("variants");
         return this;

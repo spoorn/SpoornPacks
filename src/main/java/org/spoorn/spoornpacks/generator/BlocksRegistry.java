@@ -12,6 +12,7 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.block.SPSaplingBlock;
 import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
+import org.spoorn.spoornpacks.mixin.PressurePlateBlockAccessor;
 import org.spoorn.spoornpacks.mixin.WoodenButtonBlockAccessor;
 
 import java.util.ArrayList;
@@ -108,6 +109,13 @@ public class BlocksRegistry {
 
     public Block registerSlab(String id) {
         Block block = new SlabBlock(FabricBlockSettings.copyOf(Blocks.OAK_SLAB));
+        Identifier identifier = new Identifier(this.modid, id);
+        register.put(identifier, block);
+        return Registry.register(Registry.BLOCK, identifier, block);
+    }
+
+    public Block registerPressurePlate(String id) {
+        Block block = PressurePlateBlockAccessor.create(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE));
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
         return Registry.register(Registry.BLOCK, identifier, block);

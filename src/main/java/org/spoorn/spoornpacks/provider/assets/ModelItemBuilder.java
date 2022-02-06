@@ -79,6 +79,11 @@ public class ModelItemBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelItemBuilder defaultPressurePlate() {
+        parent();
+        return this;
+    }
+
     public ModelItemBuilder parent() {
         parent(defaultBlockWithTypePrefix);
         return this;

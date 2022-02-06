@@ -61,6 +61,7 @@ public class SpoornPacks implements ModInitializer {
                     .addSapling(TreeConfiguredFeatures.OAK).addItem(ItemType.SAPLING)  // You should have your own ConfiguredFeature for trees
                     .addBlock(BlockType.BUTTON).addItem(ItemType.BUTTON)
                     .addBlock(BlockType.SLAB).addItem(ItemType.SLAB)
+                    .addBlock(BlockType.PRESSURE_PLATE).addItem(ItemType.PRESSURE_PLATE)
                     ;
 
             Resource resource = RESOURCE_GENERATOR.generate(rb);
