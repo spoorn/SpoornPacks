@@ -58,7 +58,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         String updatedName = name;
         String typeName = type.getName();
         switch (type) {
-            case LOG, WOOD, PLANKS -> {
+            case LOG, WOOD, PLANKS, FENCE -> {
                 updatedName += "_" + typeName;
                 validateUniqueBlock(updatedName);
             }
@@ -79,7 +79,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         String updatedName = name;
         String typeName = type.getName();
         switch (type) {
-            case LOG, WOOD, PLANKS -> {
+            case LOG, WOOD, PLANKS, FENCE -> {
                 updatedName += "_" + typeName;
                 validateUniqueItem(updatedName);
             }

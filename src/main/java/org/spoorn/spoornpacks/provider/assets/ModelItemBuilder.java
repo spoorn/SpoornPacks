@@ -12,13 +12,13 @@ public class ModelItemBuilder implements ResourceProvider {
     private final String namespace;
     private final String name;
     private final ItemType type;
-    private final String defaultPrefix;
+    private final String defaultBlockWithTypePrefix;
 
     public ModelItemBuilder(String namespace, String name, ItemType type) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
-        this.defaultPrefix = this.namespace + ":" + this.name + "_";
+        this.defaultBlockWithTypePrefix = this.namespace + ":block/" + this.name + "_" + this.type.getName();
     }
 
     @Override
@@ -41,8 +41,13 @@ public class ModelItemBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelItemBuilder defaultFence() {
+        parent(defaultBlockWithTypePrefix + "_inventory");
+        return this;
+    }
+
     public ModelItemBuilder parent() {
-        parent(namespace + ":block/" + name + "_" + type.getName());
+        parent(defaultBlockWithTypePrefix);
         return this;
     }
 

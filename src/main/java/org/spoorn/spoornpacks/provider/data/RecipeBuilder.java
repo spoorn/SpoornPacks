@@ -23,7 +23,7 @@ public class RecipeBuilder implements ResourceProvider {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
-        this.defaultPrefix = this.namespace + ":" + this.name + "_";
+        this.defaultPrefix = this.namespace + ":" + this.name;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class RecipeBuilder implements ResourceProvider {
         group("bark");
         pattern(List.of("##", "##"));
         key("#", Key.builder()
-                .item(this.defaultPrefix + BlockType.LOG.getName())
+                .item(this.defaultPrefix + "_" + BlockType.LOG.getName())
                 .build());
         result(3);
         return this;
@@ -46,9 +46,23 @@ public class RecipeBuilder implements ResourceProvider {
         craftingShapelessType();
         group("planks");
         addIngredient(Ingredient.builder()
-                .tag(this.defaultPrefix + BlockType.LOG.getName() + "s")
+                .tag(this.defaultPrefix + "_" + BlockType.LOG.getName() + "s")
                 .build());
         result(4);
+        return this;
+    }
+
+    public RecipeBuilder defaultFence() {
+        craftingShapedType();
+        group("wooden_fence");
+        pattern(List.of("W#W", "W#W"));
+        key("W", Key.builder()
+                .item(this.defaultPrefix + "_" + BlockType.PLANKS.getName())
+                .build());
+        key("#", Key.builder()
+                .item("minecraft:stick")
+                .build());
+        result(3);
         return this;
     }
 
@@ -85,7 +99,7 @@ public class RecipeBuilder implements ResourceProvider {
 
     public RecipeBuilder result(int count) {
         this.state.with("result")
-                .put("item", this.namespace + ":" + this.name + "_" + this.type)
+                .put("item", defaultPrefix + "_" + this.type)
                 .put("count", count);
         return this;
     }

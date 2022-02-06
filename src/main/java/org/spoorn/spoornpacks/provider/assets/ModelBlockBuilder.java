@@ -12,13 +12,15 @@ public class ModelBlockBuilder implements ResourceProvider {
     private final String namespace;
     private final String name;
     private final BlockType type;
-    private final String defaultPrefix;
+    private final String defaultBlockPrefix;
+    private final String defaultBlockWithTypePrefix;
 
     public ModelBlockBuilder(String namespace, String name, BlockType type) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
-        this.defaultPrefix = this.namespace + ":block/" + this.name + "_";
+        this.defaultBlockPrefix = this.namespace + ":block/" + this.name;
+        this.defaultBlockWithTypePrefix = defaultBlockPrefix + "_" + this.type.getName();
     }
 
     @Override
@@ -47,6 +49,24 @@ public class ModelBlockBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelBlockBuilder defaultFenceInventory() {
+        parent("minecraft:block/fence_inventory");
+        texture(defaultBlockPrefix + "_" + BlockType.PLANKS.getName());
+        return this;
+    }
+    
+    public ModelBlockBuilder defaultFencePost() {
+        parent("minecraft:block/fence_post");
+        texture(defaultBlockPrefix + "_" + BlockType.PLANKS.getName());
+        return this;
+    }
+
+    public ModelBlockBuilder defaultFenceSide() {
+        parent("minecraft:block/fence_side");
+        texture(defaultBlockPrefix + "_" + BlockType.PLANKS.getName());
+        return this;
+    }
+
     public ModelBlockBuilder parentCubeColumn() {
         parent("minecraft:block/cube_column");
         return this;
@@ -68,11 +88,11 @@ public class ModelBlockBuilder implements ResourceProvider {
     }
 
     public ModelBlockBuilder endWithTypeSuffix() {
-        return end(defaultPrefix + this.type.getName());
+        return end(this.defaultBlockWithTypePrefix);
     }
 
     public ModelBlockBuilder endWithSuffix(String suffix) {
-        return end(this.namespace + ":block/" + this.name + suffix);
+        return end(this.defaultBlockPrefix + suffix);
     }
 
     public ModelBlockBuilder end(String end) {
@@ -82,11 +102,11 @@ public class ModelBlockBuilder implements ResourceProvider {
     }
 
     public ModelBlockBuilder sideWithTypeSuffix() {
-        return side(defaultPrefix + this.type.getName());
+        return side(this.defaultBlockWithTypePrefix);
     }
 
     public ModelBlockBuilder sideWithSuffix(String suffix) {
-        return side(this.namespace + ":block/" + this.name + suffix);
+        return side(this.defaultBlockPrefix + suffix);
     }
 
     public ModelBlockBuilder side(String side) {
@@ -96,12 +116,17 @@ public class ModelBlockBuilder implements ResourceProvider {
     }
 
     public ModelBlockBuilder all() {
-        this.state.with("textures").put("all", defaultPrefix + this.type.getName());
+        this.state.with("textures").put("all", this.defaultBlockWithTypePrefix);
         return this;
     }
 
     public ModelBlockBuilder particle() {
-        this.state.with("textures").put("particle", defaultPrefix + this.type.getName());
+        this.state.with("textures").put("particle", this.defaultBlockWithTypePrefix);
+        return this;
+    }
+
+    public ModelBlockBuilder texture(String texture) {
+        this.state.with("textures").put("texture", texture);
         return this;
     }
 }

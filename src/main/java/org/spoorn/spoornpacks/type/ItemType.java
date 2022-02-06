@@ -3,7 +3,8 @@ package org.spoorn.spoornpacks.type;
 public enum ItemType {
     LOG("log"),
     WOOD("wood"),
-    PLANKS("planks");
+    PLANKS("planks"),
+    FENCE("fence");
 
     private final String name;
 

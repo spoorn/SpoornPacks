@@ -16,12 +16,14 @@ public class BlockLootTableBuilder implements ResourceProvider {
     private final String name;
     private final BlockType type;
     private final String defaultPrefix;
+    private final String defaultPrefixWithType;
 
     public BlockLootTableBuilder(String namespace, String name, BlockType type) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
-        this.defaultPrefix = this.namespace + ":" + this.name + "_";
+        this.defaultPrefix = this.namespace + ":" + this.name;
+        this.defaultPrefixWithType = this.defaultPrefix + "_" + type.getName();
     }
 
     @Override
@@ -38,6 +40,10 @@ public class BlockLootTableBuilder implements ResourceProvider {
     }
 
     public BlockLootTableBuilder defaultPlanks() {
+        return defaultSurvivesExplosion();
+    }
+    
+    public BlockLootTableBuilder defaultFence() {
         return defaultSurvivesExplosion();
     }
 
@@ -69,7 +75,7 @@ public class BlockLootTableBuilder implements ResourceProvider {
                 .entries(List.of(
                         LootTableParts.Entry.builder()
                                 .type("minecraft:item")
-                                .name(namespace + ":" + name + "_" + type.getName())
+                                .name(defaultPrefixWithType)
                                 .build()
                 )).conditions(List.of(
                         survivesExplosionCondition()

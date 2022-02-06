@@ -54,6 +54,8 @@ public class SpoornPacks implements ModInitializer {
                     .addItem(ItemType.WOOD)
                     .addBlock(BlockType.PLANKS)
                     .addItem(ItemType.PLANKS)
+                    .addBlock(BlockType.FENCE)
+                    .addItem(ItemType.FENCE)
                     ;
 
             Resource resource = RESOURCE_GENERATOR.generate(rb);

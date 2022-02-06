@@ -9,10 +9,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BlocksRegistry {
+
+    public static final List<Block> SAPLINGS = new ArrayList<>();
+    public static final List<Block> POTTED_BLOCKS = new ArrayList<>();
+    public static final List<Block> DOOR_BLOCKS = new ArrayList<>();
+    public static final List<Block> FENCES = new ArrayList<>();
+    public static final List<Block> FENCE_GATES = new ArrayList<>();
+    public static final List<Block> TRAPDOORS = new ArrayList<>();
 
     private final String modid;
     final Map<Identifier, Block> register = new HashMap<>();
@@ -39,6 +48,14 @@ public class BlocksRegistry {
         Block block = new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
+        return Registry.register(Registry.BLOCK, identifier, block);
+    }
+
+    public Block registerFence(String id) {
+        Block block = new FenceBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE));
+        Identifier identifier = new Identifier(this.modid, id);
+        register.put(identifier, block);
+        FENCES.add(block);
         return Registry.register(Registry.BLOCK, identifier, block);
     }
 

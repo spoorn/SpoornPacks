@@ -26,10 +26,11 @@ public class FileGenerator {
     private static final String JSON_SUFFIX = ".json";
 
     private final String id;
+    private final boolean overwrite;
 
-    // TODO: Allow force rewrites
-    FileGenerator(String id) {
+    FileGenerator(String id, boolean overwrite) {
         this.id = id;
+        this.overwrite = true;
     }
 
     public boolean generateBlockStates(String namespace, String name, BlockStateBuilder builder) throws IOException {
@@ -97,8 +98,12 @@ public class FileGenerator {
 
         // If file already exists, don't modify it
         if (Files.exists(file)) {
-            log.info("File already exists at {}", file.toString());
-            return false;
+            if (overwrite) {
+                log.info("Overwriting file at {}", file.toString());
+            } else {
+                log.info("File already exists at, not overwriting at {}", file.toString());
+                return false;
+            }
         }
 
         Files.writeString(file, OBJECT_MAPPER.writer(PRETTY_PRINTER).writeValueAsString(resourceProvider.getJson()), StandardCharsets.UTF_8);

@@ -35,9 +35,9 @@ public class ResourceGenerator {
     private final BlocksRegistry blocksRegistry;
     private final ItemsRegistry itemsRegistry;
 
-    public ResourceGenerator(String modid) {
+    public ResourceGenerator(String modid, boolean overwrite) {
         this.modid = modid;
-        this.fileGenerator = new FileGenerator(modid);
+        this.fileGenerator = new FileGenerator(modid, overwrite);
         this.blocksRegistry = new BlocksRegistry(modid);
         this.itemsRegistry = new ItemsRegistry(modid);
     }
@@ -75,6 +75,7 @@ public class ResourceGenerator {
     private void handleBlocks(String namespace, Map<String, List<String>> blocks) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftWoodenFences = new TagsBuilder(BLOCKS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : blocks.entrySet()) {
@@ -105,6 +106,15 @@ public class ResourceGenerator {
                         minecraftPlanks.value(namespace, name, type);
                         blocksRegistry.registerPlanks(filename);
                     }
+                    case FENCE -> {
+                        fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultFence());
+                        fileGenerator.generateModelBlock(namespace, filename + "_inventory", new ModelBlockBuilder(namespace, name, type).defaultFenceInventory());
+                        fileGenerator.generateModelBlock(namespace, filename + "_post", new ModelBlockBuilder(namespace, name, type).defaultFencePost());
+                        fileGenerator.generateModelBlock(namespace, filename + "_side", new ModelBlockBuilder(namespace, name, type).defaultFenceSide());
+                        fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultFence());
+                        minecraftWoodenFences.value(namespace, name, type);
+                        blocksRegistry.registerFence(filename);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
@@ -113,6 +123,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "logs", minecraftLogs);
         fileGenerator.generateTags(MINECRAFT, "logs_that_burn", minecraftLogs);
         fileGenerator.generateTags(MINECRAFT, "planks", minecraftPlanks);
+        fileGenerator.generateTags(MINECRAFT, "wooden_fences", minecraftWoodenFences);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(BLOCKS);
@@ -126,6 +137,7 @@ public class ResourceGenerator {
     private void handleItems(String namespace, Map<String, List<String>> items) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(ITEMS);
         TagsBuilder minecraftPlanks = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftWoodenFences = new TagsBuilder(ITEMS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : items.entrySet()) {
@@ -152,6 +164,12 @@ public class ResourceGenerator {
                         minecraftPlanks.value(namespace, name, type);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
+                    case FENCE -> {
+                        fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultFence());
+                        fileGenerator.generateRecipe(namespace, filename, new RecipeBuilder(namespace, name, type.getName()).defaultFence());
+                        minecraftWoodenFences.value(namespace, name, type);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
@@ -160,6 +178,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "logs", minecraftLogs);
         fileGenerator.generateTags(MINECRAFT, "logs_that_burn", minecraftLogs);
         fileGenerator.generateTags(MINECRAFT, "planks", minecraftPlanks);
+        fileGenerator.generateTags(MINECRAFT, "wooden_fences", minecraftWoodenFences);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);
