@@ -18,6 +18,8 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     private final Map<String, List<String>> blocks = new HashMap<>();
     @Getter
     private final Map<String, List<String>> items = new HashMap<>();
+    @Getter
+    private final Map<String, String> leavesToSaplingOverrides = new HashMap<>();
 
     private final Set<String> blockIds = new HashSet<>();
     private final Set<String> itemIds = new HashSet<>();
@@ -50,6 +52,25 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     @Override
     public ResourceBuilder addItem(ItemType type, String name) throws DuplicateNameException {
         registerItem(type, name);
+        return this;
+    }
+
+    @Override
+    public ResourceBuilder addLeavesWithSaplingOverride(BlockType type, String saplingName) throws DuplicateNameException {
+        if (type != BlockType.LEAVES) {
+            throw new IllegalArgumentException("Can only override saplings for BlockType=" + BlockType.LEAVES);
+        }
+        addLeavesWithSaplingOverride(type, this.defaultName, saplingName);
+        return this;
+    }
+
+    @Override
+    public ResourceBuilder addLeavesWithSaplingOverride(BlockType type, String name, String saplingName) throws DuplicateNameException {
+        if (type != BlockType.LEAVES) {
+            throw new IllegalArgumentException("Can only override saplings for BlockType=" + BlockType.LEAVES);
+        }
+        registerBlock(type, name);
+        this.leavesToSaplingOverrides.put(name, saplingName);
         return this;
     }
 

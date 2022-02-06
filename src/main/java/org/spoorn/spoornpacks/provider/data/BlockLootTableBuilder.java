@@ -65,6 +65,14 @@ public class BlockLootTableBuilder implements ResourceProvider {
         return this;
     }
 
+    public BlockLootTableBuilder leavesWithSapling(String saplingName) {
+        this.state = this.jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultPrefixWithType,
+                this.namespace + ":" + saplingName + "_" + BlockType.SAPLING.getName()
+        );
+        return this;
+    }
+
     public BlockLootTableBuilder typeBlock() {
         this.state.put("type", "minecraft:block");
         return this;

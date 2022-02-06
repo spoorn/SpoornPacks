@@ -13,4 +13,11 @@ public interface ResourceBuilder {
     ResourceBuilder addItem(ItemType type) throws DuplicateNameException;
 
     ResourceBuilder addItem(ItemType type, String name) throws DuplicateNameException;
+    
+    
+    // More customizable APIs
+
+    // TODO: Support setting sapling namespace as well
+    ResourceBuilder addLeavesWithSaplingOverride(BlockType type, String saplingName) throws DuplicateNameException;
+    ResourceBuilder addLeavesWithSaplingOverride(BlockType type, String name, String saplingName) throws DuplicateNameException;
 }

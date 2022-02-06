@@ -61,7 +61,7 @@ public class ResourceGenerator {
         // Blocks
         final Map<String, List<String>> blocks = drb.getBlocks();
         try {
-            handleBlocks(drb.getNamespace(), blocks);
+            handleBlocks(drb.getNamespace(), blocks, drb.getLeavesToSaplingOverrides());
         } catch (IOException e) {
             log.error("Could not generate resources for blocks", e);
             throw new RuntimeException(e);
@@ -80,7 +80,7 @@ public class ResourceGenerator {
         return gen;
     }
 
-    private void handleBlocks(String namespace, Map<String, List<String>> blocks) throws IOException {
+    private void handleBlocks(String namespace, Map<String, List<String>> blocks, Map<String, String> leavesToSaplingOverrides) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftLeaves = new TagsBuilder(BLOCKS);
@@ -121,6 +121,10 @@ public class ResourceGenerator {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultLeaves());
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultLeaves());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultLeaves());
+                        if (leavesToSaplingOverrides.containsKey(name)) {
+                            fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type)
+                                    .leavesWithSapling(leavesToSaplingOverrides.get(name)));
+                        }
                         minecraftLeaves.value(namespace, name, type);
                         hoeMineable.value(namespace, name, type);
                         blocksRegistry.registerLeaves(filename);

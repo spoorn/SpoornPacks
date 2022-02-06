@@ -55,6 +55,7 @@ public class SpoornPacks implements ModInitializer {
                     .addBlock(BlockType.FENCE).addItem(ItemType.FENCE)
                     .addBlock(BlockType.FENCE_GATE).addItem(ItemType.FENCE_GATE)
                     .addBlock(BlockType.LEAVES).addItem(ItemType.LEAVES)
+                    .addLeavesWithSaplingOverride(BlockType.LEAVES, "dark_pink_blossom", defaultName).addItem(ItemType.LEAVES, "dark_pink_blossom")
                     ;
 
             Resource resource = RESOURCE_GENERATOR.generate(rb);
