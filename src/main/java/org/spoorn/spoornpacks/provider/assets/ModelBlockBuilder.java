@@ -65,42 +65,42 @@ public class ModelBlockBuilder implements ResourceProvider {
     }
 
     public ModelBlockBuilder defaultSapling() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
             this.defaultBlockWithTypePrefix        
         );
         return this;
     }
     
     public ModelBlockBuilder defaultPottedSapling() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockWithTypePrefix
         );
         return this;
     }
     
     public ModelBlockBuilder defaultFenceGate() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;
     }
 
     public ModelBlockBuilder defaultFenceGateOpen() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;
     }
 
     public ModelBlockBuilder defaultFenceGateWall() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;
     }
 
     public ModelBlockBuilder defaultFenceGateWallOpen() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;
@@ -125,49 +125,49 @@ public class ModelBlockBuilder implements ResourceProvider {
     }
 
     public ModelBlockBuilder defaultButton() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;
     }
 
     public ModelBlockBuilder defaultButtonInventory() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;
     }
 
     public ModelBlockBuilder defaultButtonPressed() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;
     }
 
     public ModelBlockBuilder defaultSlab() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;
     }
 
     public ModelBlockBuilder defaultSlabTop() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;
     }
 
     public ModelBlockBuilder defaultPressurePlate() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;
     }
 
     public ModelBlockBuilder defaultPressurePlateDown() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
         );
         return this;

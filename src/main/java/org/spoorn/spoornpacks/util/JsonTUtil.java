@@ -1,5 +1,6 @@
 package org.spoorn.spoornpacks.util;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.spoorn.spoornpacks.SpoornPacks;
 import org.spoorn.spoornpacks.jsont.JsonT;
 
@@ -14,6 +15,14 @@ public class JsonTUtil {
     
     public JsonTUtil() {
 
+    }
+
+    /**
+     * Avoids the checked IOException that JsonT throws, and defaults to ObjectNode which is what our
+     * {@link org.spoorn.spoornpacks.provider.ResourceProvider}s use.
+     */
+    public ObjectNode substituteToObjectNode(String resourcePath, String... args) {
+        return substitute(resourcePath, ObjectNode.class, args);
     }
 
     /**

@@ -111,11 +111,7 @@ public class BlockStateBuilder implements ResourceProvider {
     }
     
     public BlockStateBuilder defaultFenceGate() {
-        /*facingInWallOpen("east", false, false, this.defaultBlockWithTypePrefix);
-        facingInWallOpen("east", false, true, this.defaultBlockWithTypePrefix + "_open");
-        facingInWallOpen("east", false, false, this.defaultBlockWithTypePrefix);
-        facingInWallOpen("east", false, false, this.defaultBlockWithTypePrefix);*/
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class, 
+        this.state = jsonTUtil.substituteToObjectNode(templatePath, 
                 defaultBlockWithTypePrefix,
                 defaultBlockWithTypePrefix + "_open",
                 defaultBlockWithTypePrefix + "_wall",
@@ -125,7 +121,7 @@ public class BlockStateBuilder implements ResourceProvider {
     }
     
     public BlockStateBuilder defaultButton() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockWithTypePrefix,
                 this.defaultBlockWithTypePrefix + "_pressed"
         );
@@ -133,7 +129,7 @@ public class BlockStateBuilder implements ResourceProvider {
     }
 
     public BlockStateBuilder defaultSlab() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockWithTypePrefix,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName(),
                 this.defaultBlockWithTypePrefix + "_top"
@@ -142,15 +138,10 @@ public class BlockStateBuilder implements ResourceProvider {
     }
 
     public BlockStateBuilder defaultPressurePlate() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockWithTypePrefix,
                 this.defaultBlockWithTypePrefix + "_down"
         );
-        return this;
-    }
-
-    public BlockStateBuilder variants() {
-        this.state.putObject("variants");
         return this;
     }
 
@@ -182,24 +173,6 @@ public class BlockStateBuilder implements ResourceProvider {
 
     public BlockStateBuilder addMultipart(Multipart multipart) {
         this.state.withArray("multipart").addPOJO(multipart);
-        return this;
-    }
-
-    public BlockStateBuilder facingInWallOpen(String facing, boolean inWall, boolean open, String model) {
-        ObjectNode nestedNode = this.state.with("variants")
-                .with("facing=" + facing + ",in_wall=" + inWall + ",open=" + open);
-        nestedNode.put("uvlock", true);
-        if ("east".equals(facing)) {
-            nestedNode.put("y", 270);
-        } else if ("north".equals(facing)) {
-            nestedNode.put("y", 180);
-        } else if ("west".equals(facing)) {
-            nestedNode.put("y", 90);
-        } else if (!"south".equals(facing)) {
-            throw new IllegalArgumentException("facing=" + facing + " is not supported for blockstates/ model");
-        }
-
-        nestedNode.put("model", model);
         return this;
     }
 }

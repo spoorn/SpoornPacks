@@ -76,7 +76,7 @@ public class RecipeBuilder implements ResourceProvider {
     }
     
     public RecipeBuilder defaultFenceGate() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefix + "_" + BlockType.PLANKS.getName(),
                 this.defaultPrefixWithType
         );
@@ -84,7 +84,7 @@ public class RecipeBuilder implements ResourceProvider {
     }
 
     public RecipeBuilder defaultButton() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefix + "_" + BlockType.PLANKS.getName(),
                 this.defaultPrefixWithType
         );
@@ -92,7 +92,7 @@ public class RecipeBuilder implements ResourceProvider {
     }
 
     public RecipeBuilder defaultSlab() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefix + "_" + BlockType.PLANKS.getName(),
                 this.defaultPrefixWithType
         );
@@ -100,7 +100,7 @@ public class RecipeBuilder implements ResourceProvider {
     }
 
     public RecipeBuilder defaultPressurePlate() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefix + "_" + BlockType.PLANKS.getName(),
                 this.defaultPrefixWithType
         );

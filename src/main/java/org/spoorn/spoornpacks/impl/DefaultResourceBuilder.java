@@ -36,6 +36,22 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     }
 
     @Override
+    public ResourceBuilder addBlocks(BlockType... types) throws DuplicateNameException {
+        for (BlockType type : types) {
+            addBlock(type);
+        }
+        return this;
+    }
+
+    @Override
+    public ResourceBuilder addItems(ItemType... types) throws DuplicateNameException {
+        for (ItemType type : types) {
+            addItem(type);
+        }
+        return this;
+    }
+
+    @Override
     public ResourceBuilder addBlock(BlockType type) throws DuplicateNameException {
         registerBlock(type, this.defaultName);
         return this;

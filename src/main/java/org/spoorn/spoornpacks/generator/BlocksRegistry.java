@@ -38,23 +38,17 @@ public class BlocksRegistry {
 
     public Block registerLog(String id) {
         Block block = new PillarBlock(FabricBlockSettings.of(Material.WOOD).strength(2.0f).sounds(BlockSoundGroup.WOOD));
-        Identifier identifier = new Identifier(this.modid, id);
-        register.put(identifier, block);
-        return Registry.register(Registry.BLOCK, identifier, block);
+        return registerBlock(id, block);
     }
 
     public Block registerWood(String id) {
         Block block = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD));
-        Identifier identifier = new Identifier(this.modid, id);
-        register.put(identifier, block);
-        return Registry.register(Registry.BLOCK, identifier, block);
+        return registerBlock(id, block);
     }
 
     public Block registerPlanks(String id) {
         Block block = new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
-        Identifier identifier = new Identifier(this.modid, id);
-        register.put(identifier, block);
-        return Registry.register(Registry.BLOCK, identifier, block);
+        return registerBlock(id, block);
     }
 
     // TODO: Allow creating leaves of different mapcolors
@@ -63,59 +57,49 @@ public class BlocksRegistry {
                 .sounds(BlockSoundGroup.GRASS).nonOpaque().allowsSpawning(SPBlocks::canSpawnOnLeaves)
                 .suffocates((state, world, pos) -> false).blockVision((state, world, pos) -> false));*/
         Block block = new LeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES));
-        Identifier identifier = new Identifier(this.modid, id);
-        register.put(identifier, block);
-        return Registry.register(Registry.BLOCK, identifier, block);
+        return registerBlock(id, block);
     }
 
     public Block registerSapling(String id, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) {
-        Block saplingBlock = new SPSaplingBlock(new SPSaplingGenerator(configuredFeature), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING));
-        Identifier identifier = new Identifier(this.modid, id);
-        register.put(identifier, saplingBlock);
-        SAPLINGS.add(saplingBlock);
-        registerFlowerPot("potted_" + id, saplingBlock);
-        return Registry.register(Registry.BLOCK, identifier, saplingBlock);
+        Block block = new SPSaplingBlock(new SPSaplingGenerator(configuredFeature), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING));
+        SAPLINGS.add(block);
+        registerFlowerPot("potted_" + id, block);
+        return registerBlock(id, block);
     }
 
     public void registerFlowerPot(String id, Block saplingBlock) {
         Block block = new FlowerPotBlock(saplingBlock, FabricBlockSettings.copyOf(Blocks.POTTED_OAK_SAPLING));
-        Identifier identifier = new Identifier(this.modid, id);
-        register.put(identifier, block);
-        POTTED_BLOCKS.add(Registry.register(Registry.BLOCK, identifier, block));
+        POTTED_BLOCKS.add(registerBlock(id, block));
     }
 
     public Block registerFence(String id) {
         Block block = new FenceBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE));
-        Identifier identifier = new Identifier(this.modid, id);
-        register.put(identifier, block);
         FENCES.add(block);
-        return Registry.register(Registry.BLOCK, identifier, block);
+        return registerBlock(id, block);
     }
 
     public Block registerFenceGate(String id) {
         Block block = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
-        Identifier identifier = new Identifier(this.modid, id);
-        register.put(identifier, block);
         FENCE_GATES.add(block);
-        return Registry.register(Registry.BLOCK, identifier, block);
+        return registerBlock(id, block);
     }
 
     public Block registerButton(String id) {
         Block block = WoodenButtonBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON));
-        Identifier identifier = new Identifier(this.modid, id);
-        register.put(identifier, block);
-        return Registry.register(Registry.BLOCK, identifier, block);
+        return registerBlock(id, block);
     }
 
     public Block registerSlab(String id) {
         Block block = new SlabBlock(FabricBlockSettings.copyOf(Blocks.OAK_SLAB));
-        Identifier identifier = new Identifier(this.modid, id);
-        register.put(identifier, block);
-        return Registry.register(Registry.BLOCK, identifier, block);
+        return registerBlock(id, block);
     }
 
     public Block registerPressurePlate(String id) {
         Block block = PressurePlateBlockAccessor.create(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE));
+        return registerBlock(id, block);
+    }
+    
+    private Block registerBlock(String id, Block block) {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
         return Registry.register(Registry.BLOCK, identifier, block);

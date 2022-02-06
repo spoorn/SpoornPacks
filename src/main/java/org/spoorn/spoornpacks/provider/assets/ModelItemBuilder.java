@@ -53,7 +53,7 @@ public class ModelItemBuilder implements ResourceProvider {
     }
 
     public ModelItemBuilder defaultSapling() {
-        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockWithTypePrefix      
         );
         return this;

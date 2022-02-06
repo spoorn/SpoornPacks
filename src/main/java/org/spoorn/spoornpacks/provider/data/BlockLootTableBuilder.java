@@ -57,7 +57,7 @@ public class BlockLootTableBuilder implements ResourceProvider {
     }
     
     public BlockLootTableBuilder defaultLeaves() {
-        this.state = this.jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = this.jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefixWithType,
                 this.defaultPrefix + "_" + BlockType.SAPLING.getName()
         );
@@ -65,7 +65,7 @@ public class BlockLootTableBuilder implements ResourceProvider {
     }
 
     public BlockLootTableBuilder leavesWithSapling(String saplingName) {
-        this.state = this.jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = this.jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefixWithType,
                 this.namespace + ":" + saplingName + "_" + BlockType.SAPLING.getName()
         );
@@ -77,7 +77,7 @@ public class BlockLootTableBuilder implements ResourceProvider {
     }
     
     public BlockLootTableBuilder defaultPottedSapling() {
-        this.state = this.jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = this.jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefixWithType
         );
         return this;
@@ -88,7 +88,7 @@ public class BlockLootTableBuilder implements ResourceProvider {
     }
 
     public BlockLootTableBuilder defaultSlab() {
-        this.state = this.jsonTUtil.substitute(templatePath, ObjectNode.class,
+        this.state = this.jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefixWithType
         );
         return this;
