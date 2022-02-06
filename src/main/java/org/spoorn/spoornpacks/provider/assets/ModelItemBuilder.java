@@ -69,6 +69,11 @@ public class ModelItemBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelItemBuilder defaultButton() {
+        parent(this.defaultBlockWithTypePrefix + "_inventory");
+        return this;
+    }
+
     public ModelItemBuilder parent() {
         parent(defaultBlockWithTypePrefix);
         return this;

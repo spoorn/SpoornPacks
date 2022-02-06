@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": ${string:1}
+    },
+    "type=double": {
+      "model": ${string:2}
+    },
+    "type=top": {
+      "model": "${string:3}
+    }
+  }
+}

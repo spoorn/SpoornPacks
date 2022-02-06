@@ -120,7 +120,15 @@ public class BlockStateBuilder implements ResourceProvider {
                 defaultBlockWithTypePrefix + "_open",
                 defaultBlockWithTypePrefix + "_wall",
                 defaultBlockWithTypePrefix + "_wall_open"
-                );
+        );
+        return this;
+    }
+    
+    public BlockStateBuilder defaultButton() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockWithTypePrefix,
+                this.defaultBlockWithTypePrefix + "_pressed"
+        );
         return this;
     }
 

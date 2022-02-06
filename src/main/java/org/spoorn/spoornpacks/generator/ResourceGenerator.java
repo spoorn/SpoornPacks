@@ -94,6 +94,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftFenceGates = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftFlowerPots = new TagsBuilder(BLOCKS);
         TagsBuilder hoeMineable = new TagsBuilder(BLOCKS + "/mineable");
+        TagsBuilder minecraftWoodenButtons = new TagsBuilder(BLOCKS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : blocks.entrySet()) {
@@ -161,7 +162,7 @@ public class ResourceGenerator {
                         blocksRegistry.registerFence(filename);
                     }
                     case FENCE_GATE -> {
-                        fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type, BLOCK_STATES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX).defaultFenceGate());
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultFenceGate());
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultFenceGate());
                         fileGenerator.generateModelBlock(namespace, filename + "_open", newModelBlockBuilder(namespace, name, type, type.getName() + "_open").defaultFenceGateOpen());
                         fileGenerator.generateModelBlock(namespace, filename + "_wall", newModelBlockBuilder(namespace, name, type, type.getName() + "_wall").defaultFenceGateWall());
@@ -169,6 +170,15 @@ public class ResourceGenerator {
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultFenceGate());
                         minecraftFenceGates.value(namespace, name, type);
                         blocksRegistry.registerFenceGate(filename);
+                    }
+                    case BUTTON -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultButton());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultButton());
+                        fileGenerator.generateModelBlock(namespace, filename + "_inventory", newModelBlockBuilder(namespace, name, type, type.getName() + "_inventory").defaultButton());
+                        fileGenerator.generateModelBlock(namespace, filename + "_pressed", newModelBlockBuilder(namespace, name, type, type.getName() + "_pressed").defaultButton());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultButton());
+                        minecraftWoodenButtons.value(namespace, name, type);
+                        blocksRegistry.registerButton(filename);
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
@@ -184,6 +194,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "saplings", minecraftSaplings);
         fileGenerator.generateTags(MINECRAFT, "flower_pots", minecraftFlowerPots);
         fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
+        fileGenerator.generateTags(MINECRAFT, "wooden_buttons", minecraftWoodenButtons);
 
         // TODO: Remove this if not needed.  Custom tags can be configurable at a higher level
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
@@ -202,6 +213,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftSaplings = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenFences = new TagsBuilder(ITEMS);
         TagsBuilder minecraftFenceGates = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftWoodenButtons = new TagsBuilder(BLOCKS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : items.entrySet()) {
@@ -243,10 +255,18 @@ public class ResourceGenerator {
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultFence());
                         minecraftWoodenFences.value(namespace, name, type);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
-                    } case FENCE_GATE -> {
+                    } 
+                    case FENCE_GATE -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultFenceGate());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultFenceGate());
                         minecraftFenceGates.value(namespace, name, type);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
+                    }
+                    case BUTTON -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultButton());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultButton());
+                        // TODO: allow specifying if button is wooden or not
+                        minecraftWoodenButtons.value(namespace, name, type);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
@@ -261,6 +281,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "fence_gates", minecraftFenceGates);
         fileGenerator.generateTags(MINECRAFT, "leaves", minecraftLeaves);
         fileGenerator.generateTags(MINECRAFT, "saplings", minecraftSaplings);
+        fileGenerator.generateTags(MINECRAFT, "wooden_buttons", minecraftWoodenButtons);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);

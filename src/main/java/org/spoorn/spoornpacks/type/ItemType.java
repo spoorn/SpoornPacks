@@ -7,7 +7,8 @@ public enum ItemType {
     LEAVES("leaves"),
     SAPLING("sapling"),
     FENCE("fence"),
-    FENCE_GATE("fence_gate");
+    FENCE_GATE("fence_gate"),
+    BUTTON("button");
 
     private final String name;
 

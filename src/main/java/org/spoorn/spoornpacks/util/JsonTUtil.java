@@ -23,7 +23,7 @@ public class JsonTUtil {
         try {
             return jsonT.substitute(resourcePath, clazz, args);
         } catch (IOException e) {
-            throw new RuntimeException("Could not generate substitution Json for resource at path " + resourcePath);
+            throw new RuntimeException("Could not generate substitution Json for resource at path " + resourcePath, e);
         }
     }
 }

@@ -4,7 +4,8 @@
   "package": "org.spoorn.spoornpacks.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ResourcePackManagerMixin"
+    "ResourcePackManagerMixin",
+    "WoodenButtonBlockAccessor"
   ],
   "client": [
   ],

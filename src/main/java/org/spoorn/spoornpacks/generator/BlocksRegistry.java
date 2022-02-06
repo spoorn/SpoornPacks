@@ -12,6 +12,7 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.block.SPSaplingBlock;
 import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
+import org.spoorn.spoornpacks.mixin.WoodenButtonBlockAccessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,6 +96,13 @@ public class BlocksRegistry {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
         FENCE_GATES.add(block);
+        return Registry.register(Registry.BLOCK, identifier, block);
+    }
+
+    public Block registerButton(String id) {
+        Block block = WoodenButtonBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON));
+        Identifier identifier = new Identifier(this.modid, id);
+        register.put(identifier, block);
         return Registry.register(Registry.BLOCK, identifier, block);
     }
 

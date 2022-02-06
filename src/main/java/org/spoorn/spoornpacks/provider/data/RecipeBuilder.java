@@ -21,6 +21,7 @@ public class RecipeBuilder implements ResourceProvider {
     private final String name;
     private final String type;
     private final String defaultPrefix;
+    private final String defaultPrefixWithType;
     private final String templatePath;
 
     private final JsonTUtil jsonTUtil = new JsonTUtil();
@@ -30,6 +31,7 @@ public class RecipeBuilder implements ResourceProvider {
         this.name = name;
         this.type = type;
         this.defaultPrefix = this.namespace + ":" + this.name;
+        this.defaultPrefixWithType = this.defaultPrefix + "_" + this.type;
         this.templatePath = templatePath;
     }
 
@@ -76,7 +78,15 @@ public class RecipeBuilder implements ResourceProvider {
     public RecipeBuilder defaultFenceGate() {
         this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
                 this.defaultPrefix + "_" + BlockType.PLANKS.getName(),
-                this.defaultPrefix + "_" + this.type
+                this.defaultPrefixWithType
+        );
+        return this;
+    }
+
+    public RecipeBuilder defaultButton() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultPrefix + "_" + BlockType.PLANKS.getName(),
+                this.defaultPrefixWithType
         );
         return this;
     }
