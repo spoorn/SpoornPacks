@@ -4,7 +4,8 @@ public enum ItemType {
     LOG("log"),
     WOOD("wood"),
     PLANKS("planks"),
-    FENCE("fence");
+    FENCE("fence"),
+    FENCE_GATE("fence_gate");
 
     private final String name;
 

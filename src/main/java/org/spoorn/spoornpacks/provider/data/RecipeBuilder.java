@@ -3,6 +3,7 @@ package org.spoorn.spoornpacks.provider.data;
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.provider.data.RecipeParts.Ingredient;
 import org.spoorn.spoornpacks.provider.data.RecipeParts.Key;
@@ -18,12 +19,16 @@ public class RecipeBuilder implements ResourceProvider {
     private final String name;
     private final String type;
     private final String defaultPrefix;
+    private final String templatePath;
 
-    public RecipeBuilder(String namespace, String name, String type) {
+    private final JsonT jsonT = new JsonT();
+
+    public RecipeBuilder(String namespace, String name, String type, String templatePath) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
         this.defaultPrefix = this.namespace + ":" + this.name;
+        this.templatePath = templatePath;
     }
 
     @Override

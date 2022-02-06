@@ -57,13 +57,15 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         validateName(name);
         String updatedName = name;
         String typeName = type.getName();
-        switch (type) {
-            case LOG, WOOD, PLANKS, FENCE -> {
+        updatedName += "_" + typeName;
+        validateUniqueBlock(updatedName);
+        /*switch (type) {
+            case LOG, WOOD, PLANKS, FENCE, FENCE_GATE -> {
                 updatedName += "_" + typeName;
                 validateUniqueBlock(updatedName);
             }
             default -> throw new IllegalArgumentException("BlockType=[" + type + "] is not valid");
-        }
+        }*/
 
         if (!this.blocks.containsKey(typeName)) {
             List<String> blockList = new ArrayList<>();
@@ -78,13 +80,15 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         validateName(name);
         String updatedName = name;
         String typeName = type.getName();
-        switch (type) {
-            case LOG, WOOD, PLANKS, FENCE -> {
+        updatedName += "_" + typeName;
+        validateUniqueItem(updatedName);
+        /*switch (type) {
+            case LOG, WOOD, PLANKS, FENCE, FENCE_GATE -> {
                 updatedName += "_" + typeName;
                 validateUniqueItem(updatedName);
             }
-            default -> throw new IllegalArgumentException("BlockType=[" + type + "] is not valid");
-        }
+            default -> throw new IllegalArgumentException("ItemType=[" + type + "] is not valid");
+        }*/
 
         if (!this.items.containsKey(typeName)) {
             List<String> blockList = new ArrayList<>();

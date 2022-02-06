@@ -2,6 +2,7 @@ package org.spoorn.spoornpacks.provider.data;
 
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.provider.data.LootTableParts.Pool;
 import org.spoorn.spoornpacks.type.BlockType;
@@ -17,13 +18,17 @@ public class BlockLootTableBuilder implements ResourceProvider {
     private final BlockType type;
     private final String defaultPrefix;
     private final String defaultPrefixWithType;
+    private final String templatePath;
 
-    public BlockLootTableBuilder(String namespace, String name, BlockType type) {
+    private final JsonT jsonT = new JsonT();
+
+    public BlockLootTableBuilder(String namespace, String name, BlockType type, String templatePath) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
         this.defaultPrefix = this.namespace + ":" + this.name;
         this.defaultPrefixWithType = this.defaultPrefix + "_" + type.getName();
+        this.templatePath = templatePath;
     }
 
     @Override
@@ -44,6 +49,10 @@ public class BlockLootTableBuilder implements ResourceProvider {
     }
     
     public BlockLootTableBuilder defaultFence() {
+        return defaultSurvivesExplosion();
+    }
+
+    public BlockLootTableBuilder defaultFenceGate() {
         return defaultSurvivesExplosion();
     }
 
@@ -71,7 +80,8 @@ public class BlockLootTableBuilder implements ResourceProvider {
     private BlockLootTableBuilder defaultSurvivesExplosion() {
         typeBlock();
         Pool pool = Pool.builder()
-                .rolls(1)
+                .rolls(1.0)
+                .bonus_rolls(0.0)
                 .entries(List.of(
                         LootTableParts.Entry.builder()
                                 .type("minecraft:item")

@@ -2,6 +2,7 @@ package org.spoorn.spoornpacks.provider.assets;
 
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.type.BlockType;
 
@@ -14,13 +15,17 @@ public class ModelBlockBuilder implements ResourceProvider {
     private final BlockType type;
     private final String defaultBlockPrefix;
     private final String defaultBlockWithTypePrefix;
+    private final String templatePath;
 
-    public ModelBlockBuilder(String namespace, String name, BlockType type) {
+    private final JsonT jsonT = new JsonT();
+
+    public ModelBlockBuilder(String namespace, String name, BlockType type, String templatePath) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
         this.defaultBlockPrefix = this.namespace + ":block/" + this.name;
         this.defaultBlockWithTypePrefix = defaultBlockPrefix + "_" + this.type.getName();
+        this.templatePath = templatePath;
     }
 
     @Override

@@ -15,6 +15,7 @@ import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.api.ResourceFactory;
 import org.spoorn.spoornpacks.client.exception.DuplicateNameException;
 import org.spoorn.spoornpacks.generator.ResourceGenerator;
+import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.registry.SpoornPacksRegistry;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
@@ -56,6 +57,7 @@ public class SpoornPacks implements ModInitializer {
                     .addItem(ItemType.PLANKS)
                     .addBlock(BlockType.FENCE)
                     .addItem(ItemType.FENCE)
+                    .addBlock(BlockType.FENCE_GATE)
                     ;
 
             Resource resource = RESOURCE_GENERATOR.generate(rb);

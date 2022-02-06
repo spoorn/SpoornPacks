@@ -2,28 +2,36 @@ package org.spoorn.spoornpacks.provider.assets;
 
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.provider.assets.BlockStateParts.Apply;
 import org.spoorn.spoornpacks.provider.assets.BlockStateParts.Multipart;
 import org.spoorn.spoornpacks.provider.assets.BlockStateParts.When;
 import org.spoorn.spoornpacks.type.BlockType;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 public class BlockStateBuilder implements ResourceProvider {
 
-    private final ObjectNode state = OBJECT_MAPPER.createObjectNode();
+    private ObjectNode state = OBJECT_MAPPER.createObjectNode();
 
     private final String namespace;
     private final String name;
     private final BlockType type;
     private final String defaultBlockPrefix;
     private final String defaultBlockWithTypePrefix;
+    private final String templatePath;
+    
+    private final JsonT jsonT = new JsonT();
 
-    public BlockStateBuilder(String namespace, String name, BlockType type) {
+    public BlockStateBuilder(String namespace, String name, BlockType type, String templatePath) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
         this.defaultBlockPrefix = this.namespace + ":block/" + this.name;
         this.defaultBlockWithTypePrefix = this.defaultBlockPrefix + "_" + this.type.getName();
+        this.templatePath = templatePath;
     }
 
     @Override
@@ -96,6 +104,24 @@ public class BlockStateBuilder implements ResourceProvider {
                 .build());
         return this;
     }
+    
+    public BlockStateBuilder defaultFenceGate() {
+        /*facingInWallOpen("east", false, false, this.defaultBlockWithTypePrefix);
+        facingInWallOpen("east", false, true, this.defaultBlockWithTypePrefix + "_open");
+        facingInWallOpen("east", false, false, this.defaultBlockWithTypePrefix);
+        facingInWallOpen("east", false, false, this.defaultBlockWithTypePrefix);*/
+        try {
+            this.state = jsonT.substitute(templatePath, ObjectNode.class, 
+                    defaultBlockWithTypePrefix,
+                    defaultBlockWithTypePrefix + "_open",
+                    defaultBlockWithTypePrefix + "_wall",
+                    defaultBlockWithTypePrefix + "_wall_open"
+                    );
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create default fence gate", e);
+        }
+        return this;
+    }
 
     public BlockStateBuilder variants() {
         this.state.putObject("variants");
@@ -130,6 +156,24 @@ public class BlockStateBuilder implements ResourceProvider {
 
     public BlockStateBuilder addMultipart(Multipart multipart) {
         this.state.withArray("multipart").addPOJO(multipart);
+        return this;
+    }
+
+    public BlockStateBuilder facingInWallOpen(String facing, boolean inWall, boolean open, String model) {
+        ObjectNode nestedNode = this.state.with("variants")
+                .with("facing=" + facing + ",in_wall=" + inWall + ",open=" + open);
+        nestedNode.put("uvlock", true);
+        if ("east".equals(facing)) {
+            nestedNode.put("y", 270);
+        } else if ("north".equals(facing)) {
+            nestedNode.put("y", 180);
+        } else if ("west".equals(facing)) {
+            nestedNode.put("y", 90);
+        } else if (!"south".equals(facing)) {
+            throw new IllegalArgumentException("facing=" + facing + " is not supported for blockstates/ model");
+        }
+
+        nestedNode.put("model", model);
         return this;
     }
 }

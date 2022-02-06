@@ -24,10 +24,18 @@ import java.util.Map.Entry;
 
 @Log4j2
 public class ResourceGenerator {
+    
+    private static final String TEMPLATES_RESOURCE_PATH = "/assets/spoornpacks/jsont/templates/";
+    private static final String BLOCK_STATES_TEMPLATE_PATH = TEMPLATES_RESOURCE_PATH + "assets/blockstates/";
+    private static final String MODELS_BLOCK_TEMPLATE_PATH = TEMPLATES_RESOURCE_PATH + "assets/models/block/";
+    private static final String MODELS_ITEM_TEMPLATE_PATH = TEMPLATES_RESOURCE_PATH + "assets/models/item/";
+    private static final String BLOCK_LOOTTABLES_TEMPLATE_PATH = TEMPLATES_RESOURCE_PATH + "data/loot_tables/blocks/";
+    private static final String RECIPES_TEMPLATE_PATH = TEMPLATES_RESOURCE_PATH + "data/recipes/";
 
     private static final String BLOCKS = "blocks";
     private static final String ITEMS = "items";
     private static final String MINECRAFT = "minecraft";
+    private static final String JSONT_SUFFIX = ".jsonT";
 
     private final FileGenerator fileGenerator;
 
@@ -84,36 +92,39 @@ public class ResourceGenerator {
                 String filename = name + "_" + type.getName();
                 switch (type) {
                     case LOG -> {
-                        fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultLog());
-                        fileGenerator.generateModelBlock(namespace, filename, new ModelBlockBuilder(namespace, name, type).defaultLog());
-                        fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultLog());
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultLog());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultLog());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultLog());
                         minecraftLogs.value(namespace, name, type);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         blocksRegistry.registerLog(filename);
                     }
                     case WOOD -> {
-                        fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultWood());
-                        fileGenerator.generateModelBlock(namespace, filename, new ModelBlockBuilder(namespace, name, type).defaultWood());
-                        fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultWood());
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultWood());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultWood());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultWood());
                         minecraftLogs.value(namespace, name, type);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         blocksRegistry.registerWood(filename);
                     }
                     case PLANKS -> {
-                        fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultPlanks());
-                        fileGenerator.generateModelBlock(namespace, filename, new ModelBlockBuilder(namespace, name, type).defaultPlanks());
-                        fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultPlanks());
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultPlanks());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultPlanks());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultPlanks());
                         minecraftPlanks.value(namespace, name, type);
                         blocksRegistry.registerPlanks(filename);
                     }
                     case FENCE -> {
-                        fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type).defaultFence());
-                        fileGenerator.generateModelBlock(namespace, filename + "_inventory", new ModelBlockBuilder(namespace, name, type).defaultFenceInventory());
-                        fileGenerator.generateModelBlock(namespace, filename + "_post", new ModelBlockBuilder(namespace, name, type).defaultFencePost());
-                        fileGenerator.generateModelBlock(namespace, filename + "_side", new ModelBlockBuilder(namespace, name, type).defaultFenceSide());
-                        fileGenerator.generateLootTable(namespace, filename, new BlockLootTableBuilder(namespace, name, type).defaultFence());
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultFence());
+                        fileGenerator.generateModelBlock(namespace, filename + "_inventory", newModelBlockBuilder(namespace, name, type).defaultFenceInventory());
+                        fileGenerator.generateModelBlock(namespace, filename + "_post", newModelBlockBuilder(namespace, name, type).defaultFencePost());
+                        fileGenerator.generateModelBlock(namespace, filename + "_side", newModelBlockBuilder(namespace, name, type).defaultFenceSide());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultFence());
                         minecraftWoodenFences.value(namespace, name, type);
                         blocksRegistry.registerFence(filename);
+                    }
+                    case FENCE_GATE -> {
+                        fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type, BLOCK_STATES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX).defaultFenceGate());
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
@@ -146,27 +157,27 @@ public class ResourceGenerator {
                 String filename = name + "_" + type.getName();
                 switch (type) {
                     case LOG -> {
-                        fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultLog());
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultLog());
                         minecraftLogs.value(namespace, name, type);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
                     case WOOD -> {
-                        fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultWood());
-                        fileGenerator.generateRecipe(namespace, filename, new RecipeBuilder(namespace, name, type.getName()).defaultWood());
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultWood());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultWood());
                         minecraftLogs.value(namespace, name, type);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
                     case PLANKS -> {
-                        fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultPlanks());
-                        fileGenerator.generateRecipe(namespace, filename, new RecipeBuilder(namespace, name, type.getName()).defaultPlanks());
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultPlanks());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultPlanks());
                         minecraftPlanks.value(namespace, name, type);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
                     case FENCE -> {
-                        fileGenerator.generateModelItem(namespace, filename, new ModelItemBuilder(namespace, name, type).defaultFence());
-                        fileGenerator.generateRecipe(namespace, filename, new RecipeBuilder(namespace, name, type.getName()).defaultFence());
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultFence());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultFence());
                         minecraftWoodenFences.value(namespace, name, type);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
@@ -187,5 +198,25 @@ public class ResourceGenerator {
             }
             fileGenerator.generateTags(namespace, entry.getKey() + "_logs", customLogTags);
         }
+    }
+    
+    private BlockStateBuilder newBlockStateBuilder(String namespace, String name, BlockType type) {
+        return new BlockStateBuilder(namespace, name, type, BLOCK_STATES_TEMPLATE_PATH + name + JSONT_SUFFIX);
+    }
+    
+    private ModelBlockBuilder newModelBlockBuilder(String namespace, String name, BlockType type) {
+        return new ModelBlockBuilder(namespace, name, type, MODELS_BLOCK_TEMPLATE_PATH + name + JSONT_SUFFIX);
+    }
+
+    private ModelItemBuilder newModelItemBuilder(String namespace, String name, ItemType type) {
+        return new ModelItemBuilder(namespace, name, type, MODELS_ITEM_TEMPLATE_PATH + name + JSONT_SUFFIX);
+    }
+
+    private BlockLootTableBuilder newBlockLootTableBuilder(String namespace, String name, BlockType type) {
+        return new BlockLootTableBuilder(namespace, name, type, BLOCK_LOOTTABLES_TEMPLATE_PATH + name + JSONT_SUFFIX);
+    }
+
+    private RecipeBuilder newRecipeBuilder(String namespace, String name, ItemType type) {
+        return new RecipeBuilder(namespace, name, type.getName(), RECIPES_TEMPLATE_PATH + name + JSONT_SUFFIX);
     }
 }

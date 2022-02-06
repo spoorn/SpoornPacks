@@ -1,0 +1,80 @@
+{
+  "variants": {
+    "facing=east,in_wall=false,open=false": {
+      "uvlock": true,
+      "y": 270,
+      "model": ${string:1}
+    },
+    "facing=east,in_wall=false,open=true": {
+      "uvlock": true,
+      "y": 270,
+      "model": ${string:2}
+    },
+    "facing=east,in_wall=true,open=false": {
+      "uvlock": true,
+      "y": 270,
+      "model": ${string:3}
+    },
+    "facing=east,in_wall=true,open=true": {
+      "uvlock": true,
+      "y": 270,
+      "model": ${string:4}
+    },
+    "facing=north,in_wall=false,open=false": {
+      "uvlock": true,
+      "y": 180,
+      "model": ${string:1}
+    },
+    "facing=north,in_wall=false,open=true": {
+      "uvlock": true,
+      "y": 180,
+      "model": ${string:2}
+    },
+    "facing=north,in_wall=true,open=false": {
+      "uvlock": true,
+      "y": 180,
+      "model": ${string:3}
+    },
+    "facing=north,in_wall=true,open=true": {
+      "uvlock": true,
+      "y": 180,
+      "model": ${string:4}
+    },
+    "facing=south,in_wall=false,open=false": {
+      "uvlock": true,
+      "model": ${string:1}
+    },
+    "facing=south,in_wall=false,open=true": {
+      "uvlock": true,
+      "model": ${string:2}
+    },
+    "facing=south,in_wall=true,open=false": {
+      "uvlock": true,
+      "model": ${string:3}
+    },
+    "facing=south,in_wall=true,open=true": {
+      "uvlock": true,
+      "model": ${string:4}
+    },
+    "facing=west,in_wall=false,open=false": {
+      "uvlock": true,
+      "y": 90,
+      "model": ${string:1}
+    },
+    "facing=west,in_wall=false,open=true": {
+      "uvlock": true,
+      "y": 90,
+      "model": ${string:2}
+    },
+    "facing=west,in_wall=true,open=false": {
+      "uvlock": true,
+      "y": 90,
+      "model": ${string:3}
+    },
+    "facing=west,in_wall=true,open=true": {
+      "uvlock": true,
+      "y": 90,
+      "model": ${string:4}
+    }
+  }
+}

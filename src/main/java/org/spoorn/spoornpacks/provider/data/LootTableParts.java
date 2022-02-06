@@ -10,7 +10,8 @@ public class LootTableParts {
     @Getter
     @Builder
     static class Pool {
-        int rolls;
+        double rolls;
+        double bonus_rolls;
         List<Entry> entries;
         List<Condition> conditions;
     }
