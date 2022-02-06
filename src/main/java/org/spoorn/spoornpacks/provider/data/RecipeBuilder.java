@@ -8,12 +8,14 @@ import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.provider.data.RecipeParts.Ingredient;
 import org.spoorn.spoornpacks.provider.data.RecipeParts.Key;
 import org.spoorn.spoornpacks.type.BlockType;
+import org.spoorn.spoornpacks.util.JsonTUtil;
 
+import java.io.IOException;
 import java.util.List;
 
 public class RecipeBuilder implements ResourceProvider {
 
-    private final ObjectNode state = OBJECT_MAPPER.createObjectNode();
+    private ObjectNode state = OBJECT_MAPPER.createObjectNode();
 
     private final String namespace;
     private final String name;
@@ -21,7 +23,7 @@ public class RecipeBuilder implements ResourceProvider {
     private final String defaultPrefix;
     private final String templatePath;
 
-    private final JsonT jsonT = new JsonT();
+    private final JsonTUtil jsonTUtil = new JsonTUtil();
 
     public RecipeBuilder(String namespace, String name, String type, String templatePath) {
         this.namespace = namespace;
@@ -68,6 +70,14 @@ public class RecipeBuilder implements ResourceProvider {
                 .item("minecraft:stick")
                 .build());
         result(3);
+        return this;
+    }
+    
+    public RecipeBuilder defaultFenceGate() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultPrefix + "_" + BlockType.PLANKS.getName(),
+                this.defaultPrefix + "_" + this.type
+        );
         return this;
     }
 

@@ -6,12 +6,13 @@ import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.provider.data.LootTableParts.Pool;
 import org.spoorn.spoornpacks.type.BlockType;
+import org.spoorn.spoornpacks.util.JsonTUtil;
 
 import java.util.List;
 
 public class BlockLootTableBuilder implements ResourceProvider {
 
-    private final ObjectNode state = OBJECT_MAPPER.createObjectNode();
+    private ObjectNode state = OBJECT_MAPPER.createObjectNode();
 
     private final String namespace;
     private final String name;
@@ -20,7 +21,7 @@ public class BlockLootTableBuilder implements ResourceProvider {
     private final String defaultPrefixWithType;
     private final String templatePath;
 
-    private final JsonT jsonT = new JsonT();
+    private final JsonTUtil jsonTUtil = new JsonTUtil();
 
     public BlockLootTableBuilder(String namespace, String name, BlockType type, String templatePath) {
         this.namespace = namespace;

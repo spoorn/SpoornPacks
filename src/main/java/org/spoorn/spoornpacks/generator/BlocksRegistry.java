@@ -59,6 +59,14 @@ public class BlocksRegistry {
         return Registry.register(Registry.BLOCK, identifier, block);
     }
 
+    public Block registerFenceGate(String id) {
+        Block block = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
+        Identifier identifier = new Identifier(this.modid, id);
+        register.put(identifier, block);
+        FENCE_GATES.add(block);
+        return Registry.register(Registry.BLOCK, identifier, block);
+    }
+
     public Boolean canSpawnOnLeaves(BlockState state, BlockView world, BlockPos pos, EntityType<?> type) {
         return type == EntityType.OCELOT || type == EntityType.PARROT;
     }

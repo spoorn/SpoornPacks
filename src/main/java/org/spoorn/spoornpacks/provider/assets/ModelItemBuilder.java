@@ -5,10 +5,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.type.ItemType;
+import org.spoorn.spoornpacks.util.JsonTUtil;
 
 public class ModelItemBuilder implements ResourceProvider {
 
-    private final ObjectNode state = OBJECT_MAPPER.createObjectNode();
+    private ObjectNode state = OBJECT_MAPPER.createObjectNode();
 
     private final String namespace;
     private final String name;
@@ -16,7 +17,7 @@ public class ModelItemBuilder implements ResourceProvider {
     private final String defaultBlockWithTypePrefix;
     private final String templatePath;
 
-    private final JsonT jsonT = new JsonT();
+    private final JsonTUtil jsonTUtil = new JsonTUtil();
 
     public ModelItemBuilder(String namespace, String name, ItemType type, String templatePath) {
         this.namespace = namespace;
@@ -48,6 +49,11 @@ public class ModelItemBuilder implements ResourceProvider {
 
     public ModelItemBuilder defaultFence() {
         parent(defaultBlockWithTypePrefix + "_inventory");
+        return this;
+    }
+
+    public ModelItemBuilder defaultFenceGate() {
+        parent();
         return this;
     }
 

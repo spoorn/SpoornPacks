@@ -84,6 +84,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenFences = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftFenceGates = new TagsBuilder(BLOCKS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : blocks.entrySet()) {
@@ -125,6 +126,13 @@ public class ResourceGenerator {
                     }
                     case FENCE_GATE -> {
                         fileGenerator.generateBlockStates(namespace, filename, new BlockStateBuilder(namespace, name, type, BLOCK_STATES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX).defaultFenceGate());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultFenceGate());
+                        fileGenerator.generateModelBlock(namespace, filename + "_open", newModelBlockBuilder(namespace, name, type, type.getName() + "_open").defaultFenceGateOpen());
+                        fileGenerator.generateModelBlock(namespace, filename + "_wall", newModelBlockBuilder(namespace, name, type, type.getName() + "_wall").defaultFenceGateWall());
+                        fileGenerator.generateModelBlock(namespace, filename + "_wall_open", newModelBlockBuilder(namespace, name, type, type.getName() + "_wall_open").defaultFenceGateWallOpen());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultFenceGate());
+                        minecraftFenceGates.value(namespace, name, type);
+                        blocksRegistry.registerFenceGate(filename);
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
@@ -135,6 +143,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "logs_that_burn", minecraftLogs);
         fileGenerator.generateTags(MINECRAFT, "planks", minecraftPlanks);
         fileGenerator.generateTags(MINECRAFT, "wooden_fences", minecraftWoodenFences);
+        fileGenerator.generateTags(MINECRAFT, "fence_gates", minecraftFenceGates);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(BLOCKS);
@@ -149,6 +158,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftLogs = new TagsBuilder(ITEMS);
         TagsBuilder minecraftPlanks = new TagsBuilder(ITEMS);
         TagsBuilder minecraftWoodenFences = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftFenceGates = new TagsBuilder(ITEMS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : items.entrySet()) {
@@ -180,6 +190,11 @@ public class ResourceGenerator {
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultFence());
                         minecraftWoodenFences.value(namespace, name, type);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
+                    } case FENCE_GATE -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultFenceGate());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultFenceGate());
+                        minecraftFenceGates.value(namespace, name, type);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
@@ -190,6 +205,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "logs_that_burn", minecraftLogs);
         fileGenerator.generateTags(MINECRAFT, "planks", minecraftPlanks);
         fileGenerator.generateTags(MINECRAFT, "wooden_fences", minecraftWoodenFences);
+        fileGenerator.generateTags(MINECRAFT, "fence_gates", minecraftFenceGates);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);
@@ -201,22 +217,26 @@ public class ResourceGenerator {
     }
     
     private BlockStateBuilder newBlockStateBuilder(String namespace, String name, BlockType type) {
-        return new BlockStateBuilder(namespace, name, type, BLOCK_STATES_TEMPLATE_PATH + name + JSONT_SUFFIX);
+        return new BlockStateBuilder(namespace, name, type, BLOCK_STATES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
     }
     
     private ModelBlockBuilder newModelBlockBuilder(String namespace, String name, BlockType type) {
-        return new ModelBlockBuilder(namespace, name, type, MODELS_BLOCK_TEMPLATE_PATH + name + JSONT_SUFFIX);
+        return newModelBlockBuilder(namespace, name, type, type.getName());
+    }
+
+    private ModelBlockBuilder newModelBlockBuilder(String namespace, String name, BlockType type, String templateFileName) {
+        return new ModelBlockBuilder(namespace, name, type, MODELS_BLOCK_TEMPLATE_PATH + templateFileName + JSONT_SUFFIX);
     }
 
     private ModelItemBuilder newModelItemBuilder(String namespace, String name, ItemType type) {
-        return new ModelItemBuilder(namespace, name, type, MODELS_ITEM_TEMPLATE_PATH + name + JSONT_SUFFIX);
+        return new ModelItemBuilder(namespace, name, type, MODELS_ITEM_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
     }
 
     private BlockLootTableBuilder newBlockLootTableBuilder(String namespace, String name, BlockType type) {
-        return new BlockLootTableBuilder(namespace, name, type, BLOCK_LOOTTABLES_TEMPLATE_PATH + name + JSONT_SUFFIX);
+        return new BlockLootTableBuilder(namespace, name, type, BLOCK_LOOTTABLES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
     }
 
     private RecipeBuilder newRecipeBuilder(String namespace, String name, ItemType type) {
-        return new RecipeBuilder(namespace, name, type.getName(), RECIPES_TEMPLATE_PATH + name + JSONT_SUFFIX);
+        return new RecipeBuilder(namespace, name, type.getName(), RECIPES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
     }
 }

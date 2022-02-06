@@ -2,15 +2,12 @@ package org.spoorn.spoornpacks.provider.assets;
 
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.provider.assets.BlockStateParts.Apply;
 import org.spoorn.spoornpacks.provider.assets.BlockStateParts.Multipart;
 import org.spoorn.spoornpacks.provider.assets.BlockStateParts.When;
 import org.spoorn.spoornpacks.type.BlockType;
-
-import java.io.IOException;
-import java.nio.file.Path;
+import org.spoorn.spoornpacks.util.JsonTUtil;
 
 public class BlockStateBuilder implements ResourceProvider {
 
@@ -22,8 +19,8 @@ public class BlockStateBuilder implements ResourceProvider {
     private final String defaultBlockPrefix;
     private final String defaultBlockWithTypePrefix;
     private final String templatePath;
-    
-    private final JsonT jsonT = new JsonT();
+
+    private final JsonTUtil jsonTUtil = new JsonTUtil();
 
     public BlockStateBuilder(String namespace, String name, BlockType type, String templatePath) {
         this.namespace = namespace;
@@ -110,16 +107,12 @@ public class BlockStateBuilder implements ResourceProvider {
         facingInWallOpen("east", false, true, this.defaultBlockWithTypePrefix + "_open");
         facingInWallOpen("east", false, false, this.defaultBlockWithTypePrefix);
         facingInWallOpen("east", false, false, this.defaultBlockWithTypePrefix);*/
-        try {
-            this.state = jsonT.substitute(templatePath, ObjectNode.class, 
-                    defaultBlockWithTypePrefix,
-                    defaultBlockWithTypePrefix + "_open",
-                    defaultBlockWithTypePrefix + "_wall",
-                    defaultBlockWithTypePrefix + "_wall_open"
-                    );
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create default fence gate", e);
-        }
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class, 
+                defaultBlockWithTypePrefix,
+                defaultBlockWithTypePrefix + "_open",
+                defaultBlockWithTypePrefix + "_wall",
+                defaultBlockWithTypePrefix + "_wall_open"
+                );
         return this;
     }
 

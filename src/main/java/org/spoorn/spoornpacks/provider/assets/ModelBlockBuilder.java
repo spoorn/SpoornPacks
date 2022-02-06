@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.type.BlockType;
+import org.spoorn.spoornpacks.util.JsonTUtil;
+
+import java.io.IOException;
 
 public class ModelBlockBuilder implements ResourceProvider {
 
-    private final ObjectNode state = OBJECT_MAPPER.createObjectNode();
+    private ObjectNode state = OBJECT_MAPPER.createObjectNode();
 
     private final String namespace;
     private final String name;
@@ -17,7 +20,7 @@ public class ModelBlockBuilder implements ResourceProvider {
     private final String defaultBlockWithTypePrefix;
     private final String templatePath;
 
-    private final JsonT jsonT = new JsonT();
+    private final JsonTUtil jsonTUtil = new JsonTUtil();
 
     public ModelBlockBuilder(String namespace, String name, BlockType type, String templatePath) {
         this.namespace = namespace;
@@ -51,6 +54,34 @@ public class ModelBlockBuilder implements ResourceProvider {
         parentCubeAll();
         all();
         particle();
+        return this;
+    }
+    
+    public ModelBlockBuilder defaultFenceGate() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
+        );
+        return this;
+    }
+
+    public ModelBlockBuilder defaultFenceGateOpen() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
+        );
+        return this;
+    }
+
+    public ModelBlockBuilder defaultFenceGateWall() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
+        );
+        return this;
+    }
+
+    public ModelBlockBuilder defaultFenceGateWallOpen() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
+        );
         return this;
     }
 
