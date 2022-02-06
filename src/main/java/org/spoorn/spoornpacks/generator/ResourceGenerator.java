@@ -2,6 +2,8 @@ package org.spoorn.spoornpacks.generator;
 
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.impl.DefaultResourceBuilder;
@@ -36,6 +38,7 @@ public class ResourceGenerator {
     private static final String ITEMS = "items";
     private static final String MINECRAFT = "minecraft";
     private static final String JSONT_SUFFIX = ".jsonT";
+    private static final String POTTED_PREFIX = "potted_";
 
     private final FileGenerator fileGenerator;
 
@@ -51,7 +54,7 @@ public class ResourceGenerator {
     }
 
     public Resource generate(ResourceBuilder resourceBuilder) {
-        log.info("Generating resources for {}", modid);
+        log.info("Generating resources for {}", this.modid);
         if (!(resourceBuilder instanceof DefaultResourceBuilder)) {
             throw new UnsupportedOperationException("ResourceBuilder is unsupported!");
         }
@@ -61,7 +64,7 @@ public class ResourceGenerator {
         // Blocks
         final Map<String, List<String>> blocks = drb.getBlocks();
         try {
-            handleBlocks(drb.getNamespace(), blocks, drb.getLeavesToSaplingOverrides());
+            handleBlocks(drb.getNamespace(), blocks, drb.getLeavesToSaplingOverrides(), drb.getSaplingConfiguredFeatures());
         } catch (IOException e) {
             log.error("Could not generate resources for blocks", e);
             throw new RuntimeException(e);
@@ -77,15 +80,19 @@ public class ResourceGenerator {
         }
 
         GeneratedResource gen = new GeneratedResource(drb.getNamespace());
+        log.info("Done generating some resources for {}!", this.modid);
         return gen;
     }
 
-    private void handleBlocks(String namespace, Map<String, List<String>> blocks, Map<String, String> leavesToSaplingOverrides) throws IOException {
+    private void handleBlocks(String namespace, Map<String, List<String>> blocks, Map<String, String> leavesToSaplingOverrides,
+                              Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftLeaves = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftSaplings = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenFences = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftFenceGates = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftFlowerPots = new TagsBuilder(BLOCKS);
         TagsBuilder hoeMineable = new TagsBuilder(BLOCKS + "/mineable");
         Map<String, List<String>> customLogs = new HashMap<>();
 
@@ -129,6 +136,18 @@ public class ResourceGenerator {
                         hoeMineable.value(namespace, name, type);
                         blocksRegistry.registerLeaves(filename);
                     }
+                    case SAPLING -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultSapling());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultSapling());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultSapling());
+                        minecraftSaplings.value(namespace, name, type);
+                        blocksRegistry.registerSapling(filename, saplingConfiguredFeatures.get(name));
+                        // Sapling in flower pot
+                        fileGenerator.generateBlockStates(namespace, POTTED_PREFIX + filename, newBlockStateBuilder(namespace, POTTED_PREFIX + name, type).defaultSapling());
+                        fileGenerator.generateModelBlock(namespace, POTTED_PREFIX + filename, newModelBlockBuilder(namespace, POTTED_PREFIX + name, type, POTTED_PREFIX + type.getName()).defaultSapling());
+                        fileGenerator.generateLootTable(namespace, POTTED_PREFIX + filename, newBlockLootTableBuilder(namespace, POTTED_PREFIX + name, type, POTTED_PREFIX + type.getName()).defaultSapling());
+                        minecraftFlowerPots.value(namespace, POTTED_PREFIX + name, type);
+                    }
                     case FENCE -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultFence());
                         fileGenerator.generateModelBlock(namespace, filename + "_inventory", newModelBlockBuilder(namespace, name, type).defaultFenceInventory());
@@ -159,6 +178,8 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "wooden_fences", minecraftWoodenFences);
         fileGenerator.generateTags(MINECRAFT, "fence_gates", minecraftFenceGates);
         fileGenerator.generateTags(MINECRAFT, "leaves", minecraftLeaves);
+        fileGenerator.generateTags(MINECRAFT, "saplings", minecraftSaplings);
+        fileGenerator.generateTags(MINECRAFT, "flower_pots", minecraftFlowerPots);
         fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
@@ -174,6 +195,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftLogs = new TagsBuilder(ITEMS);
         TagsBuilder minecraftPlanks = new TagsBuilder(ITEMS);
         TagsBuilder minecraftLeaves = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftSaplings = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenFences = new TagsBuilder(ITEMS);
         TagsBuilder minecraftFenceGates = new TagsBuilder(ITEMS);
         Map<String, List<String>> customLogs = new HashMap<>();
@@ -207,6 +229,11 @@ public class ResourceGenerator {
                         minecraftLeaves.value(namespace, name, type);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
+                    case SAPLING -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultSapling());
+                        minecraftSaplings.value(namespace, name, type);
+                        itemsRegistry.registerSaplingItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
+                    }
                     case FENCE -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultFence());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultFence());
@@ -229,6 +256,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "wooden_fences", minecraftWoodenFences);
         fileGenerator.generateTags(MINECRAFT, "fence_gates", minecraftFenceGates);
         fileGenerator.generateTags(MINECRAFT, "leaves", minecraftLeaves);
+        fileGenerator.generateTags(MINECRAFT, "saplings", minecraftSaplings);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);
@@ -256,7 +284,11 @@ public class ResourceGenerator {
     }
 
     private BlockLootTableBuilder newBlockLootTableBuilder(String namespace, String name, BlockType type) {
-        return new BlockLootTableBuilder(namespace, name, type, BLOCK_LOOTTABLES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
+        return newBlockLootTableBuilder(namespace, name, type, type.getName());
+    }
+
+    private BlockLootTableBuilder newBlockLootTableBuilder(String namespace, String name, BlockType type, String templateFileName) {
+        return new BlockLootTableBuilder(namespace, name, type, BLOCK_LOOTTABLES_TEMPLATE_PATH + templateFileName + JSONT_SUFFIX);
     }
 
     private RecipeBuilder newRecipeBuilder(String namespace, String name, ItemType type) {

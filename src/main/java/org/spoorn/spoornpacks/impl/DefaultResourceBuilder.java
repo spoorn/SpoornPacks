@@ -1,6 +1,8 @@
 package org.spoorn.spoornpacks.impl;
 
 import lombok.Getter;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.client.exception.DuplicateNameException;
 import org.spoorn.spoornpacks.type.BlockType;
@@ -20,6 +22,8 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     private final Map<String, List<String>> items = new HashMap<>();
     @Getter
     private final Map<String, String> leavesToSaplingOverrides = new HashMap<>();
+    @Getter
+    private final Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures = new HashMap<>();
 
     private final Set<String> blockIds = new HashSet<>();
     private final Set<String> itemIds = new HashSet<>();
@@ -71,6 +75,18 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         }
         registerBlock(type, name);
         this.leavesToSaplingOverrides.put(name, saplingName);
+        return this;
+    }
+
+    @Override
+    public ResourceBuilder addSapling(ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) throws DuplicateNameException {
+        return addSapling(this.defaultName, configuredFeature);
+    }
+
+    @Override
+    public ResourceBuilder addSapling(String name, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) throws DuplicateNameException {
+        registerBlock(BlockType.LEAVES, name);
+        this.saplingConfiguredFeatures.put(name, configuredFeature);
         return this;
     }
 

@@ -85,6 +85,9 @@ public class FileGenerator {
 
     public boolean generateTags(String namespace, String name, TagsBuilder builder) throws IOException {
         try {
+            if (builder.isEmpty()) {
+                return false;
+            }
             Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + DATA_PREFIX + namespace + "/tags/" + builder.getType() + "/" + name + JSON_SUFFIX);
             return writeFile(file, builder);
         } catch (Exception e) {

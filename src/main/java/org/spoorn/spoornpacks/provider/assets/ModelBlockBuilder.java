@@ -63,6 +63,13 @@ public class ModelBlockBuilder implements ResourceProvider {
         particle();
         return this;
     }
+
+    public ModelBlockBuilder defaultSapling() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+            this.defaultBlockWithTypePrefix        
+        );
+        return this;
+    }
     
     public ModelBlockBuilder defaultFenceGate() {
         this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
@@ -111,13 +118,11 @@ public class ModelBlockBuilder implements ResourceProvider {
     }
 
     public ModelBlockBuilder parentCubeColumn() {
-        parent("minecraft:block/cube_column");
-        return this;
+        return parent("minecraft:block/cube_column");
     }
 
     public ModelBlockBuilder parentCubeAll() {
-        parent("minecraft:block/cube_all");
-        return this;
+        return parent("minecraft:block/cube_all");
     }
 
     public ModelBlockBuilder parent(String parent) {

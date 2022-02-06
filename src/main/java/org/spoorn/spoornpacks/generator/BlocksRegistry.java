@@ -8,6 +8,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.FeatureConfig;
+import org.spoorn.spoornpacks.block.SPSaplingBlock;
+import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +64,22 @@ public class BlocksRegistry {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
         return Registry.register(Registry.BLOCK, identifier, block);
+    }
+
+    public Block registerSapling(String id, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) {
+        Block saplingBlock = new SPSaplingBlock(new SPSaplingGenerator(configuredFeature), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING));
+        Identifier identifier = new Identifier(this.modid, id);
+        register.put(identifier, saplingBlock);
+        SAPLINGS.add(saplingBlock);
+        registerFlowerPot("potted_" + id, saplingBlock);
+        return Registry.register(Registry.BLOCK, identifier, saplingBlock);
+    }
+
+    public void registerFlowerPot(String id, Block saplingBlock) {
+        Block block = new FlowerPotBlock(saplingBlock, FabricBlockSettings.copyOf(Blocks.POTTED_OAK_SAPLING));
+        Identifier identifier = new Identifier(this.modid, id);
+        register.put(identifier, block);
+        POTTED_BLOCKS.add(Registry.register(Registry.BLOCK, identifier, block));
     }
 
     public Block registerFence(String id) {

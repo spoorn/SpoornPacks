@@ -73,6 +73,10 @@ public class BlockLootTableBuilder implements ResourceProvider {
         return this;
     }
 
+    public BlockLootTableBuilder defaultSapling() {
+        return defaultSurvivesExplosion();
+    }
+
     public BlockLootTableBuilder typeBlock() {
         this.state.put("type", "minecraft:block");
         return this;

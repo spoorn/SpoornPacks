@@ -14,6 +14,7 @@ public class TagsBuilder implements ResourceProvider {
     // sub-directory under tags/
     @Getter
     private String type;
+    private boolean empty = true;
 
     public TagsBuilder(String type) {
         this(false, type);
@@ -28,6 +29,10 @@ public class TagsBuilder implements ResourceProvider {
     public ObjectNode getJson() {
         return this.state;
     }
+    
+    public boolean isEmpty() {
+        return this.empty;
+    }
 
     public TagsBuilder replace(boolean replace) {
         state.put("replace", replace);
@@ -35,14 +40,17 @@ public class TagsBuilder implements ResourceProvider {
     }
 
     public TagsBuilder value(String namespace, String name, BlockType type) {
+        this.empty = false;
         return value(namespace + ":" + name + "_" + type.getName());
     }
 
     public TagsBuilder value(String namespace, String name, ItemType type) {
+        this.empty = false;
         return value(namespace + ":" + name + "_" + type.getName());
     }
 
     public TagsBuilder value(String value) {
+        this.empty = false;
         this.state.withArray("values").add(value);
         return this;
     }

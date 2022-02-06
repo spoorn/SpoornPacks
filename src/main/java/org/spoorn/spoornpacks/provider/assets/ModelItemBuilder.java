@@ -52,6 +52,13 @@ public class ModelItemBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelItemBuilder defaultSapling() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockWithTypePrefix      
+        );
+        return this;
+    }
+
     public ModelItemBuilder defaultFence() {
         parent(defaultBlockWithTypePrefix + "_inventory");
         return this;
