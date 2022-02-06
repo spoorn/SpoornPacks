@@ -79,6 +79,10 @@ public class ModelItemBuilder implements ResourceProvider {
         return parent();
     }
 
+    public ModelItemBuilder defaultTrapdoor() {
+        return parent(this.defaultBlockWithTypePrefix + "_bottom");
+    }
+
     public ModelItemBuilder parent() {
         return parent(defaultBlockWithTypePrefix);
     }

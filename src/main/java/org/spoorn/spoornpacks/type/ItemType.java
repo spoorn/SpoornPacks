@@ -11,7 +11,8 @@ public enum ItemType {
     BUTTON("button"),
     SLAB("slab"),
     PRESSURE_PLATE("pressure_plate"),
-    STAIRS("stairs");
+    STAIRS("stairs"),
+    TRAPDOOR("trapdoor");
 
     private final String name;
 

@@ -112,6 +112,27 @@ public class ModelBlockBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelBlockBuilder defaultTrapdoorBottom() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix
+        );
+        return this;
+    }
+
+    public ModelBlockBuilder defaultTrapdoorOpen() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix
+        );
+        return this;
+    }
+
+    public ModelBlockBuilder defaultTrapdoorTop() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix
+        );
+        return this;
+    }
+
     public ModelBlockBuilder defaultButton() {
         return substitutePlanks();
     }

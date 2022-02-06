@@ -154,6 +154,15 @@ public class BlockStateBuilder implements ResourceProvider {
         return this;
     }
 
+    public BlockStateBuilder defaultTrapdoor() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix + "_bottom",
+                this.defaultBlockWithTypePrefix + "_open",
+                this.defaultBlockWithTypePrefix + "_top"
+        );
+        return this;
+    }
+
     public BlockStateBuilder yaxis() {
         this.state.with("variants").with("axis=y")
                 .put("model", defaultBlockWithTypePrefix);

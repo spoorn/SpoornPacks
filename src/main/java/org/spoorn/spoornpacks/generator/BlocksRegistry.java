@@ -14,6 +14,7 @@ import org.spoorn.spoornpacks.block.SPSaplingBlock;
 import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
 import org.spoorn.spoornpacks.mixin.PressurePlateBlockAccessor;
 import org.spoorn.spoornpacks.mixin.StairsBlockAccessor;
+import org.spoorn.spoornpacks.mixin.TrapdoorBlockAccessor;
 import org.spoorn.spoornpacks.mixin.WoodenButtonBlockAccessor;
 
 import java.util.ArrayList;
@@ -103,6 +104,12 @@ public class BlocksRegistry {
     // TODO: Allow different types for the settings part of stairs block
     public Block registerStairs(String id, Block defaultBlock) {
         Block block = StairsBlockAccessor.create(defaultBlock.getDefaultState(), FabricBlockSettings.copyOf(defaultBlock));
+        return registerBlock(id, block);
+    }
+
+    public Block registerTrapdoor(String id) {
+        Block block = TrapdoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
+        TRAPDOORS.add(block);
         return registerBlock(id, block);
     }
     
