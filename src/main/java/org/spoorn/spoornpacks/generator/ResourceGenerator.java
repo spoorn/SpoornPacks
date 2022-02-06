@@ -185,6 +185,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "flower_pots", minecraftFlowerPots);
         fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
 
+        // TODO: Remove this if not needed.  Custom tags can be configurable at a higher level
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(BLOCKS);
             for (String value : entry.getValue()) {
