@@ -74,6 +74,11 @@ public class ModelItemBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelItemBuilder defaultSlab() {
+        parent();
+        return this;
+    }
+
     public ModelItemBuilder parent() {
         parent(defaultBlockWithTypePrefix);
         return this;

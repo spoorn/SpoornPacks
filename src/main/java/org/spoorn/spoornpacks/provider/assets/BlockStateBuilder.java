@@ -132,6 +132,15 @@ public class BlockStateBuilder implements ResourceProvider {
         return this;
     }
 
+    public BlockStateBuilder defaultSlab() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockWithTypePrefix,
+                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName(),
+                this.defaultBlockWithTypePrefix + "_top"
+        );
+        return this;
+    }
+
     public BlockStateBuilder variants() {
         this.state.putObject("variants");
         return this;

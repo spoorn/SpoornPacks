@@ -11,7 +11,8 @@ public enum BlockType {
     SAPLING("sapling"),
     FENCE("fence"),
     FENCE_GATE("fence_gate"),
-    BUTTON("button");
+    BUTTON("button"),
+    SLAB("slab");
 
     private final String name;
 

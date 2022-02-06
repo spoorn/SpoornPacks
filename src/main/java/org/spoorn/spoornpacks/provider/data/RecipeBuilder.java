@@ -91,6 +91,14 @@ public class RecipeBuilder implements ResourceProvider {
         return this;
     }
 
+    public RecipeBuilder defaultSlab() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultPrefix + "_" + BlockType.PLANKS.getName(),
+                this.defaultPrefixWithType
+        );
+        return this;
+    }
+
     public RecipeBuilder craftingShapedType() {
         return type("minecraft:crafting_shaped");
     }

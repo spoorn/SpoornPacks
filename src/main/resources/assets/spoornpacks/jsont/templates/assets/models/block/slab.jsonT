@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": ${string:1},
+    "top": ${string:1},
+    "side": ${string:1}
+  }
+}

@@ -145,6 +145,20 @@ public class ModelBlockBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelBlockBuilder defaultSlab() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
+        );
+        return this;
+    }
+
+    public ModelBlockBuilder defaultSlabTop() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
+        );
+        return this;
+    }
+
     public ModelBlockBuilder parentCubeColumn() {
         return parent("minecraft:block/cube_column");
     }

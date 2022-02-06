@@ -6,6 +6,10 @@ import org.spoorn.spoornpacks.client.exception.DuplicateNameException;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
 
+/**
+ * 
+ * TODO: Allow specifying if block is wooden or not, for the minecraft tags
+ */
 public interface ResourceBuilder {
 
     ResourceBuilder addBlock(BlockType type) throws DuplicateNameException;

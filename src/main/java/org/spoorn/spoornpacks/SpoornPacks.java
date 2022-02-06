@@ -60,6 +60,7 @@ public class SpoornPacks implements ModInitializer {
                     .addLeavesWithSaplingOverride("dark_pink_blossom", defaultName).addItem(ItemType.LEAVES, "dark_pink_blossom")
                     .addSapling(TreeConfiguredFeatures.OAK).addItem(ItemType.SAPLING)  // You should have your own ConfiguredFeature for trees
                     .addBlock(BlockType.BUTTON).addItem(ItemType.BUTTON)
+                    .addBlock(BlockType.SLAB).addItem(ItemType.SLAB)
                     ;
 
             Resource resource = RESOURCE_GENERATOR.generate(rb);

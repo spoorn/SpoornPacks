@@ -95,6 +95,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftFlowerPots = new TagsBuilder(BLOCKS);
         TagsBuilder hoeMineable = new TagsBuilder(BLOCKS + "/mineable");
         TagsBuilder minecraftWoodenButtons = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftWoodenSlabs = new TagsBuilder(BLOCKS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : blocks.entrySet()) {
@@ -180,6 +181,14 @@ public class ResourceGenerator {
                         minecraftWoodenButtons.value(namespace, name, type);
                         blocksRegistry.registerButton(filename);
                     }
+                    case SLAB -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultSlab());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultSlab());
+                        fileGenerator.generateModelBlock(namespace, filename + "_top", newModelBlockBuilder(namespace, name, type, type.getName() + "_top").defaultSlab());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultSlab());
+                        minecraftWoodenSlabs.value(namespace, name, type);
+                        blocksRegistry.registerSlab(filename);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
@@ -195,6 +204,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "flower_pots", minecraftFlowerPots);
         fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
         fileGenerator.generateTags(MINECRAFT, "wooden_buttons", minecraftWoodenButtons);
+        fileGenerator.generateTags(MINECRAFT, "wooden_slabs", minecraftWoodenSlabs);
 
         // TODO: Remove this if not needed.  Custom tags can be configurable at a higher level
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
@@ -210,10 +220,11 @@ public class ResourceGenerator {
         TagsBuilder minecraftLogs = new TagsBuilder(ITEMS);
         TagsBuilder minecraftPlanks = new TagsBuilder(ITEMS);
         TagsBuilder minecraftLeaves = new TagsBuilder(ITEMS);
-        TagsBuilder minecraftSaplings = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftSaplings = new TagsBuilder(ITEMS);
         TagsBuilder minecraftWoodenFences = new TagsBuilder(ITEMS);
         TagsBuilder minecraftFenceGates = new TagsBuilder(ITEMS);
-        TagsBuilder minecraftWoodenButtons = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftWoodenButtons = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftWoodenSlabs = new TagsBuilder(ITEMS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : items.entrySet()) {
@@ -269,6 +280,12 @@ public class ResourceGenerator {
                         minecraftWoodenButtons.value(namespace, name, type);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
+                    case SLAB -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultSlab());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultSlab());
+                        minecraftWoodenSlabs.value(namespace, name, type);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
@@ -282,6 +299,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "leaves", minecraftLeaves);
         fileGenerator.generateTags(MINECRAFT, "saplings", minecraftSaplings);
         fileGenerator.generateTags(MINECRAFT, "wooden_buttons", minecraftWoodenButtons);
+        fileGenerator.generateTags(MINECRAFT, "wooden_slabs", minecraftWoodenSlabs);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);
