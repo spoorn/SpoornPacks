@@ -60,20 +60,13 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     }
 
     @Override
-    public ResourceBuilder addLeavesWithSaplingOverride(BlockType type, String saplingName) throws DuplicateNameException {
-        if (type != BlockType.LEAVES) {
-            throw new IllegalArgumentException("Can only override saplings for BlockType=" + BlockType.LEAVES);
-        }
-        addLeavesWithSaplingOverride(type, this.defaultName, saplingName);
-        return this;
+    public ResourceBuilder addLeavesWithSaplingOverride(String saplingName) throws DuplicateNameException {
+        return addLeavesWithSaplingOverride(this.defaultName, saplingName);
     }
 
     @Override
-    public ResourceBuilder addLeavesWithSaplingOverride(BlockType type, String name, String saplingName) throws DuplicateNameException {
-        if (type != BlockType.LEAVES) {
-            throw new IllegalArgumentException("Can only override saplings for BlockType=" + BlockType.LEAVES);
-        }
-        registerBlock(type, name);
+    public ResourceBuilder addLeavesWithSaplingOverride(String name, String saplingName) throws DuplicateNameException {
+        registerBlock(BlockType.LEAVES, name);
         this.leavesToSaplingOverrides.put(name, saplingName);
         return this;
     }
@@ -85,7 +78,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
 
     @Override
     public ResourceBuilder addSapling(String name, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) throws DuplicateNameException {
-        registerBlock(BlockType.LEAVES, name);
+        registerBlock(BlockType.SAPLING, name);
         this.saplingConfiguredFeatures.put(name, configuredFeature);
         return this;
     }

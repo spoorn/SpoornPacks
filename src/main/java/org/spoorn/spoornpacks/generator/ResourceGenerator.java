@@ -127,10 +127,11 @@ public class ResourceGenerator {
                     case LEAVES -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultLeaves());
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultLeaves());
-                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultLeaves());
                         if (leavesToSaplingOverrides.containsKey(name)) {
                             fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type)
                                     .leavesWithSapling(leavesToSaplingOverrides.get(name)));
+                        } else {
+                            fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultLeaves());
                         }
                         minecraftLeaves.value(namespace, name, type);
                         hoeMineable.value(namespace, name, type);
@@ -142,10 +143,12 @@ public class ResourceGenerator {
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultSapling());
                         minecraftSaplings.value(namespace, name, type);
                         blocksRegistry.registerSapling(filename, saplingConfiguredFeatures.get(name));
+                        
                         // Sapling in flower pot
                         fileGenerator.generateBlockStates(namespace, POTTED_PREFIX + filename, newBlockStateBuilder(namespace, POTTED_PREFIX + name, type).defaultSapling());
-                        fileGenerator.generateModelBlock(namespace, POTTED_PREFIX + filename, newModelBlockBuilder(namespace, POTTED_PREFIX + name, type, POTTED_PREFIX + type.getName()).defaultSapling());
-                        fileGenerator.generateLootTable(namespace, POTTED_PREFIX + filename, newBlockLootTableBuilder(namespace, POTTED_PREFIX + name, type, POTTED_PREFIX + type.getName()).defaultSapling());
+                        // Model for sapling in a flower pot uses the regular sapling in the models/block and loot_table/blocks files, but uses potted_sapling.jsonT template file
+                        fileGenerator.generateModelBlock(namespace, POTTED_PREFIX + filename, newModelBlockBuilder(namespace, name, type, POTTED_PREFIX + type.getName()).defaultPottedSapling());
+                        fileGenerator.generateLootTable(namespace, POTTED_PREFIX + filename, newBlockLootTableBuilder(namespace, name, type, POTTED_PREFIX + type.getName()).defaultPottedSapling());
                         minecraftFlowerPots.value(namespace, POTTED_PREFIX + name, type);
                     }
                     case FENCE -> {

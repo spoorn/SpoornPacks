@@ -3,6 +3,7 @@ package org.spoorn.spoornpacks.generator;
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import static org.spoorn.spoornpacks.SpoornPacks.PRETTY_PRINTER;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.provider.assets.BlockStateBuilder;
 import org.spoorn.spoornpacks.provider.assets.ModelBlockBuilder;
@@ -11,6 +12,7 @@ import org.spoorn.spoornpacks.provider.data.BlockLootTableBuilder;
 import org.spoorn.spoornpacks.provider.data.RecipeBuilder;
 import org.spoorn.spoornpacks.provider.data.TagsBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -26,11 +28,19 @@ public class FileGenerator {
     private static final String JSON_SUFFIX = ".json";
 
     private final String id;
-    private final boolean overwrite;
 
     FileGenerator(String id, boolean overwrite) {
         this.id = id;
-        this.overwrite = true;
+        if (overwrite) {
+            try {
+                FileUtils.deleteDirectory(new File(SPOORNPACKS_PREFIX + this.id));
+            } catch (IOException e) {
+                String errorMessage = "Mod Id=[" + this.id + "] set overwrite to true for their sub-spoornpack, but could not delete" +
+                        "files at " + SPOORNPACKS_PREFIX + this.id;
+                log.error(errorMessage, e);
+                throw new RuntimeException(errorMessage, e);
+            }
+        }
     }
 
     public boolean generateBlockStates(String namespace, String name, BlockStateBuilder builder) throws IOException {
@@ -101,12 +111,8 @@ public class FileGenerator {
 
         // If file already exists, don't modify it
         if (Files.exists(file)) {
-            if (overwrite) {
-                log.info("Overwriting file at {}", file.toString());
-            } else {
-                log.info("File already exists at, not overwriting at {}", file.toString());
-                return false;
-            }
+            log.warn("File already exists at, not overwriting at {}", file.toString());
+            return false;
         }
 
         Files.writeString(file, OBJECT_MAPPER.writer(PRETTY_PRINTER).writeValueAsString(resourceProvider.getJson()), StandardCharsets.UTF_8);

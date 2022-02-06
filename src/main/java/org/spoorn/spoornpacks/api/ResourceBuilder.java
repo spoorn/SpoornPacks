@@ -20,8 +20,8 @@ public interface ResourceBuilder {
     // More customizable APIs
 
     // TODO: Support setting sapling namespace as well
-    ResourceBuilder addLeavesWithSaplingOverride(BlockType type, String saplingName) throws DuplicateNameException;
-    ResourceBuilder addLeavesWithSaplingOverride(BlockType type, String name, String saplingName) throws DuplicateNameException;
+    ResourceBuilder addLeavesWithSaplingOverride(String saplingName) throws DuplicateNameException;
+    ResourceBuilder addLeavesWithSaplingOverride(String name, String saplingName) throws DuplicateNameException;
 
     ResourceBuilder addSapling(ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) throws DuplicateNameException;
     ResourceBuilder addSapling(String name, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) throws DuplicateNameException;

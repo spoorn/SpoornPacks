@@ -71,6 +71,13 @@ public class ModelBlockBuilder implements ResourceProvider {
         return this;
     }
     
+    public ModelBlockBuilder defaultPottedSapling() {
+        this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultBlockWithTypePrefix
+        );
+        return this;
+    }
+    
     public ModelBlockBuilder defaultFenceGate() {
         this.state = jsonTUtil.substitute(templatePath, ObjectNode.class,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()

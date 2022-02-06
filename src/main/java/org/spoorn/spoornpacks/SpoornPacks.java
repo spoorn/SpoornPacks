@@ -10,6 +10,8 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.resource.ResourcePackSource;
+import net.minecraft.world.gen.feature.ConfiguredFeatures;
+import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.api.ResourceFactory;
@@ -55,7 +57,8 @@ public class SpoornPacks implements ModInitializer {
                     .addBlock(BlockType.FENCE).addItem(ItemType.FENCE)
                     .addBlock(BlockType.FENCE_GATE).addItem(ItemType.FENCE_GATE)
                     .addBlock(BlockType.LEAVES).addItem(ItemType.LEAVES)
-                    .addLeavesWithSaplingOverride(BlockType.LEAVES, "dark_pink_blossom", defaultName).addItem(ItemType.LEAVES, "dark_pink_blossom")
+                    .addLeavesWithSaplingOverride("dark_pink_blossom", defaultName).addItem(ItemType.LEAVES, "dark_pink_blossom")
+                    .addSapling(TreeConfiguredFeatures.OAK).addItem(ItemType.SAPLING)  // You should have your own ConfiguredFeature for trees
                     ;
 
             Resource resource = RESOURCE_GENERATOR.generate(rb);

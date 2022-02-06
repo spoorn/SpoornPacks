@@ -2,7 +2,6 @@ package org.spoorn.spoornpacks.provider.data;
 
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.provider.data.LootTableParts.Pool;
 import org.spoorn.spoornpacks.type.BlockType;
@@ -75,6 +74,13 @@ public class BlockLootTableBuilder implements ResourceProvider {
 
     public BlockLootTableBuilder defaultSapling() {
         return defaultSurvivesExplosion();
+    }
+    
+    public BlockLootTableBuilder defaultPottedSapling() {
+        this.state = this.jsonTUtil.substitute(templatePath, ObjectNode.class,
+                this.defaultPrefixWithType
+        );
+        return this;
     }
 
     public BlockLootTableBuilder typeBlock() {
