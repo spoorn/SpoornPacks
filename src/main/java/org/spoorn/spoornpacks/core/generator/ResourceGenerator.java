@@ -78,9 +78,12 @@ public class ResourceGenerator {
 
         // Blocks
         final TreeMap<String, List<String>> blocks = drb.getBlocks();
+
+        final Map<BlockType, Map<String, Block>> generatedBlocks = new HashMap<>();
+        final Map<ItemType, Map<String, Item>> generatedItems = new HashMap<>();
         
         try {
-            handleBlocks(drb.getNamespace(), blocks, drb.getLeavesToSaplingOverrides(), drb.getSaplingConfiguredFeatures());
+            handleBlocks(generatedBlocks, drb.getNamespace(), blocks, drb.getLeavesToSaplingOverrides(), drb.getSaplingConfiguredFeatures());
         } catch (IOException e) {
             log.error("Could not generate resources for blocks", e);
             throw new RuntimeException(e);
@@ -89,19 +92,20 @@ public class ResourceGenerator {
         // Items
         final Map<String, List<String>> items = drb.getItems();
         try {
-            handleItems(drb.getNamespace(), items, drb.getItemGroup());
+            handleItems(generatedItems, drb.getNamespace(), items, drb.getItemGroup());
         } catch (IOException e) {
             log.error("Could not generate resources for items", e);
             throw new RuntimeException(e);
         }
 
-        GeneratedResource gen = new GeneratedResource(drb.getNamespace());
+        GeneratedResource gen = new GeneratedResource(drb.getNamespace(), generatedBlocks, generatedItems);
         log.info("Done generating some resources for {}!", this.modid);
         return gen;
     }
 
-    private void handleBlocks(String namespace, TreeMap<String, List<String>> blocks, Map<String, String> leavesToSaplingOverrides,
-                              Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures) throws IOException {
+    private void handleBlocks(Map<BlockType, Map<String, Block>> generatedBlocks, String namespace, 
+              TreeMap<String, List<String>> blocks, Map<String, String> leavesToSaplingOverrides,
+              Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftLeaves = new TagsBuilder(BLOCKS);
@@ -178,6 +182,8 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, POTTED_PREFIX + filename, newModelBlockBuilder(namespace, name, type, POTTED_PREFIX + type.getName()).defaultPottedSapling());
                         fileGenerator.generateLootTable(namespace, POTTED_PREFIX + filename, newBlockLootTableBuilder(namespace, name, type, POTTED_PREFIX + type.getName()).defaultPottedSapling());
                         minecraftFlowerPots.value(namespace, POTTED_PREFIX + name, type);
+                        Block flowerBlock = blocksRegistry.registerFlowerPot("potted_" + filename, block);
+                        generatedBlocks.computeIfAbsent(type, m -> new HashMap<>()).put("potted_" + name, flowerBlock);
                     }
                     case FENCE -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultFence());
@@ -285,6 +291,7 @@ public class ResourceGenerator {
                 if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
                     SPRenderLayers.registerRenderLayer(type, block);
                 }
+                generatedBlocks.computeIfAbsent(type, m -> new HashMap<>()).put(name, block);
             }
         }
 
@@ -318,7 +325,8 @@ public class ResourceGenerator {
         }
     }
 
-    private void handleItems(String namespace, Map<String, List<String>> items, ItemGroup itemGroup) throws IOException {
+    private void handleItems(Map<ItemType, Map<String, Item>> generatedItems, String namespace, 
+                             Map<String, List<String>> items, ItemGroup itemGroup) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(ITEMS);
         TagsBuilder minecraftPlanks = new TagsBuilder(ITEMS);
         TagsBuilder minecraftLeaves = new TagsBuilder(ITEMS);
@@ -450,6 +458,7 @@ public class ResourceGenerator {
 
                 // Register furnace fuel times for items
                 SPFurnaceBlockFuelTimes.registerFurnaceBlockFuelTime(type, item);
+                generatedItems.computeIfAbsent(type, m -> new HashMap<>()).put(name, item);
             }
         }
 

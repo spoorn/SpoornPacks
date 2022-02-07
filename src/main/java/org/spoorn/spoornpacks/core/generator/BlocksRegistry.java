@@ -57,14 +57,13 @@ public class BlocksRegistry {
 
     public Block registerSapling(String id, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) {
         Block block = new SPSaplingBlock(new SPSaplingGenerator(configuredFeature), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING));
-        registerFlowerPot("potted_" + id, block);
         return registerBlock(id, block);
     }
 
-    public void registerFlowerPot(String id, Block saplingBlock) {
+    public Block registerFlowerPot(String id, Block saplingBlock) {
         Block block = new FlowerPotBlock(saplingBlock, FabricBlockSettings.copyOf(Blocks.POTTED_OAK_SAPLING));
         SPRenderLayers.registerRenderLayer(BlockType.SAPLING, block);
-        registerBlock(id, block);
+        return registerBlock(id, block);
     }
 
     public Block registerFence(String id) {
