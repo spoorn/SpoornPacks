@@ -63,50 +63,10 @@ public class BlockStateBuilder implements ResourceProvider {
     }
 
     public BlockStateBuilder defaultFence() {
-        addMultipart(Multipart.builder()
-                .apply(Apply.builder()
-                        .model(defaultBlockWithTypePrefix + "_post")
-                        .build())
-                .build());
-        addMultipart(Multipart.builder()
-                .when(When.builder()
-                        .north("true")
-                        .build())
-                .apply(Apply.builder()
-                        .model(defaultBlockWithTypePrefix + "_side")
-                        .uvlock(true)
-                        .build())
-                .build());
-        addMultipart(Multipart.builder()
-                .when(When.builder()
-                        .east("true")
-                        .build())
-                .apply(Apply.builder()
-                        .model(defaultBlockWithTypePrefix + "_side")
-                        .y(90)
-                        .uvlock(true)
-                        .build())
-                .build());
-        addMultipart(Multipart.builder()
-                .when(When.builder()
-                        .south("true")
-                        .build())
-                .apply(Apply.builder()
-                        .model(defaultBlockWithTypePrefix + "_side")
-                        .y(180)
-                        .uvlock(true)
-                        .build())
-                .build());
-        addMultipart(Multipart.builder()
-                .when(When.builder()
-                        .west("true")
-                        .build())
-                .apply(Apply.builder()
-                        .model(defaultBlockWithTypePrefix + "_side")
-                        .y(270)
-                        .uvlock(true)
-                        .build())
-                .build());
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                defaultBlockWithTypePrefix + "_post",
+                defaultBlockWithTypePrefix + "_side"
+        );
         return this;
     }
     
