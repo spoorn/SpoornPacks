@@ -16,7 +16,7 @@ import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.api.ResourceFactory;
-import org.spoorn.spoornpacks.client.exception.DuplicateNameException;
+import org.spoorn.spoornpacks.exception.DuplicateNameException;
 import org.spoorn.spoornpacks.core.generator.ResourceGenerator;
 import org.spoorn.spoornpacks.registry.SpoornPacksRegistry;
 import org.spoorn.spoornpacks.type.BlockType;

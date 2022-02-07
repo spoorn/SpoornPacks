@@ -2,7 +2,7 @@ package org.spoorn.spoornpacks.api;
 
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
-import org.spoorn.spoornpacks.client.exception.DuplicateNameException;
+import org.spoorn.spoornpacks.exception.DuplicateNameException;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
 

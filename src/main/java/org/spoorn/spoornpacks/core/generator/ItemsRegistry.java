@@ -12,8 +12,11 @@ import org.spoorn.spoornpacks.entity.SPEntities;
 import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
 import org.spoorn.spoornpacks.item.SPBoatItem;
 
-public class ItemsRegistry {
+import java.util.ArrayList;
+import java.util.List;
 
+public class ItemsRegistry {
+    
     private final String modid;
 
     public ItemsRegistry(String modid) {

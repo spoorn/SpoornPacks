@@ -13,24 +13,19 @@ import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.block.SPCraftingTableBlock;
 import org.spoorn.spoornpacks.block.SPSaplingBlock;
 import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
+import org.spoorn.spoornpacks.client.render.SPRenderLayers;
 import org.spoorn.spoornpacks.mixin.*;
+import org.spoorn.spoornpacks.type.BlockType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class BlocksRegistry {
-
-    public static final List<Block> SAPLINGS = new ArrayList<>();
-    public static final List<Block> POTTED_BLOCKS = new ArrayList<>();
-    public static final List<Block> DOOR_BLOCKS = new ArrayList<>();
-    public static final List<Block> FENCES = new ArrayList<>();
-    public static final List<Block> FENCE_GATES = new ArrayList<>();
-    public static final List<Block> TRAPDOORS = new ArrayList<>();
+    
 
     private final String modid;
-    final Map<Identifier, Block> register = new HashMap<>();
+    
+    public final Map<Identifier, Block> register = new HashMap<>();
 
     public BlocksRegistry(String modid) {
         this.modid = modid;
@@ -62,25 +57,23 @@ public class BlocksRegistry {
 
     public Block registerSapling(String id, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) {
         Block block = new SPSaplingBlock(new SPSaplingGenerator(configuredFeature), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING));
-        SAPLINGS.add(block);
         registerFlowerPot("potted_" + id, block);
         return registerBlock(id, block);
     }
 
     public void registerFlowerPot(String id, Block saplingBlock) {
         Block block = new FlowerPotBlock(saplingBlock, FabricBlockSettings.copyOf(Blocks.POTTED_OAK_SAPLING));
-        POTTED_BLOCKS.add(registerBlock(id, block));
+        SPRenderLayers.registerRenderLayer(BlockType.SAPLING, block);
+        registerBlock(id, block);
     }
 
     public Block registerFence(String id) {
         Block block = new FenceBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE));
-        FENCES.add(block);
         return registerBlock(id, block);
     }
 
     public Block registerFenceGate(String id) {
         Block block = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
-        FENCE_GATES.add(block);
         return registerBlock(id, block);
     }
 
@@ -107,13 +100,11 @@ public class BlocksRegistry {
 
     public Block registerTrapdoor(String id) {
         Block block = TrapdoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
-        TRAPDOORS.add(block);
         return registerBlock(id, block);
     }
 
     public Block registerDoor(String id) {
         Block block = DoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_DOOR));
-        DOOR_BLOCKS.add(block);
         return registerBlock(id, block);
     }
 

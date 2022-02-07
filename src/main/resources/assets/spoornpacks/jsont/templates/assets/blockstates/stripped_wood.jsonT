@@ -6,7 +6,7 @@
       "y": 90
     },
     "axis=y": {
-      "model": ${string:2}
+      "model": ${string:1}
     },
     "axis=z": {
       "model": ${string:1},

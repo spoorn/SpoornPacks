@@ -197,8 +197,7 @@ public class ModelBlockBuilder implements ResourceProvider {
         );
         return this;
     }
-
-    // Same for wood and wood_horizontal
+    
     public ModelBlockBuilder defaultStrippedWood() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + BlockType.LOG.getSuffix()

@@ -141,7 +141,6 @@ public class BlockStateBuilder implements ResourceProvider {
 
     public BlockStateBuilder defaultStrippedWood() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockWithTypePrefix + "_horizontal",
                 this.defaultBlockWithTypePrefix
         );
         return this;
