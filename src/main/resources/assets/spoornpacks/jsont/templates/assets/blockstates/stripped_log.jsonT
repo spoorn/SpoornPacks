@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": ${string:1},
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": ${string:2}
+    },
+    "axis=z": {
+      "model": ${string:1},
+      "x": 90
+    }
+  }
+}

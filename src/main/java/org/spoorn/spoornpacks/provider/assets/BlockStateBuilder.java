@@ -3,9 +3,7 @@ package org.spoorn.spoornpacks.provider.assets;
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
-import org.spoorn.spoornpacks.provider.assets.BlockStateParts.Apply;
 import org.spoorn.spoornpacks.provider.assets.BlockStateParts.Multipart;
-import org.spoorn.spoornpacks.provider.assets.BlockStateParts.When;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.util.JsonTUtil;
 
@@ -129,6 +127,15 @@ public class BlockStateBuilder implements ResourceProvider {
                 this.defaultBlockWithTypePrefix + "_bottom_hinge",
                 this.defaultBlockWithTypePrefix + "_top",
                 this.defaultBlockWithTypePrefix + "_top_hinge"
+        );
+        return this;
+    }
+
+    public BlockStateBuilder defaultStrippedLog() {
+        String strippedName = this.namespace + ":block/" + this.type.getPrefix() + this.name + this.type.getSuffix();
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                strippedName + "_horizontal",
+                strippedName
         );
         return this;
     }

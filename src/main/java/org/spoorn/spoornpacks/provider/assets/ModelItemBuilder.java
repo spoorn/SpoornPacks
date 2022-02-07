@@ -23,7 +23,8 @@ public class ModelItemBuilder implements ResourceProvider {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
-        this.defaultBlockWithTypePrefix = this.namespace + ":block/" + this.name + "_" + this.type.getName();
+        // We use prefix + suffix here as ItemTypes defaults suffix to the name
+        this.defaultBlockWithTypePrefix = this.namespace + ":block/" + this.type.getPrefix() + this.name + this.type.getSuffix();
         this.templatePath = templatePath;
     }
 
@@ -99,6 +100,10 @@ public class ModelItemBuilder implements ResourceProvider {
                 this.namespace + ":item/" + this.name + "_" + this.type.getName()
         );
         return this;
+    }
+
+    public ModelItemBuilder defaultStrippedLog() {
+        return parent();
     }
 
     public ModelItemBuilder parent() {

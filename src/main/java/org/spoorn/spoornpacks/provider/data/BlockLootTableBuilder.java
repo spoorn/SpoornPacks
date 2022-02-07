@@ -26,8 +26,8 @@ public class BlockLootTableBuilder implements ResourceProvider {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
-        this.defaultPrefix = this.namespace + ":" + this.name;
-        this.defaultPrefixWithType = this.defaultPrefix + "_" + type.getName();
+        this.defaultPrefix = this.namespace + ":" + type.getPrefix() + this.name;
+        this.defaultPrefixWithType = this.defaultPrefix + type.getSuffix();
         this.templatePath = templatePath;
     }
 
@@ -114,6 +114,10 @@ public class BlockLootTableBuilder implements ResourceProvider {
     }
 
     public BlockLootTableBuilder defaultCraftingTable() {
+        return defaultSurvivesExplosion();
+    }
+
+    public BlockLootTableBuilder defaultStrippedLog() {
         return defaultSurvivesExplosion();
     }
 

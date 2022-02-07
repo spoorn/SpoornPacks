@@ -245,6 +245,16 @@ public class ResourceGenerator {
                         axeMineable.value(namespace, name, type);
                         blocksRegistry.registerCraftingTable(filename);
                     }
+                    case STRIPPED_LOG -> {
+                        filename = type.getPrefix() + name + type.getSuffix();
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultStrippedLog());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultStrippedLog());
+                        fileGenerator.generateModelBlock(namespace, filename + "_horizontal", newModelBlockBuilder(namespace, name, type, type.getName() + "_horizontal").defaultStrippedLog());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultStrippedLog());
+                        minecraftLogs.value(namespace + ":" + filename);
+                        customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
+                        blocksRegistry.registerLog(filename);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
@@ -389,6 +399,13 @@ public class ResourceGenerator {
                         itemsRegistry.registerBoatItem(namespace, filename, this.spBoatRegistry, boatType, this.spEntities);
                         EntityType<SPBoatEntity> boatEntityType = this.spEntities.registerBoatEntityType(namespace, this.spBoatRegistry);
                         EntityRenderersAccessor.registerEntityRenderer(boatEntityType, (ctx) -> new SPBoatEntityRenderer(this.spBoatRegistry, ctx));
+                    }
+                    case STRIPPED_LOG -> {
+                        filename = type.getPrefix() + name + type.getSuffix();
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultStrippedLog());
+                        minecraftLogs.value(namespace + ":" + filename);
+                        customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }

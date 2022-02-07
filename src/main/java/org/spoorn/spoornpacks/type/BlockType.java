@@ -1,10 +1,13 @@
 package org.spoorn.spoornpacks.type;
 
+import lombok.Getter;
 import lombok.ToString;
 
+@Getter
 @ToString
 public enum BlockType {
     LOG("log"),
+    STRIPPED_LOG("stripped_log", "stripped_", "_log"),
     WOOD("wood"),
     PLANKS("planks"),
     LEAVES("leaves"),
@@ -20,13 +23,20 @@ public enum BlockType {
     CRAFTING_TABLE("crafting_table");
 
     private final String name;
+    
+    // For use cases where there is a prefix and a suffix to the name, such as "stripped_<name>_log"
+    private String prefix;
+    private String suffix;
 
     BlockType(String name) {
-        this.name = name;
+        // Default to setting the name as the suffix as most items do that
+        this(name, "", "_" + name);
     }
-
-    public String getName() {
-        return this.name;
+    
+    BlockType(String name, String prefix, String suffix) {
+        this.name = name;
+        this.prefix = prefix;
+        this.suffix = suffix;
     }
 
     public static BlockType fromString(String name) {

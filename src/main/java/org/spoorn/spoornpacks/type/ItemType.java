@@ -1,7 +1,11 @@
 package org.spoorn.spoornpacks.type;
 
+import lombok.Getter;
+
+@Getter
 public enum ItemType {
     LOG("log"),
+    STRIPPED_LOG("stripped_log", "stripped_", "_log"),
     WOOD("wood"),
     PLANKS("planks"),
     LEAVES("leaves"),
@@ -19,8 +23,19 @@ public enum ItemType {
 
     private final String name;
 
+    // For use cases where there is a prefix and a suffix to the name, such as "stripped_<name>_log"
+    private String prefix;
+    private String suffix;
+
     ItemType(String name) {
+        // Default to setting the name as the suffix as most items use that as the suffix
+        this(name, "", "_" + name);
+    }
+
+    ItemType(String name, String prefix, String suffix) {
         this.name = name;
+        this.prefix = prefix;
+        this.suffix = suffix;
     }
 
     public String getName() {

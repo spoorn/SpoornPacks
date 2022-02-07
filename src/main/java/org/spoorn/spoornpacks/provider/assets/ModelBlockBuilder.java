@@ -188,6 +188,16 @@ public class ModelBlockBuilder implements ResourceProvider {
     public ModelBlockBuilder defaultStairsOuter() {
         return substitutePlanks();
     }
+
+    // Same for log and log_horizontal
+    public ModelBlockBuilder defaultStrippedLog() {
+        String strippedName = this.namespace + ":block/" + this.type.getPrefix() + this.name + this.type.getSuffix();
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                strippedName + "_top",
+                strippedName
+        );
+        return this;
+    }
     
     private ModelBlockBuilder substitutePlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
