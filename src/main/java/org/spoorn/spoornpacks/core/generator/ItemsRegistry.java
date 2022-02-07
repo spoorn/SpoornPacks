@@ -24,18 +24,18 @@ public class ItemsRegistry {
     }
 
     // TODO: Add item groups
-    public Item registerBlockItem(String id, Block block) {
-        return registerItem(id, new BlockItem(block, new FabricItemSettings().group(ItemGroup.MISC)));
+    public Item registerBlockItem(String id, Block block, ItemGroup itemGroup) {
+        return registerItem(id, new BlockItem(block, new FabricItemSettings().group(itemGroup)));
     }
 
-    public Item registerSaplingItem(String id, Block block) {
-        Item item = new BlockItem(block, new FabricItemSettings().group(ItemGroup.MISC));
+    public Item registerSaplingItem(String id, Block block, ItemGroup itemGroup) {
+        Item item = new BlockItem(block, new FabricItemSettings().group(itemGroup));
         registerCompostable(item);
         return registerItem(id, item);
     }
 
-    public Item registerBoatItem(String namespace, String id, SPBoatRegistry spBoatRegistry, SPBoatRegistry.BoatType boatType, SPEntities spEntities) {
-        Item item = new SPBoatItem(spEntities, spBoatRegistry, boatType, new Item.Settings().maxCount(1).group(ItemGroup.MISC));
+    public Item registerBoatItem(String id, SPBoatRegistry spBoatRegistry, SPBoatRegistry.BoatType boatType, SPEntities spEntities, ItemGroup itemGroup) {
+        Item item = new SPBoatItem(spEntities, spBoatRegistry, boatType, new Item.Settings().maxCount(1).group(itemGroup));
         return registerItem(id, item);
     }
     

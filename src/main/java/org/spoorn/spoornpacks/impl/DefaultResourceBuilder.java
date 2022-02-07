@@ -1,6 +1,7 @@
 package org.spoorn.spoornpacks.impl;
 
 import lombok.Getter;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
@@ -15,6 +16,8 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     @Getter
     private final String namespace;
     private final String defaultName;
+    @Getter
+    private final ItemGroup itemGroup;
 
     // We make blocks a tree map so we can conveniently process Planks before Stairs.
     // This is because stair blocks depend on the plank blocks.  See StairBlock's constructor
@@ -30,11 +33,12 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     private final Set<String> blockIds = new HashSet<>();
     private final Set<String> itemIds = new HashSet<>();
 
-    public DefaultResourceBuilder(String namespace, String defaultName) {
+    public DefaultResourceBuilder(String namespace, String defaultName, ItemGroup itemGroup) {
         validateNamesapce(namespace);
         validateName(defaultName);
         this.namespace = namespace;
         this.defaultName = defaultName;
+        this.itemGroup = itemGroup;
     }
 
     @Override
@@ -55,8 +59,10 @@ public class DefaultResourceBuilder implements ResourceBuilder {
 
     @Override
     public ResourceBuilder addBlock(BlockType type) throws DuplicateNameException {
-        registerBlock(type, this.defaultName);
-        return this;
+        if (type == BlockType.SAPLING) {
+            throw new IllegalArgumentException("BlockType=SAPLING should be added via #addSapling");
+        }
+        return addBlock(type, this.defaultName);
     }
 
     @Override
@@ -67,8 +73,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
 
     @Override
     public ResourceBuilder addItem(ItemType type) throws DuplicateNameException {
-        registerItem(type, this.defaultName);
-        return this;
+        return addItem(type, this.defaultName);
     }
 
     @Override

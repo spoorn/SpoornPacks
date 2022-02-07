@@ -9,9 +9,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourcePackSource;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
@@ -55,7 +59,13 @@ public class SpoornPacks implements ModInitializer {
     public static void test() {
         try {
             String defaultName = "pink_blossom";
-            ResourceBuilder rb = ResourceFactory.create("spoornpink", defaultName)
+            
+            ItemGroup itemGroup = FabricItemGroupBuilder.build(
+                    new Identifier("spoornpink", "general"),
+                    ResourceFactory.fetchItemGroupSupplierFromBlock("spoornpink", "pink_blossom_sapling")
+            );
+            
+            ResourceBuilder rb = ResourceFactory.create("spoornpink", defaultName, itemGroup)
                     .addBlocks(BlockType.LOG, BlockType.WOOD, BlockType.PLANKS, BlockType.FENCE, BlockType.FENCE_GATE, 
                             BlockType.LEAVES, BlockType.BUTTON, BlockType.SLAB, BlockType.PRESSURE_PLATE, BlockType.STAIRS,
                             BlockType.TRAPDOOR, BlockType.DOOR, BlockType.CRAFTING_TABLE, BlockType.STRIPPED_LOG, BlockType.STRIPPED_WOOD)
