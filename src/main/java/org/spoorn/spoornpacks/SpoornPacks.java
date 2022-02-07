@@ -10,14 +10,12 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.resource.ResourcePackSource;
-import net.minecraft.world.gen.feature.ConfiguredFeatures;
 import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.api.ResourceFactory;
 import org.spoorn.spoornpacks.client.exception.DuplicateNameException;
-import org.spoorn.spoornpacks.generator.ResourceGenerator;
-import org.spoorn.spoornpacks.jsont.JsonT;
+import org.spoorn.spoornpacks.core.generator.ResourceGenerator;
 import org.spoorn.spoornpacks.registry.SpoornPacksRegistry;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
@@ -53,10 +51,10 @@ public class SpoornPacks implements ModInitializer {
             ResourceBuilder rb = ResourceFactory.create("spoornpink", defaultName)
                     .addBlocks(BlockType.LOG, BlockType.WOOD, BlockType.PLANKS, BlockType.FENCE, BlockType.FENCE_GATE, 
                             BlockType.LEAVES, BlockType.BUTTON, BlockType.SLAB, BlockType.PRESSURE_PLATE, BlockType.STAIRS,
-                            BlockType.TRAPDOOR, BlockType.DOOR)
+                            BlockType.TRAPDOOR, BlockType.DOOR, BlockType.CRAFTING_TABLE)
                     .addItems(ItemType.LOG, ItemType.WOOD, ItemType.PLANKS, ItemType.FENCE, ItemType.FENCE_GATE, 
                             ItemType.LEAVES, ItemType.BUTTON, ItemType.SLAB, ItemType.PRESSURE_PLATE, ItemType.STAIRS,
-                            ItemType.TRAPDOOR, ItemType.DOOR)
+                            ItemType.TRAPDOOR, ItemType.DOOR, ItemType.CRAFTING_TABLE)
                     .addLeavesWithSaplingOverride("dark_pink_blossom", defaultName).addItem(ItemType.LEAVES, "dark_pink_blossom")
                     .addSapling(TreeConfiguredFeatures.OAK).addItem(ItemType.SAPLING)  // You should have your own ConfiguredFeature for trees
                     ;

@@ -1,4 +1,4 @@
-package org.spoorn.spoornpacks.generator;
+package org.spoorn.spoornpacks.core.generator;
 
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.util.Identifier;
@@ -91,13 +91,14 @@ public class ResourceGenerator {
         TagsBuilder minecraftWoodenFences = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftFenceGates = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftFlowerPots = new TagsBuilder(BLOCKS);
-        TagsBuilder hoeMineable = new TagsBuilder(BLOCKS + "/mineable");
         TagsBuilder minecraftWoodenButtons = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenSlabs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenPressurePlates = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenStairs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenTrapdoors = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenDoors = new TagsBuilder(BLOCKS);
+        TagsBuilder hoeMineable = new TagsBuilder(BLOCKS + "/mineable");
+        TagsBuilder axeMineable = new TagsBuilder(BLOCKS + "/mineable");
         Map<String, List<String>> customLogs = new HashMap<>();
 
         // We make blocks a tree map so we can conveniently process Planks before Stairs.
@@ -229,6 +230,13 @@ public class ResourceGenerator {
                         minecraftWoodenDoors.value(namespace, name, type);
                         blocksRegistry.registerDoor(filename);
                     }
+                    case CRAFTING_TABLE -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultCraftingTable());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultCraftingTable());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultCraftingTable());
+                        axeMineable.value(namespace, name, type);
+                        blocksRegistry.registerCraftingTable(filename);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
@@ -242,15 +250,16 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "leaves", minecraftLeaves);
         fileGenerator.generateTags(MINECRAFT, "saplings", minecraftSaplings);
         fileGenerator.generateTags(MINECRAFT, "flower_pots", minecraftFlowerPots);
-        fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
         fileGenerator.generateTags(MINECRAFT, "wooden_buttons", minecraftWoodenButtons);
         fileGenerator.generateTags(MINECRAFT, "wooden_slabs", minecraftWoodenSlabs);
         fileGenerator.generateTags(MINECRAFT, "wooden_pressure_plates", minecraftWoodenPressurePlates);
         fileGenerator.generateTags(MINECRAFT, "wooden_stairs", minecraftWoodenStairs);
         fileGenerator.generateTags(MINECRAFT, "wooden_trapdoors", minecraftWoodenTrapdoors);
         fileGenerator.generateTags(MINECRAFT, "wooden_doors", minecraftWoodenDoors);
+        fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
+        fileGenerator.generateTags(MINECRAFT, "axe", axeMineable);
 
-        // TODO: Remove this if not needed.  Custom tags can be configurable at a higher level
+        // Custom logs are needed for some recipes, such as Planks recipes, which can be from any log of the same name
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(BLOCKS);
             for (String value : entry.getValue()) {
@@ -356,6 +365,11 @@ public class ResourceGenerator {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultDoor());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultDoor());
                         minecraftWoodenDoors.value(namespace, name, type);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
+                    }
+                    case CRAFTING_TABLE -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultCraftingTable());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultCraftingTable());
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");

@@ -138,6 +138,16 @@ public class ModelBlockBuilder implements ResourceProvider {
         );
         return this;
     }
+    
+    public ModelBlockBuilder defaultCraftingTable() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix + "_front",
+                this.defaultBlockWithTypePrefix + "_side",
+                this.defaultBlockWithTypePrefix + "_top",
+                this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()
+        );
+        return this;
+    }
 
     public ModelBlockBuilder defaultButton() {
         return substitutePlanks();

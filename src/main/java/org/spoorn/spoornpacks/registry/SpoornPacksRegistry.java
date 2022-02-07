@@ -1,6 +1,6 @@
 package org.spoorn.spoornpacks.registry;
 
-import org.spoorn.spoornpacks.generator.ResourceGenerator;
+import org.spoorn.spoornpacks.core.generator.ResourceGenerator;
 
 import java.util.ArrayList;
 import java.util.List;

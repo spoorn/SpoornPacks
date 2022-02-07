@@ -1,4 +1,4 @@
-package org.spoorn.spoornpacks.generator;
+package org.spoorn.spoornpacks.core.generator;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Block;

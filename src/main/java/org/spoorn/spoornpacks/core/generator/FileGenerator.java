@@ -1,4 +1,4 @@
-package org.spoorn.spoornpacks.generator;
+package org.spoorn.spoornpacks.core.generator;
 
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import static org.spoorn.spoornpacks.SpoornPacks.PRETTY_PRINTER;

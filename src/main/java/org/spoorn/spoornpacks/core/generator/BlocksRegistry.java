@@ -1,4 +1,4 @@
-package org.spoorn.spoornpacks.generator;
+package org.spoorn.spoornpacks.core.generator;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -10,6 +10,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
+import org.spoorn.spoornpacks.block.SPCraftingTableBlock;
 import org.spoorn.spoornpacks.block.SPSaplingBlock;
 import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
 import org.spoorn.spoornpacks.mixin.*;
@@ -113,6 +114,11 @@ public class BlocksRegistry {
     public Block registerDoor(String id) {
         Block block = DoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_DOOR));
         DOOR_BLOCKS.add(block);
+        return registerBlock(id, block);
+    }
+
+    public Block registerCraftingTable(String id) {
+        Block block = new SPCraftingTableBlock(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE));
         return registerBlock(id, block);
     }
     
