@@ -83,6 +83,13 @@ public class ModelItemBuilder implements ResourceProvider {
         return parent(this.defaultBlockWithTypePrefix + "_bottom");
     }
 
+    public ModelItemBuilder defaultDoor() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.namespace + ":item/" + this.name + "_" + this.type.getName()
+        );
+        return this;
+    }
+
     public ModelItemBuilder parent() {
         return parent(defaultBlockWithTypePrefix);
     }

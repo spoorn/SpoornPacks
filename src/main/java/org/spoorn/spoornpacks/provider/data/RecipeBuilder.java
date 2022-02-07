@@ -98,6 +98,10 @@ public class RecipeBuilder implements ResourceProvider {
     public RecipeBuilder defaultTrapdoor() {
         return fromPlanks();
     }
+
+    public RecipeBuilder defaultDoor() {
+        return fromPlanks();
+    }
     
     private RecipeBuilder fromPlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,

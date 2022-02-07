@@ -12,10 +12,7 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.block.SPSaplingBlock;
 import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
-import org.spoorn.spoornpacks.mixin.PressurePlateBlockAccessor;
-import org.spoorn.spoornpacks.mixin.StairsBlockAccessor;
-import org.spoorn.spoornpacks.mixin.TrapdoorBlockAccessor;
-import org.spoorn.spoornpacks.mixin.WoodenButtonBlockAccessor;
+import org.spoorn.spoornpacks.mixin.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,6 +107,12 @@ public class BlocksRegistry {
     public Block registerTrapdoor(String id) {
         Block block = TrapdoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
         TRAPDOORS.add(block);
+        return registerBlock(id, block);
+    }
+
+    public Block registerDoor(String id) {
+        Block block = DoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_DOOR));
+        DOOR_BLOCKS.add(block);
         return registerBlock(id, block);
     }
     

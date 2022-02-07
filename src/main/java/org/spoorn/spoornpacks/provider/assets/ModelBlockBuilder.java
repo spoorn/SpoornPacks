@@ -2,12 +2,9 @@ package org.spoorn.spoornpacks.provider.assets;
 
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.util.JsonTUtil;
-
-import java.io.IOException;
 
 public class ModelBlockBuilder implements ResourceProvider {
 
@@ -129,6 +126,15 @@ public class ModelBlockBuilder implements ResourceProvider {
     public ModelBlockBuilder defaultTrapdoorTop() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockWithTypePrefix
+        );
+        return this;
+    }
+
+    // This is the same for door_bottom/bottom_hinge/top/top_hinge
+    public ModelBlockBuilder defaultDoorPart() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix + "_top",
+                this.defaultBlockWithTypePrefix + "_bottom"
         );
         return this;
     }

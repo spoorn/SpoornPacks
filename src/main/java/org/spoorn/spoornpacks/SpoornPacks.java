@@ -53,10 +53,10 @@ public class SpoornPacks implements ModInitializer {
             ResourceBuilder rb = ResourceFactory.create("spoornpink", defaultName)
                     .addBlocks(BlockType.LOG, BlockType.WOOD, BlockType.PLANKS, BlockType.FENCE, BlockType.FENCE_GATE, 
                             BlockType.LEAVES, BlockType.BUTTON, BlockType.SLAB, BlockType.PRESSURE_PLATE, BlockType.STAIRS,
-                            BlockType.TRAPDOOR)
+                            BlockType.TRAPDOOR, BlockType.DOOR)
                     .addItems(ItemType.LOG, ItemType.WOOD, ItemType.PLANKS, ItemType.FENCE, ItemType.FENCE_GATE, 
                             ItemType.LEAVES, ItemType.BUTTON, ItemType.SLAB, ItemType.PRESSURE_PLATE, ItemType.STAIRS,
-                            ItemType.TRAPDOOR)
+                            ItemType.TRAPDOOR, ItemType.DOOR)
                     .addLeavesWithSaplingOverride("dark_pink_blossom", defaultName).addItem(ItemType.LEAVES, "dark_pink_blossom")
                     .addSapling(TreeConfiguredFeatures.OAK).addItem(ItemType.SAPLING)  // You should have your own ConfiguredFeature for trees
                     ;

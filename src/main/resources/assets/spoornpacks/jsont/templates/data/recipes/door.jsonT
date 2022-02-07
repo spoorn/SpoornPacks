@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wooden_door",
+  "pattern": [
+    "##",
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": ${string:1}
+    }
+  },
+  "result": {
+    "item": ${string:2},
+    "count": 3
+  }
+}
