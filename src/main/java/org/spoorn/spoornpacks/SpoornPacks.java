@@ -34,7 +34,7 @@ public class SpoornPacks implements ModInitializer {
     public static final String MODID = "SpoornPacks";
     public static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static DefaultPrettyPrinter PRETTY_PRINTER = new DefaultPrettyPrinter();
-    public static ResourceGenerator RESOURCE_GENERATOR = SpoornPacksRegistry.registerResource("spoornpink");
+    private static ResourceGenerator RESOURCE_GENERATOR = SpoornPacksRegistry.registerResource("spoornpink");
 
     public static ResourcePackSource RESOURCE_PACK_SOURCE = ResourcePackSource.nameAndSource("pack.source.spoornpacks");
 
@@ -53,7 +53,7 @@ public class SpoornPacks implements ModInitializer {
     public void onInitialize() {
         log.info("Hello from SpoornPacks!");
 
-        test();
+        //test();
     }
 
     public static void test() {
