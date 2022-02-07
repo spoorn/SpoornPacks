@@ -106,6 +106,10 @@ public class RecipeBuilder implements ResourceProvider {
     public RecipeBuilder defaultCraftingTable() {
         return fromPlanks();
     }
+
+    public RecipeBuilder defaultBoat() {
+        return fromPlanks();
+    }
     
     private RecipeBuilder fromPlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,

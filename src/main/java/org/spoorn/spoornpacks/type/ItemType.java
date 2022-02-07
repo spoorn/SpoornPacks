@@ -14,7 +14,8 @@ public enum ItemType {
     STAIRS("stairs"),
     TRAPDOOR("trapdoor"),
     DOOR("door"),
-    CRAFTING_TABLE("crafting_table");
+    CRAFTING_TABLE("crafting_table"),
+    BOAT("boat");
 
     private final String name;
 

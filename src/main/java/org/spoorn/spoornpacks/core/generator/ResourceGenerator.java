@@ -1,13 +1,19 @@
 package org.spoorn.spoornpacks.core.generator;
 
 import lombok.extern.log4j.Log4j2;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
+import org.spoorn.spoornpacks.entity.SPEntities;
+import org.spoorn.spoornpacks.entity.boat.SPBoatEntity;
+import org.spoorn.spoornpacks.entity.boat.SPBoatEntityRenderer;
+import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
 import org.spoorn.spoornpacks.impl.DefaultResourceBuilder;
 import org.spoorn.spoornpacks.impl.GeneratedResource;
+import org.spoorn.spoornpacks.mixin.EntityRenderersAccessor;
 import org.spoorn.spoornpacks.provider.assets.BlockStateBuilder;
 import org.spoorn.spoornpacks.provider.assets.ModelBlockBuilder;
 import org.spoorn.spoornpacks.provider.assets.ModelItemBuilder;
@@ -42,6 +48,8 @@ public class ResourceGenerator {
     private final String modid;
     private final BlocksRegistry blocksRegistry;
     private final ItemsRegistry itemsRegistry;
+    private final SPBoatRegistry spBoatRegistry = new SPBoatRegistry();
+    private final SPEntities spEntities = new SPEntities();
 
     public ResourceGenerator(String modid, boolean overwrite) {
         this.modid = modid;
@@ -282,6 +290,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftWoodenStairs = new TagsBuilder(ITEMS);
         TagsBuilder minecraftWoodenTrapdoors = new TagsBuilder(ITEMS);
         TagsBuilder minecraftWoodenDoors = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftBoats = new TagsBuilder(ITEMS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : items.entrySet()) {
@@ -372,6 +381,15 @@ public class ResourceGenerator {
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultCraftingTable());
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
                     }
+                    case BOAT -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultBoat());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultBoat());
+                        minecraftBoats.value(namespace, name, type);
+                        SPBoatRegistry.BoatType boatType = this.spBoatRegistry.registerBoat(namespace, name);
+                        itemsRegistry.registerBoatItem(namespace, filename, this.spBoatRegistry, boatType, this.spEntities);
+                        EntityType<SPBoatEntity> boatEntityType = this.spEntities.registerBoatEntityType(namespace, this.spBoatRegistry);
+                        EntityRenderersAccessor.registerEntityRenderer(boatEntityType, (ctx) -> new SPBoatEntityRenderer(this.spBoatRegistry, ctx));
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
             }
@@ -390,6 +408,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "wooden_stairs", minecraftWoodenStairs);
         fileGenerator.generateTags(MINECRAFT, "wooden_trapdoors", minecraftWoodenTrapdoors);
         fileGenerator.generateTags(MINECRAFT, "wooden_doors", minecraftWoodenDoors);
+        fileGenerator.generateTags(MINECRAFT, "boats", minecraftBoats);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);

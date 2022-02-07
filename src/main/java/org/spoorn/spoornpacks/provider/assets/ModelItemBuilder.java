@@ -94,6 +94,13 @@ public class ModelItemBuilder implements ResourceProvider {
         return parent();
     }
 
+    public ModelItemBuilder defaultBoat() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.namespace + ":item/" + this.name + "_" + this.type.getName()
+        );
+        return this;
+    }
+
     public ModelItemBuilder parent() {
         return parent(defaultBlockWithTypePrefix);
     }

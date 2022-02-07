@@ -9,7 +9,9 @@
     "PressurePlateBlockAccessor",
     "StairsBlockAccessor",
     "TrapdoorBlockAccessor",
-    "DoorBlockAccessor"
+    "DoorBlockAccessor",
+    "EntityRenderersAccessor",
+    "EntityModelsMixin"
   ],
   "client": [
   ],
