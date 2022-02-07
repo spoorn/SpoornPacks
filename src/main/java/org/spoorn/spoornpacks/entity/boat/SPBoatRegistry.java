@@ -1,7 +1,9 @@
 package org.spoorn.spoornpacks.entity.boat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.spoorn.spoornpacks.SpoornPacks;
 
 import java.util.ArrayList;
@@ -33,11 +35,12 @@ public class SPBoatRegistry {
     }
 
     @Getter
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class BoatType {
 
-        private final String namespace;
-        private final String name;
-        private final int ordinal;
+        private String namespace;
+        private String name;
+        private int ordinal;
 
         private BoatType(String namespace, String name, int ordinal) {
             this.namespace = namespace;

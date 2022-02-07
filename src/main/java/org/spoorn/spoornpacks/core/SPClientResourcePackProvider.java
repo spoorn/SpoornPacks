@@ -25,7 +25,7 @@ public class SPClientResourcePackProvider implements ResourcePackProvider {
                 true,
                 () -> spGroupResourcePack,
                 factory,
-                ResourcePackProfile.InsertionPosition.TOP,
+                ResourcePackProfile.InsertionPosition.BOTTOM,
                 SpoornPacks.RESOURCE_PACK_SOURCE
         );
 
