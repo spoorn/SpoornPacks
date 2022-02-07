@@ -7,6 +7,7 @@ public enum ItemType {
     LOG("log"),
     STRIPPED_LOG("stripped_log", "stripped_", "_log"),
     WOOD("wood"),
+    STRIPPED_WOOD("stripped_wood", "stripped_", "_wood"),
     PLANKS("planks"),
     LEAVES("leaves"),
     SAPLING("sapling"),

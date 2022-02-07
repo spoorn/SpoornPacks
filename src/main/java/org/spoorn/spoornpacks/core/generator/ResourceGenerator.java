@@ -114,7 +114,7 @@ public class ResourceGenerator {
         for (Entry<String, List<String>> entry : blocks.entrySet()) {
             BlockType type = BlockType.fromString(entry.getKey());
             for (String name : entry.getValue()) {
-                String filename = name + "_" + type.getName();
+                String filename = type.getPrefix() + name + type.getSuffix();
                 switch (type) {
                     case LOG -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultLog());
@@ -246,11 +246,18 @@ public class ResourceGenerator {
                         blocksRegistry.registerCraftingTable(filename);
                     }
                     case STRIPPED_LOG -> {
-                        filename = type.getPrefix() + name + type.getSuffix();
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultStrippedLog());
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultStrippedLog());
                         fileGenerator.generateModelBlock(namespace, filename + "_horizontal", newModelBlockBuilder(namespace, name, type, type.getName() + "_horizontal").defaultStrippedLog());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultStrippedLog());
+                        minecraftLogs.value(namespace + ":" + filename);
+                        customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
+                        blocksRegistry.registerLog(filename);
+                    }
+                    case STRIPPED_WOOD -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultStrippedWood());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultStrippedWood());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultStrippedWood());
                         minecraftLogs.value(namespace + ":" + filename);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         blocksRegistry.registerLog(filename);
@@ -306,7 +313,7 @@ public class ResourceGenerator {
         for (Entry<String, List<String>> entry : items.entrySet()) {
             ItemType type = ItemType.fromString(entry.getKey());
             for (String name : entry.getValue()) {
-                String filename = name + "_" + type.getName();
+                String filename = type.getPrefix() + name + type.getSuffix();
                 switch (type) {
                     case LOG -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultLog());
@@ -401,8 +408,13 @@ public class ResourceGenerator {
                         EntityRenderersAccessor.registerEntityRenderer(boatEntityType, (ctx) -> new SPBoatEntityRenderer(this.spBoatRegistry, ctx));
                     }
                     case STRIPPED_LOG -> {
-                        filename = type.getPrefix() + name + type.getSuffix();
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultStrippedLog());
+                        minecraftLogs.value(namespace + ":" + filename);
+                        customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
+                        itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
+                    }
+                    case STRIPPED_WOOD -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultStrippedWood());
                         minecraftLogs.value(namespace + ":" + filename);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)));
@@ -461,6 +473,6 @@ public class ResourceGenerator {
     }
 
     private RecipeBuilder newRecipeBuilder(String namespace, String name, ItemType type) {
-        return new RecipeBuilder(namespace, name, type.getName(), RECIPES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
+        return new RecipeBuilder(namespace, name, type, RECIPES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
     }
 }

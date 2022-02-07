@@ -24,8 +24,8 @@ public class BlockStateBuilder implements ResourceProvider {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
-        this.defaultBlockPrefix = this.namespace + ":block/" + this.name;
-        this.defaultBlockWithTypePrefix = this.defaultBlockPrefix + "_" + this.type.getName();
+        this.defaultBlockPrefix = this.namespace + ":block/" + this.type.getPrefix() + this.name;
+        this.defaultBlockWithTypePrefix = this.defaultBlockPrefix + this.type.getSuffix();
         this.templatePath = templatePath;
     }
 
@@ -132,10 +132,17 @@ public class BlockStateBuilder implements ResourceProvider {
     }
 
     public BlockStateBuilder defaultStrippedLog() {
-        String strippedName = this.namespace + ":block/" + this.type.getPrefix() + this.name + this.type.getSuffix();
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                strippedName + "_horizontal",
-                strippedName
+                this.defaultBlockWithTypePrefix + "_horizontal",
+                this.defaultBlockWithTypePrefix
+        );
+        return this;
+    }
+
+    public BlockStateBuilder defaultStrippedWood() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix + "_horizontal",
+                this.defaultBlockWithTypePrefix
         );
         return this;
     }

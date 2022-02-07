@@ -23,8 +23,8 @@ public class ModelBlockBuilder implements ResourceProvider {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
-        this.defaultBlockPrefix = this.namespace + ":block/" + this.name;
-        this.defaultBlockWithTypePrefix = defaultBlockPrefix + "_" + this.type.getName();
+        this.defaultBlockPrefix = this.namespace + ":block/" + this.type.getPrefix() + this.name;
+        this.defaultBlockWithTypePrefix = defaultBlockPrefix + this.type.getSuffix();
         this.templatePath = templatePath;
     }
 
@@ -191,10 +191,17 @@ public class ModelBlockBuilder implements ResourceProvider {
 
     // Same for log and log_horizontal
     public ModelBlockBuilder defaultStrippedLog() {
-        String strippedName = this.namespace + ":block/" + this.type.getPrefix() + this.name + this.type.getSuffix();
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                strippedName + "_top",
-                strippedName
+                this.defaultBlockWithTypePrefix + "_top",
+                this.defaultBlockWithTypePrefix
+        );
+        return this;
+    }
+
+    // Same for wood and wood_horizontal
+    public ModelBlockBuilder defaultStrippedWood() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockPrefix + BlockType.LOG.getSuffix()
         );
         return this;
     }

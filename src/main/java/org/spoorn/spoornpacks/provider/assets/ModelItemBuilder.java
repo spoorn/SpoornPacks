@@ -106,6 +106,10 @@ public class ModelItemBuilder implements ResourceProvider {
         return parent();
     }
 
+    public ModelItemBuilder defaultStrippedWood() {
+        return parent();
+    }
+
     public ModelItemBuilder parent() {
         return parent(defaultBlockWithTypePrefix);
     }

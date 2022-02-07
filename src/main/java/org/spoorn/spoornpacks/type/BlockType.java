@@ -9,6 +9,7 @@ public enum BlockType {
     LOG("log"),
     STRIPPED_LOG("stripped_log", "stripped_", "_log"),
     WOOD("wood"),
+    STRIPPED_WOOD("stripped_wood", "stripped_", "_wood"),
     PLANKS("planks"),
     LEAVES("leaves"),
     SAPLING("sapling"),
@@ -25,8 +26,8 @@ public enum BlockType {
     private final String name;
     
     // For use cases where there is a prefix and a suffix to the name, such as "stripped_<name>_log"
-    private String prefix;
-    private String suffix;
+    private final String prefix;
+    private final String suffix;
 
     BlockType(String name) {
         // Default to setting the name as the suffix as most items do that

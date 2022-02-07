@@ -3,14 +3,13 @@ package org.spoorn.spoornpacks.provider.data;
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.provider.data.RecipeParts.Ingredient;
 import org.spoorn.spoornpacks.provider.data.RecipeParts.Key;
 import org.spoorn.spoornpacks.type.BlockType;
+import org.spoorn.spoornpacks.type.ItemType;
 import org.spoorn.spoornpacks.util.JsonTUtil;
 
-import java.io.IOException;
 import java.util.List;
 
 public class RecipeBuilder implements ResourceProvider {
@@ -19,19 +18,19 @@ public class RecipeBuilder implements ResourceProvider {
 
     private final String namespace;
     private final String name;
-    private final String type;
+    private final ItemType type;
     private final String defaultPrefix;
     private final String defaultPrefixWithType;
     private final String templatePath;
 
     private final JsonTUtil jsonTUtil = new JsonTUtil();
 
-    public RecipeBuilder(String namespace, String name, String type, String templatePath) {
+    public RecipeBuilder(String namespace, String name, ItemType type, String templatePath) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
-        this.defaultPrefix = this.namespace + ":" + this.name;
-        this.defaultPrefixWithType = this.defaultPrefix + "_" + this.type;
+        this.defaultPrefix = this.namespace + ":" + this.type.getPrefix() + this.name;
+        this.defaultPrefixWithType = this.defaultPrefix + this.type.getSuffix();
         this.templatePath = templatePath;
     }
 
@@ -110,7 +109,15 @@ public class RecipeBuilder implements ResourceProvider {
     public RecipeBuilder defaultBoat() {
         return fromPlanks();
     }
-    
+
+    public RecipeBuilder defaultStrippedWood() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultPrefix + ItemType.LOG.getSuffix(),
+                this.defaultPrefixWithType
+        );
+        return this;
+    }
+
     private RecipeBuilder fromPlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefix + "_" + BlockType.PLANKS.getName(),
@@ -152,7 +159,7 @@ public class RecipeBuilder implements ResourceProvider {
 
     public RecipeBuilder result(int count) {
         this.state.with("result")
-                .put("item", defaultPrefix + "_" + this.type)
+                .put("item", this.defaultPrefixWithType)
                 .put("count", count);
         return this;
     }
