@@ -1,6 +1,7 @@
 package org.spoorn.spoornpacks.impl;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import org.spoorn.spoornpacks.api.Resource;
@@ -10,6 +11,7 @@ import org.spoorn.spoornpacks.type.ItemType;
 import java.util.Map;
 import java.util.Optional;
 
+@Log4j2
 public class GeneratedResource implements Resource {
 
     @Getter
@@ -26,15 +28,23 @@ public class GeneratedResource implements Resource {
 
     @Override
     public Optional<Block> getBlock(BlockType type, String name) {
-        return Optional.of(blocks)
+        Optional<Block> block = Optional.of(blocks)
                 .map(outer -> outer.get(type))
                 .map(inner -> inner.get(name));
+        if (block.isEmpty() && name.endsWith(type.getSuffix())) {
+            log.warn("getBlock called with name={}.  You should exclude suffixes for the name", name);
+        }
+        return block;
     }
 
     @Override
     public Optional<Item> getItem(ItemType type, String name) {
-        return Optional.of(items)
+        Optional<Item> item = Optional.of(items)
                 .map(outer -> outer.get(type))
                 .map(inner -> inner.get(name));
+        if (item.isEmpty() && name.endsWith(type.getSuffix())) {
+            log.warn("getItem called with name={}.  You should exclude suffixes for the name", name);
+        }
+        return item;
     }
 }
