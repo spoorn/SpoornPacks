@@ -69,7 +69,7 @@ public class SPBoatEntity extends BoatEntity {
             try {
                 this.setSPBoatType(SpoornPacks.OBJECT_MAPPER.readValue(nbt.getString(TYPE_NBT_KEY), BoatType.class));
             } catch (JsonProcessingException e) {
-                throw new RuntimeException("Could not read custom Nbt data for SpoornPacks BoatType", e);
+                throw new RuntimeException("Could not read custom Nbt data for SpoornPacks BoatType nbt=" + nbt.getString(TYPE_NBT_KEY), e);
             }
         }
     }

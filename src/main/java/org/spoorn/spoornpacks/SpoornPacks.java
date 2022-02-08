@@ -42,9 +42,7 @@ public class SpoornPacks implements ModInitializer {
         OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         OBJECT_MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
         // When de/serializing, only access the fields and ignore getters, setters, etc.
-        OBJECT_MAPPER.setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE);
-        OBJECT_MAPPER.setVisibility(PropertyAccessor.IS_GETTER, JsonAutoDetect.Visibility.NONE);
-        OBJECT_MAPPER.setVisibility(PropertyAccessor.SETTER, JsonAutoDetect.Visibility.NONE);
+        OBJECT_MAPPER.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
         OBJECT_MAPPER.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         PRETTY_PRINTER.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
     }
@@ -59,12 +57,12 @@ public class SpoornPacks implements ModInitializer {
 //    public static void test() {
 //        try {
 //            String defaultName = "pink_blossom";
-//            
+//
 //            ItemGroup itemGroup = FabricItemGroupBuilder.build(
 //                    new Identifier("spoornpink", "general"),
 //                    ResourceFactory.fetchItemGroupSupplierFromBlock("spoornpink", "pink_blossom_sapling")
 //            );
-//            
+//
 //            ResourceBuilder rb = ResourceFactory.create("spoornpink", defaultName, itemGroup)
 //                    .addBlocks(BlockType.LOG, BlockType.WOOD, BlockType.PLANKS, BlockType.FENCE, BlockType.FENCE_GATE, 
 //                            BlockType.LEAVES, BlockType.BUTTON, BlockType.SLAB, BlockType.PRESSURE_PLATE, BlockType.STAIRS,
