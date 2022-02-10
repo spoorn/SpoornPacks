@@ -39,7 +39,6 @@ public enum BlockType {
         this.prefix = prefix;
         this.suffix = suffix;
     }
-
     public static BlockType fromString(String name) {
         BlockType[] blockTypes = values();
         for (int i = 0; i < blockTypes.length; i++) {

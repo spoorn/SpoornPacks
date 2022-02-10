@@ -7,9 +7,28 @@ import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.resource.ResourcePackSource;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
+import org.spoorn.spoornpacks.api.Resource;
+import org.spoorn.spoornpacks.api.ResourceBuilder;
+import org.spoorn.spoornpacks.api.ResourceFactory;
+import org.spoorn.spoornpacks.core.generator.ResourceGenerator;
+import org.spoorn.spoornpacks.exception.DuplicateNameException;
+import org.spoorn.spoornpacks.provider.ResourceProvider;
+import org.spoorn.spoornpacks.registry.SpoornPacksRegistry;
+import org.spoorn.spoornpacks.type.BlockType;
+import org.spoorn.spoornpacks.type.ItemType;
+import org.spoorn.spoornpacks.type.ResourceType;
+
+import java.util.Optional;
 
 @Log4j2
 public class SpoornPacks implements ModInitializer {
@@ -17,7 +36,6 @@ public class SpoornPacks implements ModInitializer {
     public static final String MODID = "spoornpacks";
     public static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static DefaultPrettyPrinter PRETTY_PRINTER = new DefaultPrettyPrinter();
-    //private static ResourceGenerator RESOURCE_GENERATOR = SpoornPacksRegistry.registerResource("mymodid");
 
     public static ResourcePackSource RESOURCE_PACK_SOURCE = ResourcePackSource.nameAndSource("pack.source.spoornpacks");
 
@@ -39,6 +57,7 @@ public class SpoornPacks implements ModInitializer {
 
 //    public static void test() {
 //        try {
+//            ResourceGenerator RESOURCE_GENERATOR = SpoornPacksRegistry.registerResource("mymodid");
 //            String defaultName = "red_blossom";
 //
 //            ItemGroup itemGroup = FabricItemGroupBuilder.build(
@@ -55,6 +74,11 @@ public class SpoornPacks implements ModInitializer {
 //                            ItemType.TRAPDOOR, ItemType.DOOR, ItemType.CRAFTING_TABLE, ItemType.BOAT, ItemType.STRIPPED_LOG, ItemType.STRIPPED_WOOD)
 //                    .addLeavesWithSaplingOverride("yellow_blossom", defaultName).addItem(ItemType.LEAVES, "yellow_blossom")
 //                    .addSapling(TreeConfiguredFeatures.OAK).addItem(ItemType.SAPLING)  // You should have your own ConfiguredFeature for trees
+//                    .addCustomResourceProvider("stripped_red_blossom_wood", ResourceType.BLOCKSTATE, new TestCustomResourceProvider())
+//                    .addCustomResourceProvider("stripped_red_blossom_wood", ResourceType.BLOCK_MODEL, new TestCustomResourceProvider())
+//                    .addCustomResourceProvider("stripped_red_blossom_wood", ResourceType.ITEM_MODEL, new TestCustomResourceProvider())
+//                    .addCustomResourceProvider("stripped_red_blossom_wood", ResourceType.BLOCK_LOOT_TABLE, new TestCustomResourceProvider())
+//                    .addCustomResourceProvider("stripped_red_blossom_wood", ResourceType.RECIPE, new TestCustomResourceProvider())
 //                    ;
 //
 //            Resource resource = RESOURCE_GENERATOR.generate(rb);
@@ -68,6 +92,16 @@ public class SpoornPacks implements ModInitializer {
 //        } catch (DuplicateNameException e) {
 //            log.error("Duplicate names", e);
 //            throw new RuntimeException(e);
+//        }
+//    }
+//    
+//    static class TestCustomResourceProvider implements ResourceProvider {
+//        
+//        TestCustomResourceProvider() { }
+//
+//        @Override
+//        public ObjectNode getJson() {
+//            return OBJECT_MAPPER.createObjectNode().put("testkey", "testvalue");
 //        }
 //    }
 }

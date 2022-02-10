@@ -39,10 +39,6 @@ public enum ItemType {
         this.suffix = suffix;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
     public static ItemType fromString(String name) {
         ItemType[] itemTypes = values();
         for (int i = 0; i < itemTypes.length; i++) {

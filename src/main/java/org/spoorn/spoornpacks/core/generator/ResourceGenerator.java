@@ -53,9 +53,8 @@ public class ResourceGenerator {
     private static final String JSONT_SUFFIX = ".jsonT";
     private static final String POTTED_PREFIX = "potted_";
 
-    private final FileGenerator fileGenerator;
-
     private final String modid;
+    private final boolean overwrite;
     private final BlocksRegistry blocksRegistry;
     private final ItemsRegistry itemsRegistry;
     private final SPBoatRegistry spBoatRegistry = new SPBoatRegistry();
@@ -63,12 +62,12 @@ public class ResourceGenerator {
 
     public ResourceGenerator(String modid, boolean overwrite) {
         this.modid = modid;
-        this.fileGenerator = new FileGenerator(modid, overwrite);
+        this.overwrite = overwrite;
         this.blocksRegistry = new BlocksRegistry(modid);
         this.itemsRegistry = new ItemsRegistry(modid);
     }
 
-    public Resource generate(ResourceBuilder resourceBuilder) {
+    public synchronized Resource generate(ResourceBuilder resourceBuilder) {
         log.info("Generating resources for {}", this.modid);
         if (!(resourceBuilder instanceof DefaultResourceBuilder)) {
             throw new UnsupportedOperationException("ResourceBuilder is unsupported!");
@@ -77,13 +76,12 @@ public class ResourceGenerator {
         DefaultResourceBuilder drb = (DefaultResourceBuilder) resourceBuilder;
 
         // Blocks
-        final TreeMap<String, List<String>> blocks = drb.getBlocks();
-
         final Map<BlockType, Map<String, Block>> generatedBlocks = new HashMap<>();
         final Map<ItemType, Map<String, Item>> generatedItems = new HashMap<>();
-        
+        FileGenerator fileGenerator = new FileGenerator(modid, this.overwrite, drb.getCustomResourceProviders());
+
         try {
-            handleBlocks(generatedBlocks, drb.getNamespace(), blocks, drb.getLeavesToSaplingOverrides(), drb.getSaplingConfiguredFeatures());
+            handleBlocks(generatedBlocks, drb, fileGenerator);
         } catch (IOException e) {
             log.error("Could not generate resources for blocks", e);
             throw new RuntimeException(e);
@@ -92,7 +90,7 @@ public class ResourceGenerator {
         // Items
         final Map<String, List<String>> items = drb.getItems();
         try {
-            handleItems(generatedItems, drb.getNamespace(), items, drb.getItemGroup());
+            handleItems(generatedItems, drb.getNamespace(), items, drb.getItemGroup(), fileGenerator);
         } catch (IOException e) {
             log.error("Could not generate resources for items", e);
             throw new RuntimeException(e);
@@ -103,9 +101,13 @@ public class ResourceGenerator {
         return gen;
     }
 
-    private void handleBlocks(Map<BlockType, Map<String, Block>> generatedBlocks, String namespace, 
-              TreeMap<String, List<String>> blocks, Map<String, String> leavesToSaplingOverrides,
-              Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures) throws IOException {
+    private void handleBlocks(Map<BlockType, Map<String, Block>> generatedBlocks, DefaultResourceBuilder drb, 
+                              FileGenerator fileGenerator) throws IOException {
+        String namespace = drb.getNamespace();
+        TreeMap<String, List<String>> blocks = drb.getBlocks();
+        Map<String, String> leavesToSaplingOverrides = drb.getLeavesToSaplingOverrides();
+        Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures = drb.getSaplingConfiguredFeatures();
+        
         TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftLeaves = new TagsBuilder(BLOCKS);
@@ -326,7 +328,7 @@ public class ResourceGenerator {
     }
 
     private void handleItems(Map<ItemType, Map<String, Item>> generatedItems, String namespace, 
-                             Map<String, List<String>> items, ItemGroup itemGroup) throws IOException {
+                             Map<String, List<String>> items, ItemGroup itemGroup, FileGenerator fileGenerator) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(ITEMS);
         TagsBuilder minecraftPlanks = new TagsBuilder(ITEMS);
         TagsBuilder minecraftLeaves = new TagsBuilder(ITEMS);
