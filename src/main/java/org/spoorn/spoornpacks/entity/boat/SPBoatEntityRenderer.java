@@ -2,6 +2,8 @@ package org.spoorn.spoornpacks.entity.boat;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -18,6 +20,7 @@ import net.minecraft.util.math.Vec3f;
 
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class SPBoatEntityRenderer extends EntityRenderer<SPBoatEntity> {
 
     private final Map<SPBoatRegistry.BoatType, Pair<Identifier, BoatEntityModel>> texturesAndModels;

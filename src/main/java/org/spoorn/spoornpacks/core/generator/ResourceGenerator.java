@@ -32,6 +32,7 @@ import org.spoorn.spoornpacks.provider.data.RecipeBuilder;
 import org.spoorn.spoornpacks.provider.data.TagsBuilder;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
+import org.spoorn.spoornpacks.util.ClientSideUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -54,7 +55,7 @@ public class ResourceGenerator {
     private static final String POTTED_PREFIX = "potted_";
 
     private final String modid;
-    private final boolean overwrite;
+    private boolean overwrite;
     private final BlocksRegistry blocksRegistry;
     private final ItemsRegistry itemsRegistry;
     private final SPBoatRegistry spBoatRegistry = new SPBoatRegistry();
@@ -79,6 +80,7 @@ public class ResourceGenerator {
         final Map<BlockType, Map<String, Block>> generatedBlocks = new HashMap<>();
         final Map<ItemType, Map<String, Item>> generatedItems = new HashMap<>();
         FileGenerator fileGenerator = new FileGenerator(modid, this.overwrite, drb.getCustomResourceProviders());
+        this.overwrite = false;  // Only overwrite on the first generate for a single ResourceGenerator instance
 
         try {
             handleBlocks(generatedBlocks, drb, fileGenerator);
@@ -291,7 +293,7 @@ public class ResourceGenerator {
                 // Flammables, Render Layers, etc.
                 SPFlammables.registerFlammable(type, block);
                 if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                    SPRenderLayers.registerRenderLayer(type, block);
+                    ClientSideUtils.registerRenderLayer(type, block);
                 }
                 generatedBlocks.computeIfAbsent(type, m -> new HashMap<>()).put(name, block);
             }
@@ -440,7 +442,9 @@ public class ResourceGenerator {
                         SPBoatRegistry.BoatType boatType = this.spBoatRegistry.registerBoat(namespace, name);
                         item = itemsRegistry.registerBoatItem(filename, this.spBoatRegistry, boatType, this.spEntities, itemGroup);
                         EntityType<SPBoatEntity> boatEntityType = this.spEntities.registerBoatEntityType(namespace, this.spBoatRegistry);
-                        EntityRenderersAccessor.registerEntityRenderer(boatEntityType, (ctx) -> new SPBoatEntityRenderer(this.spBoatRegistry, ctx));
+                        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+                            ClientSideUtils.registerBoatEntity(boatEntityType, spBoatRegistry);
+                        }
                     }
                     case STRIPPED_LOG -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultStrippedLog());

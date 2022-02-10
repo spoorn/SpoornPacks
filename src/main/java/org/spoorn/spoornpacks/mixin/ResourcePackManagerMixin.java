@@ -3,7 +3,6 @@ package org.spoorn.spoornpacks.mixin;
 import com.google.common.collect.ImmutableSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.resource.ClientBuiltinResourcePackProvider;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackProvider;
@@ -36,7 +35,7 @@ public class ResourcePackManagerMixin {
             at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableSet;copyOf([Ljava/lang/Object;)Lcom/google/common/collect/ImmutableSet;"))
     private <E> ImmutableSet<Object> injectSPResourcePack(E[] elements) {
         //System.out.println("### injectSPResourcePack");
-        boolean isClient = false;
+        boolean isClient = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
         boolean providerPresent = false;
 
         SPClientResourcePackProvider clientProvider;
@@ -44,9 +43,6 @@ public class ResourcePackManagerMixin {
 
         for (int i = 0; i < elements.length; i++) {
             E element = elements[i];
-            if (element instanceof ClientBuiltinResourcePackProvider) {
-                isClient = true;
-            }
 
             if (element instanceof SPClientResourcePackProvider) {
                 isClient = true;

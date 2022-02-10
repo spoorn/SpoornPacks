@@ -10,13 +10,13 @@
     "StairsBlockAccessor",
     "TrapdoorBlockAccessor",
     "DoorBlockAccessor",
-    "EntityRenderersAccessor",
-    "EntityModelsMixin",
     "FireBlockAccessor",
     "AxeItemAccessor"
   ],
   "client": [
-    "RenderLayersAccessor"
+    "RenderLayersAccessor",
+    "EntityModelsMixin",
+    "EntityRenderersAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

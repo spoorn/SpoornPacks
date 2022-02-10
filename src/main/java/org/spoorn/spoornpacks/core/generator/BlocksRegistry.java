@@ -1,6 +1,8 @@
 package org.spoorn.spoornpacks.core.generator;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.sound.BlockSoundGroup;
@@ -62,7 +64,9 @@ public class BlocksRegistry {
 
     public Block registerFlowerPot(String id, Block saplingBlock) {
         Block block = new FlowerPotBlock(saplingBlock, FabricBlockSettings.copyOf(Blocks.POTTED_OAK_SAPLING));
-        SPRenderLayers.registerRenderLayer(BlockType.SAPLING, block);
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            SPRenderLayers.registerRenderLayer(BlockType.SAPLING, block);
+        }
         return registerBlock(id, block);
     }
 

@@ -37,6 +37,7 @@ public class FileGenerator {
         this.id = id;
         if (overwrite) {
             try {
+                log.warn("Deleting to override directory at {}", SPOORNPACKS_PREFIX + this.id);
                 FileUtils.deleteDirectory(new File(SPOORNPACKS_PREFIX + this.id));
             } catch (IOException e) {
                 String errorMessage = "Mod Id=[" + this.id + "] set overwrite to true for their sub-spoornpack, but could not delete" +
