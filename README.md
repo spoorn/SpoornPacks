@@ -4,3 +4,5 @@ SpoornPacks is an API Library mod for the Minecraft Fabric mod loader that adds 
 The goal of this mod is to simplify resource creation (i.e. blocks, items, structures, features, etc.) as much as possible for the majority of use cases, while being extensible to more complex ones.
 
 See the [Wiki](https://github.com/spoorn/SpoornPacks/wiki) to get started!
+
+CurseForge page: https://www.curseforge.com/minecraft/mc-mods/spoornpacks
