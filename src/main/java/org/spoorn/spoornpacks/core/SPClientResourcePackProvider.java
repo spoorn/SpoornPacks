@@ -35,6 +35,7 @@ public class SPClientResourcePackProvider implements ResourcePackProvider {
     }
 
     public void addSubResourcePacks() {
+        this.spGroupResourcePack.clear();  // Clear resource pack first
         for (String id : SpoornPacksRegistry.RESOURCES) {
             this.spGroupResourcePack.addSubResourcePack(id);
         }

@@ -72,7 +72,7 @@ public class ResourcePackManagerMixin {
     }
 
     @Inject(method = "scanPacks", at = @At(value = "TAIL"))
-    private void debugPrints(CallbackInfo ci) {
+    private void addSubResourcePacks(CallbackInfo ci) {
         //System.out.println("### server? " + (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER));
         //System.out.println("### providers: " + this.providers);
         //System.out.println("### profiles: " + this.profiles);

@@ -63,6 +63,11 @@ public class SPGroupResourcePack implements ResourcePack {
         addedPacks.add(id);
         log.info("Registered [{}] resource pack in SpoornPacks", id);
     }
+    
+    public void clear() {
+        log.info("Clearing SPGroupResourcePack");
+        this.addedPacks.clear();
+    }
 
     @Nullable
     @Override
