@@ -149,6 +149,10 @@ public class BlockStateBuilder implements ResourceProvider {
     public BlockStateBuilder defaultCraftingTable() {
         return emptyModel();
     }
+    
+    public BlockStateBuilder defaultChest() {
+        return emptyModel();
+    }
 
     public BlockStateBuilder yaxis() {
         this.state.with("variants").with("axis=y")

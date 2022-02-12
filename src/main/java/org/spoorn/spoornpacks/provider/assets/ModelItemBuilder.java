@@ -4,6 +4,7 @@ import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
+import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
 import org.spoorn.spoornpacks.util.JsonTUtil;
 
@@ -108,6 +109,13 @@ public class ModelItemBuilder implements ResourceProvider {
 
     public ModelItemBuilder defaultStrippedWood() {
         return parent();
+    }
+    
+    public ModelItemBuilder defaultChest() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.namespace + ":block/" + this.name + "_" + BlockType.PLANKS.getName()
+        );
+        return this;
     }
 
     public ModelItemBuilder parent() {

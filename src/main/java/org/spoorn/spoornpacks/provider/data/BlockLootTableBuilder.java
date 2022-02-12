@@ -124,6 +124,13 @@ public class BlockLootTableBuilder implements ResourceProvider {
     public BlockLootTableBuilder defaultStrippedWood() {
         return defaultSurvivesExplosion();
     }
+
+    public BlockLootTableBuilder defaultChest() {
+        this.state = this.jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultPrefixWithType
+        );
+        return this;
+    }
     
     public BlockLootTableBuilder typeBlock() {
         this.state.put("type", "minecraft:block");

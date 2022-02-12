@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
@@ -12,10 +13,12 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
+import org.spoorn.spoornpacks.block.SPChestBlock;
 import org.spoorn.spoornpacks.block.SPCraftingTableBlock;
 import org.spoorn.spoornpacks.block.SPSaplingBlock;
 import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
 import org.spoorn.spoornpacks.client.render.SPRenderLayers;
+import org.spoorn.spoornpacks.entity.SPEntities;
 import org.spoorn.spoornpacks.mixin.*;
 import org.spoorn.spoornpacks.type.BlockType;
 
@@ -113,6 +116,12 @@ public class BlocksRegistry {
 
     public Block registerCraftingTable(String id) {
         Block block = new SPCraftingTableBlock(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE));
+        return registerBlock(id, block);
+    }
+    
+    public Block registerChest(String namespace, String name, String id, SPEntities spEntities) {
+        // SPChestBlock has a reference to the block name, and actual identifier with _chest suffix
+        Block block = new SPChestBlock(FabricBlockSettings.copyOf(Blocks.CHEST), namespace, name, spEntities);
         return registerBlock(id, block);
     }
     

@@ -205,6 +205,10 @@ public class ModelBlockBuilder implements ResourceProvider {
         return this;
     }
     
+    public ModelBlockBuilder defaultChest() {
+        return substitutePlanks();
+    }
+    
     private ModelBlockBuilder substitutePlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_" + BlockType.PLANKS.getName()

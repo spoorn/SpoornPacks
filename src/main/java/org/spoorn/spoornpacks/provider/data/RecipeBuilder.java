@@ -118,6 +118,10 @@ public class RecipeBuilder implements ResourceProvider {
         return this;
     }
 
+    public RecipeBuilder defaultChest() {
+        return fromPlanks();
+    }
+
     private RecipeBuilder fromPlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefix + "_" + BlockType.PLANKS.getName(),

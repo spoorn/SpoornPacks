@@ -15,15 +15,13 @@ import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.block.SPFlammables;
 import org.spoorn.spoornpacks.block.entity.SPFurnaceBlockFuelTimes;
-import org.spoorn.spoornpacks.client.render.SPRenderLayers;
+import org.spoorn.spoornpacks.client.render.SPTexturedRenderLayers;
 import org.spoorn.spoornpacks.entity.SPEntities;
 import org.spoorn.spoornpacks.entity.boat.SPBoatEntity;
-import org.spoorn.spoornpacks.entity.boat.SPBoatEntityRenderer;
 import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
 import org.spoorn.spoornpacks.impl.DefaultResourceBuilder;
 import org.spoorn.spoornpacks.impl.GeneratedResource;
 import org.spoorn.spoornpacks.item.SPAxeItemModifier;
-import org.spoorn.spoornpacks.mixin.EntityRenderersAccessor;
 import org.spoorn.spoornpacks.provider.assets.BlockStateBuilder;
 import org.spoorn.spoornpacks.provider.assets.ModelBlockBuilder;
 import org.spoorn.spoornpacks.provider.assets.ModelItemBuilder;
@@ -287,6 +285,14 @@ public class ResourceGenerator {
                         block = blocksRegistry.registerLog(filename);
                         strippedBlocks.add(Pair.of(name + type.getSuffix(), block));
                     }
+                    case CHEST -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultChest());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultChest());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultChest());
+                        block = blocksRegistry.registerChest(namespace, name, filename, this.spEntities);
+                        this.spEntities.registerChestBlockEntityType(namespace, name, block);
+                        SPTexturedRenderLayers.registerChest(namespace, name);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
 
@@ -458,6 +464,12 @@ public class ResourceGenerator {
                         minecraftLogs.value(namespace + ":" + filename);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
                         item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                    }
+                    case CHEST -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultChest());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultChest());
+                        Block chestBlock = blocksRegistry.register.get(new Identifier(namespace, filename));
+                        item = itemsRegistry.registerBlockItem(filename, chestBlock, itemGroup);
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }

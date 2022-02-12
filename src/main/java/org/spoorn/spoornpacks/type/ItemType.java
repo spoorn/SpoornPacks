@@ -20,7 +20,8 @@ public enum ItemType {
     TRAPDOOR("trapdoor"),
     DOOR("door"),
     CRAFTING_TABLE("crafting_table"),
-    BOAT("boat");
+    BOAT("boat"),
+    CHEST("chest");
 
     private final String name;
 
