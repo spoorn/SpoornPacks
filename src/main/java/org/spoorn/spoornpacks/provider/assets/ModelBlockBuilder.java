@@ -208,6 +208,27 @@ public class ModelBlockBuilder implements ResourceProvider {
     public ModelBlockBuilder defaultChest() {
         return substitutePlanks();
     }
+
+    public ModelBlockBuilder defaultBarrel() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix + "_top",
+                this.defaultBlockWithTypePrefix + "_bottom",
+                this.defaultBlockWithTypePrefix + "_side"
+        );
+        return this;
+    }
+
+    // defaultBlockWithTypePrefix should be namespace:name_barrel, excluding the _top suffix
+    public ModelBlockBuilder defaultBarrelOpen() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix + "_top_open",
+                this.defaultBlockWithTypePrefix + "_bottom",
+                this.defaultBlockWithTypePrefix + "_side"
+        );
+        return this;
+    }
+    
+    
     
     private ModelBlockBuilder substitutePlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,

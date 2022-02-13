@@ -122,6 +122,13 @@ public class RecipeBuilder implements ResourceProvider {
         return fromPlanks();
     }
 
+    public RecipeBuilder defaultBarrel() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultPrefixWithType
+        );
+        return this;
+    }
+
     private RecipeBuilder fromPlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefix + "_" + BlockType.PLANKS.getName(),

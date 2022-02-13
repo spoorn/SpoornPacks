@@ -22,7 +22,8 @@ public enum BlockType {
     TRAPDOOR("trapdoor"),
     DOOR("door"),
     CRAFTING_TABLE("crafting_table"),
-    CHEST("chest");
+    CHEST("chest"),
+    BARREL("barrel");
 
     private final String name;
     

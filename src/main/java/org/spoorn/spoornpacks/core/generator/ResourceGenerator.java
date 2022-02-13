@@ -15,7 +15,6 @@ import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.block.SPFlammables;
 import org.spoorn.spoornpacks.block.entity.SPFurnaceBlockFuelTimes;
-import org.spoorn.spoornpacks.client.render.SPTexturedRenderLayers;
 import org.spoorn.spoornpacks.entity.SPEntities;
 import org.spoorn.spoornpacks.entity.boat.SPBoatEntity;
 import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
@@ -302,6 +301,15 @@ public class ResourceGenerator {
                         minecraftLavaPoolStoneCannotReplace.value(namespace, name, type);
                         minecraftGuardedByPiglins.value(namespace, name, type);
                     }
+                    case BARREL -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultBarrel());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultBarrel());
+                        fileGenerator.generateModelBlock(namespace, filename + "_open", newModelBlockBuilder(namespace, name, type).defaultBarrelOpen());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultBarrel());
+                        block = blocksRegistry.registerBarrel(filename);
+                        axeMineable.value(namespace, name, type);
+                        minecraftGuardedByPiglins.value(namespace, name, type);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
 
@@ -480,8 +488,12 @@ public class ResourceGenerator {
                     case CHEST -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultChest());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultChest());
-                        Block chestBlock = blocksRegistry.register.get(new Identifier(namespace, filename));
-                        item = itemsRegistry.registerBlockItem(filename, chestBlock, itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                    }
+                    case BARREL -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultBarrel());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultBarrel());
+                        item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }

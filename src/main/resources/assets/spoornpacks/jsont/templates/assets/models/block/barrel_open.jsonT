@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": ${string:1},
+    "bottom": ${string:2},
+    "side": ${string:3}
+  }
+}

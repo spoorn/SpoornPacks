@@ -13,14 +13,8 @@ public class SPFurnaceBlockFuelTimes {
     public static void registerFurnaceBlockFuelTime(ItemType type, Item item) {
         if (item != null) {
             switch (type) {
-                case FENCE, FENCE_GATE -> {
-                    registerFence(item);
-                }
-                case CRAFTING_TABLE -> {
-                    registerCraftingTable(item);
-                }
-                case CHEST -> {
-                    registerChest(item);
+                case FENCE, FENCE_GATE, CRAFTING_TABLE, CHEST, BARREL -> {
+                    register300(item);
                 }
                 default -> {
                 }
@@ -28,15 +22,7 @@ public class SPFurnaceBlockFuelTimes {
         }
     }
 
-    private static void registerFence(ItemConvertible item) {
-        FuelRegistry.INSTANCE.add(item, 300);
-    }
-
-    private static void registerCraftingTable(ItemConvertible item) {
-        FuelRegistry.INSTANCE.add(item, 300);
-    }
-
-    private static void registerChest(ItemConvertible item) {
+    private static void register300(ItemConvertible item) {
         FuelRegistry.INSTANCE.add(item, 300);
     }
 }

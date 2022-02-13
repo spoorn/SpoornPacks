@@ -4,12 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
-import net.minecraft.entity.EntityType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.block.SPChestBlock;
@@ -121,6 +118,11 @@ public class BlocksRegistry {
     public Block registerChest(String namespace, String name, String id, SPEntities spEntities) {
         // SPChestBlock has a reference to the block name, and actual identifier with _chest suffix
         Block block = new SPChestBlock(FabricBlockSettings.copyOf(Blocks.CHEST), namespace, name, spEntities);
+        return registerBlock(id, block);
+    }
+
+    public Block registerBarrel(String id) {
+        Block block = new BarrelBlock(FabricBlockSettings.copyOf(Blocks.BARREL));
         return registerBlock(id, block);
     }
     
