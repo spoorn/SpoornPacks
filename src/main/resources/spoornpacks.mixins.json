@@ -20,7 +20,8 @@
     "EntityRenderersAccessor",
     "TexturedRenderLayersMixin",
     "BlockEntityRendererFactoriesAccessor",
-    "ModelLoaderAccessor"
+    "ModelLoaderAccessor",
+    "BuiltinModelItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
