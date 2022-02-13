@@ -121,6 +121,9 @@ public class ResourceGenerator {
         TagsBuilder minecraftWoodenStairs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenTrapdoors = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftWoodenDoors = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftFeaturesCannotReplace = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftLavaPoolStoneCannotReplace = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftGuardedByPiglins = new TagsBuilder(BLOCKS);
         TagsBuilder hoeMineable = new TagsBuilder(BLOCKS + "/mineable");
         TagsBuilder axeMineable = new TagsBuilder(BLOCKS + "/mineable");
         Map<String, List<String>> customLogs = new HashMap<>();
@@ -292,6 +295,10 @@ public class ResourceGenerator {
                         block = blocksRegistry.registerChest(namespace, name, filename, this.spEntities);
                         this.spEntities.registerChestBlockEntityType(namespace, name, block);
                         SPTexturedRenderLayers.registerChest(namespace, name);
+                        axeMineable.value(namespace, name, type);
+                        minecraftFeaturesCannotReplace.value(namespace, name, type);
+                        minecraftLavaPoolStoneCannotReplace.value(namespace, name, type);
+                        minecraftGuardedByPiglins.value(namespace, name, type);
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
@@ -322,6 +329,9 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "wooden_stairs", minecraftWoodenStairs);
         fileGenerator.generateTags(MINECRAFT, "wooden_trapdoors", minecraftWoodenTrapdoors);
         fileGenerator.generateTags(MINECRAFT, "wooden_doors", minecraftWoodenDoors);
+        fileGenerator.generateTags(MINECRAFT, "features_cannot_replace", minecraftFeaturesCannotReplace);
+        fileGenerator.generateTags(MINECRAFT, "lava_pool_stone_cannot_replace", minecraftLavaPoolStoneCannotReplace);
+        fileGenerator.generateTags(MINECRAFT, "guarded_by_piglins", minecraftGuardedByPiglins);
         fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
         fileGenerator.generateTags(MINECRAFT, "axe", axeMineable);
 
