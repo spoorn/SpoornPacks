@@ -21,6 +21,9 @@ public class SPRenderLayers {
     public static void registerRenderLayer(BlockType type, Block block) {
         if (block != null) {
             switch (type) {
+                case LEAVES -> {
+                    RenderLayersAccessor.getBlocks().put(block, RenderLayer.getCutoutMipped());
+                }
                 case SAPLING, DOOR, TRAPDOOR -> {
                     RenderLayersAccessor.getBlocks().put(block, RenderLayer.getCutout());
                 }

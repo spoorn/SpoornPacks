@@ -4,7 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
@@ -17,10 +16,10 @@ import org.spoorn.spoornpacks.block.SPChestBlock;
 import org.spoorn.spoornpacks.block.SPCraftingTableBlock;
 import org.spoorn.spoornpacks.block.SPSaplingBlock;
 import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
-import org.spoorn.spoornpacks.client.render.SPRenderLayers;
 import org.spoorn.spoornpacks.entity.SPEntities;
 import org.spoorn.spoornpacks.mixin.*;
 import org.spoorn.spoornpacks.type.BlockType;
+import org.spoorn.spoornpacks.util.ClientSideUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +67,7 @@ public class BlocksRegistry {
     public Block registerFlowerPot(String id, Block saplingBlock) {
         Block block = new FlowerPotBlock(saplingBlock, FabricBlockSettings.copyOf(Blocks.POTTED_OAK_SAPLING));
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            SPRenderLayers.registerRenderLayer(BlockType.SAPLING, block);
+            ClientSideUtils.registerRenderLayer(BlockType.SAPLING, block);
         }
         return registerBlock(id, block);
     }
@@ -129,10 +128,5 @@ public class BlocksRegistry {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
         return Registry.register(Registry.BLOCK, identifier, block);
-    }
-
-    // Copied from vanilla
-    public static Boolean canSpawnOnLeaves(BlockState state, BlockView world, BlockPos pos, EntityType<?> type) {
-        return type == EntityType.OCELOT || type == EntityType.PARROT;
     }
 }

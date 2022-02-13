@@ -137,11 +137,6 @@ public class BlockLootTableBuilder implements ResourceProvider {
         return this;
     }
 
-    public BlockLootTableBuilder pools() {
-        this.state.putArray("pools");
-        return this;
-    }
-
     public BlockLootTableBuilder addPool(Pool pool) {
         this.state.withArray("pools").addPOJO(pool);
         return this;

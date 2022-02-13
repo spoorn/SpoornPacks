@@ -4,9 +4,7 @@ import lombok.Getter;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
-import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
-import org.spoorn.spoornpacks.exception.DuplicateNameException;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
@@ -39,7 +37,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     private final Set<String> itemIds = new HashSet<>();
 
     public DefaultResourceBuilder(String namespace, String defaultName, ItemGroup itemGroup) {
-        validateNamesapce(namespace);
+        validateNamespace(namespace);
         validateName(defaultName);
         this.namespace = namespace;
         this.defaultName = defaultName;
@@ -47,7 +45,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     }
 
     @Override
-    public synchronized ResourceBuilder addBlocks(BlockType... types) throws DuplicateNameException {
+    public synchronized ResourceBuilder addBlocks(BlockType... types) {
         for (BlockType type : types) {
             addBlock(type);
         }
@@ -55,7 +53,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     }
 
     @Override
-    public synchronized ResourceBuilder addItems(ItemType... types) throws DuplicateNameException {
+    public synchronized ResourceBuilder addItems(ItemType... types) {
         for (ItemType type : types) {
             addItem(type);
         }
@@ -63,7 +61,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     }
 
     @Override
-    public synchronized ResourceBuilder addBlock(BlockType type) throws DuplicateNameException {
+    public synchronized ResourceBuilder addBlock(BlockType type) {
         if (type == BlockType.SAPLING) {
             throw new IllegalArgumentException("BlockType=SAPLING should be added via #addSapling");
         }
@@ -71,41 +69,41 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     }
 
     @Override
-    public synchronized ResourceBuilder addBlock(BlockType type, String name) throws DuplicateNameException {
+    public synchronized ResourceBuilder addBlock(BlockType type, String name) {
         registerBlock(type, name);
         return this;
     }
 
     @Override
-    public synchronized ResourceBuilder addItem(ItemType type) throws DuplicateNameException {
+    public synchronized ResourceBuilder addItem(ItemType type) {
         return addItem(type, this.defaultName);
     }
 
     @Override
-    public synchronized ResourceBuilder addItem(ItemType type, String name) throws DuplicateNameException {
+    public synchronized ResourceBuilder addItem(ItemType type, String name) {
         registerItem(type, name);
         return this;
     }
 
     @Override
-    public synchronized ResourceBuilder addLeavesWithSaplingOverride(String saplingName) throws DuplicateNameException {
+    public synchronized ResourceBuilder addLeavesWithSaplingOverride(String saplingName) {
         return addLeavesWithSaplingOverride(this.defaultName, saplingName);
     }
 
     @Override
-    public synchronized ResourceBuilder addLeavesWithSaplingOverride(String name, String saplingName) throws DuplicateNameException {
+    public synchronized ResourceBuilder addLeavesWithSaplingOverride(String name, String saplingName) {
         registerBlock(BlockType.LEAVES, name);
         this.leavesToSaplingOverrides.put(name, saplingName);
         return this;
     }
 
     @Override
-    public synchronized ResourceBuilder addSapling(ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) throws DuplicateNameException {
+    public synchronized ResourceBuilder addSapling(ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) {
         return addSapling(this.defaultName, configuredFeature);
     }
 
     @Override
-    public synchronized ResourceBuilder addSapling(String name, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) throws DuplicateNameException {
+    public synchronized ResourceBuilder addSapling(String name, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) {
         registerBlock(BlockType.SAPLING, name);
         this.saplingConfiguredFeatures.put(name, configuredFeature);
         return this;
@@ -121,19 +119,12 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         return this;
     }
 
-    private void registerBlock(BlockType type, String name) throws DuplicateNameException {
+    private void registerBlock(BlockType type, String name) {
         validateName(name);
         String updatedName = name;
         String typeName = type.getName();
         updatedName += "_" + typeName;
         validateUniqueBlock(updatedName);
-        /*switch (type) {
-            case LOG, WOOD, PLANKS, FENCE, FENCE_GATE -> {
-                updatedName += "_" + typeName;
-                validateUniqueBlock(updatedName);
-            }
-            default -> throw new IllegalArgumentException("BlockType=[" + type + "] is not valid");
-        }*/
 
         if (!this.blocks.containsKey(typeName)) {
             List<String> blockList = new ArrayList<>();
@@ -144,19 +135,12 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         }
     }
 
-    private void registerItem(ItemType type, String name) throws DuplicateNameException {
+    private void registerItem(ItemType type, String name) {
         validateName(name);
         String updatedName = name;
         String typeName = type.getName();
         updatedName += "_" + typeName;
         validateUniqueItem(updatedName);
-        /*switch (type) {
-            case LOG, WOOD, PLANKS, FENCE, FENCE_GATE -> {
-                updatedName += "_" + typeName;
-                validateUniqueItem(updatedName);
-            }
-            default -> throw new IllegalArgumentException("ItemType=[" + type + "] is not valid");
-        }*/
 
         if (!this.items.containsKey(typeName)) {
             List<String> blockList = new ArrayList<>();
@@ -167,23 +151,23 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         }
     }
 
-    private void validateUniqueBlock(String name) throws DuplicateNameException {
+    private void validateUniqueBlock(String name) {
         if (this.blockIds.contains(name)) {
-            throw new DuplicateNameException("Block with name=[" + name + "] was already added!");
+            throw new IllegalArgumentException("Block with name=[" + name + "] was already added!");
         } else {
             this.blockIds.add(name);
         }
     }
 
-    private void validateUniqueItem(String name) throws DuplicateNameException {
+    private void validateUniqueItem(String name) {
         if (this.itemIds.contains(name)) {
-            throw new DuplicateNameException("Item with name=[" + name + "] was already added!");
+            throw new IllegalArgumentException("Item with name=[" + name + "] was already added!");
         } else {
             this.itemIds.add(name);
         }
     }
 
-    private void validateNamesapce(String namespace) {
+    private void validateNamespace(String namespace) {
         if (namespace == null || namespace.isEmpty()) {
             throw new IllegalArgumentException("namespace cannot be empty");
         }

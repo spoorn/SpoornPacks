@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resource.ResourcePackManager;
-import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackProvider;
 import org.apache.commons.lang3.ArrayUtils;
 import org.spongepowered.asm.mixin.Final;
@@ -17,15 +16,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spoorn.spoornpacks.core.SPClientResourcePackProvider;
 import org.spoorn.spoornpacks.core.SPServerResourcePackProvider;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @Mixin(ResourcePackManager.class)
 public class ResourcePackManagerMixin {
-
-    @Shadow private List<ResourcePackProfile> enabled;
-    @Shadow private Map<String, ResourcePackProfile> profiles;
+    
     @Shadow @Final private Set<ResourcePackProvider> providers;
 
     /**
@@ -37,9 +32,6 @@ public class ResourcePackManagerMixin {
         //System.out.println("### injectSPResourcePack");
         boolean isClient = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
         boolean providerPresent = false;
-
-        SPClientResourcePackProvider clientProvider;
-        SPServerResourcePackProvider serverProvider;
 
         for (int i = 0; i < elements.length; i++) {
             E element = elements[i];
@@ -59,12 +51,10 @@ public class ResourcePackManagerMixin {
         if (!providerPresent) {
             if (isClient) {
                 //System.out.println("### adding client");
-                clientProvider = new SPClientResourcePackProvider();
-                return ImmutableSet.copyOf(ArrayUtils.add(elements, clientProvider));
+                return ImmutableSet.copyOf(ArrayUtils.add(elements, new SPClientResourcePackProvider()));
             } else {
                 //System.out.println("### adding server");
-                serverProvider = new SPServerResourcePackProvider();
-                return ImmutableSet.copyOf(ArrayUtils.add(elements, serverProvider));
+                return ImmutableSet.copyOf(ArrayUtils.add(elements, new SPServerResourcePackProvider()));
             }
         }
 

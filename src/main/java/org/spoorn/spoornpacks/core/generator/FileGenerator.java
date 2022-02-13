@@ -52,13 +52,7 @@ public class FileGenerator {
     public boolean generateBlockStates(String namespace, String filename, BlockStateBuilder builder) throws IOException {
         try {
             Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + ASSETS_PREFIX + namespace + "/blockstates/" + filename + JSON_SUFFIX);
-            
-            Optional<ResourceProvider> customResourceProvider = getCustomResourceProvider(filename, ResourceType.BLOCKSTATE);
-            if (customResourceProvider.isPresent()) {
-                return writeFile(file, customResourceProvider.get());
-            } else {
-                return writeFile(file, builder);
-            }
+            return checkCustomResourceProviderAndWriteFile(file, filename, ResourceType.BLOCKSTATE, builder);
         } catch (Exception e) {
             log.error("Could not create blockstates/ file for namespace=" + namespace + ", name=" + filename, e);
             throw e;
@@ -68,12 +62,7 @@ public class FileGenerator {
     public boolean generateModelBlock(String namespace,  String filename, ModelBlockBuilder builder) throws IOException {
         try {
             Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + ASSETS_PREFIX + namespace + "/models/block/" + filename + JSON_SUFFIX);
-            Optional<ResourceProvider> customResourceProvider = getCustomResourceProvider(filename, ResourceType.BLOCK_MODEL);
-            if (customResourceProvider.isPresent()) {
-                return writeFile(file, customResourceProvider.get());
-            } else {
-                return writeFile(file, builder);
-            }
+            return checkCustomResourceProviderAndWriteFile(file, filename, ResourceType.BLOCK_MODEL, builder);
         } catch (Exception e) {
             log.error("Could not create models/block file for namespace=" + namespace + ", name=" + filename, e);
             throw e;
@@ -83,12 +72,7 @@ public class FileGenerator {
     public boolean generateModelItem(String namespace, String filename, ModelItemBuilder builder) throws IOException {
         try {
             Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + ASSETS_PREFIX + namespace + "/models/item/" + filename + JSON_SUFFIX);
-            Optional<ResourceProvider> customResourceProvider = getCustomResourceProvider(filename, ResourceType.ITEM_MODEL);
-            if (customResourceProvider.isPresent()) {
-                return writeFile(file, customResourceProvider.get());
-            } else {
-                return writeFile(file, builder);
-            }
+            return checkCustomResourceProviderAndWriteFile(file, filename, ResourceType.ITEM_MODEL, builder);
         } catch (Exception e) {
             log.error("Could not create models/item file for namespace=" + namespace + ", name=" + filename, e);
             throw e;
@@ -98,12 +82,7 @@ public class FileGenerator {
     public boolean generateLootTable(String namespace, String filename, BlockLootTableBuilder builder) throws IOException {
         try {
             Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + DATA_PREFIX + namespace + "/loot_tables/blocks/" + filename + JSON_SUFFIX);
-            Optional<ResourceProvider> customResourceProvider = getCustomResourceProvider(filename, ResourceType.BLOCK_LOOT_TABLE);
-            if (customResourceProvider.isPresent()) {
-                return writeFile(file, customResourceProvider.get());
-            } else {
-                return writeFile(file, builder);
-            }
+            return checkCustomResourceProviderAndWriteFile(file, filename, ResourceType.BLOCK_LOOT_TABLE, builder);
         } catch (Exception e) {
             log.error("Could not create loot_tables/blocks file for namespace=" + namespace + ", name=" + filename, e);
             throw e;
@@ -113,12 +92,7 @@ public class FileGenerator {
     public boolean generateRecipe(String namespace, String filename, RecipeBuilder builder) throws IOException  {
         try {
             Path file = Paths.get(SPOORNPACKS_PREFIX + this.id + DATA_PREFIX + namespace + "/recipes/" + filename + JSON_SUFFIX);
-            Optional<ResourceProvider> customResourceProvider = getCustomResourceProvider(filename, ResourceType.RECIPE);
-            if (customResourceProvider.isPresent()) {
-                return writeFile(file, customResourceProvider.get());
-            } else {
-                return writeFile(file, builder);
-            }
+            return checkCustomResourceProviderAndWriteFile(file, filename, ResourceType.RECIPE, builder);
         } catch (Exception e) {
             log.error("Could not create recipes/ file for namespace=" + namespace + ", name=" + filename, e);
             throw e;
@@ -135,6 +109,16 @@ public class FileGenerator {
         } catch (Exception e) {
             log.error("Could not create tags/ file for namespace=" + namespace + ", name=" + filename, e);
             throw e;
+        }
+    }
+    
+    private boolean checkCustomResourceProviderAndWriteFile(Path file, String filename, ResourceType type, ResourceProvider builder) 
+            throws IOException {
+        Optional<ResourceProvider> customResourceProvider = getCustomResourceProvider(filename, type);
+        if (customResourceProvider.isPresent()) {
+            return writeFile(file, customResourceProvider.get());
+        } else {
+            return writeFile(file, builder);
         }
     }
 

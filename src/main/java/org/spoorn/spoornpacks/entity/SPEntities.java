@@ -15,6 +15,7 @@ import org.spoorn.spoornpacks.entity.boat.SPBoatEntity;
 import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
 import org.spoorn.spoornpacks.entity.chest.SPChestBlockEntity;
 import org.spoorn.spoornpacks.mixin.BlockEntityRendererFactoriesAccessor;
+import org.spoorn.spoornpacks.util.ClientSideUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class SPEntities {
                     BlockEntityType.Builder.<SPChestBlockEntity>create((blockPos, blockState) -> new SPChestBlockEntity(namespace, name, this, blockPos, blockState), block)
                             .build(null));
             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                BlockEntityRendererFactoriesAccessor.register(entityType, ChestBlockEntityRenderer::new);
+                ClientSideUtils.registerBlockEntityRendererFactory(entityType, ChestBlockEntityRenderer::new);
             }
             chestBlockEntities.put(namespace, entityType);
             return entityType;

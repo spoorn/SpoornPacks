@@ -7,6 +7,10 @@ import org.spoorn.spoornpacks.type.ItemType;
 
 import java.util.Optional;
 
+/**
+ * A representation of Resources generated from SpoornPacks.  Allows access to blocks and items generated and registered
+ * based on the {@link ResourceBuilder} used to generate this Resource.
+ */
 public interface Resource {
 
     String getNamespace();

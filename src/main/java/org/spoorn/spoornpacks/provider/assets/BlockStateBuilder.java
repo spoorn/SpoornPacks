@@ -3,7 +3,6 @@ package org.spoorn.spoornpacks.provider.assets;
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
-import org.spoorn.spoornpacks.provider.assets.BlockStateParts.Multipart;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.util.JsonTUtil;
 
@@ -177,11 +176,6 @@ public class BlockStateBuilder implements ResourceProvider {
 
     public BlockStateBuilder emptyModel() {
         this.state.with("variants").with("").put("model", defaultBlockWithTypePrefix);
-        return this;
-    }
-
-    public BlockStateBuilder addMultipart(Multipart multipart) {
-        this.state.withArray("multipart").addPOJO(multipart);
         return this;
     }
 }

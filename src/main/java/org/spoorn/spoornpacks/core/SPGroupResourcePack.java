@@ -28,7 +28,6 @@ public class SPGroupResourcePack implements ResourcePack {
     private static final PackResourceMetadata DEFAULT_PACK_METADATA = new PackResourceMetadata(new TranslatableText("spoornpack.metadata.description"), ResourceType.CLIENT_RESOURCES.getPackVersion(SharedConstants.getGameVersion()));
 
     private final ResourceType resourceType;
-    private final String separator;
     private final Path basePath;
 
     // To check if packs conflict
@@ -40,7 +39,6 @@ public class SPGroupResourcePack implements ResourcePack {
     public SPGroupResourcePack(ResourceType resourceType) {
         this.resourceType = resourceType;
         this.basePath = FabricLoader.getInstance().getGameDir().resolve("spoornpacks").toAbsolutePath().normalize();
-        this.separator = basePath.getFileSystem().getSeparator();
     }
 
     public void addSubResourcePack(String id) {
@@ -48,16 +46,10 @@ public class SPGroupResourcePack implements ResourcePack {
             throw new RuntimeException("Namespace [" + id + "] was already registered in SpoornPacks!");
         }
 
-        SPResourcePack spResourcePack = new SPResourcePack(id, resourceType, basePath, separator);
+        SPResourcePack spResourcePack = new SPResourcePack(id, resourceType, basePath);
 
         for (String namespace : spResourcePack.getNamespaces(resourceType)) {
-            if (this.subResourcePacks.containsKey(namespace)) {
-                this.subResourcePacks.get(namespace).add(spResourcePack);
-            } else {
-                List<SPResourcePack> spResourcePacks = new ArrayList<>();
-                spResourcePacks.add(spResourcePack);
-                this.subResourcePacks.put(namespace, spResourcePacks);
-            }
+            this.subResourcePacks.computeIfAbsent(namespace, m -> new ArrayList<>()).add(spResourcePack);
         }
 
         addedPacks.add(id);
@@ -67,13 +59,14 @@ public class SPGroupResourcePack implements ResourcePack {
     public void clear() {
         log.info("Clearing SPGroupResourcePack");
         this.addedPacks.clear();
+        this.subResourcePacks.clear();
     }
 
     @Nullable
     @Override
     public InputStream openRoot(String fileName) throws IOException {
         if (PACK_METADATA_NAME.equals(fileName)) {
-            String description = "Spoornpacks resources";
+            String description = "SpoornPacks resources";
             String pack = String.format("{\"pack\":{\"pack_format\":" + resourceType.getPackVersion(SharedConstants.getGameVersion()) + ",\"description\":\"%s\"}}", description);
             return IOUtils.toInputStream(pack, StandardCharsets.UTF_8);
         }

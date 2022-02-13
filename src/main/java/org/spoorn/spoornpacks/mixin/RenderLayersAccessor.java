@@ -16,6 +16,6 @@ public interface RenderLayersAccessor {
 
     @Accessor("BLOCKS")
     static Map<Block, RenderLayer> getBlocks() {
-        throw new RuntimeException("[SpoornPink] Could not get BLOCKS from RenderLayers");
+        throw new RuntimeException("[SpoornPacks] Could not get BLOCKS from RenderLayers");
     }
 }

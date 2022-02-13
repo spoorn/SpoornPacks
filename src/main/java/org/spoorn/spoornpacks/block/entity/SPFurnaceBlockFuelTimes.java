@@ -19,6 +19,9 @@ public class SPFurnaceBlockFuelTimes {
                 case CRAFTING_TABLE -> {
                     registerCraftingTable(item);
                 }
+                case CHEST -> {
+                    registerChest(item);
+                }
                 default -> {
                 }
             }
@@ -30,6 +33,10 @@ public class SPFurnaceBlockFuelTimes {
     }
 
     private static void registerCraftingTable(ItemConvertible item) {
+        FuelRegistry.INSTANCE.add(item, 300);
+    }
+
+    private static void registerChest(ItemConvertible item) {
         FuelRegistry.INSTANCE.add(item, 300);
     }
 }

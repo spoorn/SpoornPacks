@@ -39,7 +39,7 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
     private final String separator;
     private final Path basePath;
 
-    public SPResourcePack(String id, ResourceType resourceType, Path basePath, String separator) {
+    public SPResourcePack(String id, ResourceType resourceType, Path basePath) {
         super(null);
         this.id = id;
         this.resourceType = resourceType;
@@ -76,6 +76,7 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
             return Files.newInputStream(path);
         }
 
+        // This should never be reached as SPResourcePack is not directly added as a resource pack
         if (PACK_METADATA_NAME.equals(fileName)) {
             return new ByteArrayInputStream(OBJECT_MAPPER.writeValueAsBytes(DEFAULT_PACK_METADATA));
         }
@@ -152,7 +153,7 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
 
             // Allow minecraft tags from mods as well
             // TODO: Optimize.  This will cause all SPResourcePacks to be invoked for "minecraft" tags
-            namespaces.add("minecraft");
+            namespaces.add(MINECRAFT_NAMESPACE);
             this.namespaces = namespaces;
         }
 
