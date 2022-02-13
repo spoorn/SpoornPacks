@@ -294,7 +294,9 @@ public class ResourceGenerator {
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultChest());
                         block = blocksRegistry.registerChest(namespace, name, filename, this.spEntities);
                         this.spEntities.registerChestBlockEntityType(namespace, name, block);
-                        SPTexturedRenderLayers.registerChest(namespace, name);
+                        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+                            ClientSideUtils.registerTexturedRenderLayer(namespace, name);
+                        }
                         axeMineable.value(namespace, name, type);
                         minecraftFeaturesCannotReplace.value(namespace, name, type);
                         minecraftLavaPoolStoneCannotReplace.value(namespace, name, type);

@@ -5,6 +5,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import org.spoorn.spoornpacks.client.render.SPRenderLayers;
+import org.spoorn.spoornpacks.client.render.SPTexturedRenderLayers;
 import org.spoorn.spoornpacks.entity.boat.SPBoatEntity;
 import org.spoorn.spoornpacks.entity.boat.SPBoatEntityRenderer;
 import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
@@ -29,6 +30,12 @@ public class ClientSideUtils {
     public static void registerRenderLayer(BlockType type, Block block) {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             SPRenderLayers.registerRenderLayer(type, block);
+        }
+    }
+    
+    public static void registerTexturedRenderLayer(String namespace, String name) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            SPTexturedRenderLayers.registerChest(namespace, name);
         }
     }
 }
