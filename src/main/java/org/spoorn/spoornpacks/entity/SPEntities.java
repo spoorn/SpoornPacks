@@ -59,7 +59,7 @@ public class SPEntities {
         if (customChestBlockEntityTypes.containsKey(namespace)) {
             return customChestBlockEntityTypes.get(namespace);
         } else {
-            BlockEntityType<? extends ChestBlockEntity> entityType = registerBlockEntity(namespace, "chest",
+            BlockEntityType<? extends ChestBlockEntity> entityType = registerBlockEntity(namespace, name + "_chest",
                     FabricBlockEntityTypeBuilder.create(blockEntityFactory, block).build());
             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
                 ClientSideUtils.registerBlockEntityRendererFactory(entityType, ChestBlockEntityRenderer::new);
