@@ -1,5 +1,6 @@
 package org.spoorn.spoornpacks.entity;
 
+import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
@@ -24,6 +25,7 @@ import org.spoorn.spoornpacks.util.ClientSideUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+@Log4j2
 public class SPEntities {
     
     public static final Map<Class<? extends ChestBlockEntity>, Pair<String, String>> CUSTOM_CHEST_BLOCK_ENTITY_CLASSES = new HashMap<>();
@@ -93,10 +95,12 @@ public class SPEntities {
     }
 
     private static <E extends Entity, ET extends EntityType<E>> ET registerEntity(String namespace, String id, ET entityType) {
+        log.info("Registering EntityType with namespace={}, name={}", namespace, id);
         return Registry.register(Registry.ENTITY_TYPE, new Identifier(namespace, id), entityType);
     }
 
     private static <E extends BlockEntity, ET extends BlockEntityType<E>> ET registerBlockEntity(String namespace, String id, ET entityType) {
+        log.info("Registering BlockEntityType with namespace={}, name={}", namespace, id);
         return Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(namespace, id), entityType);
     }
 }
