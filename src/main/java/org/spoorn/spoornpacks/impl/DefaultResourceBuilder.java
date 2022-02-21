@@ -44,7 +44,6 @@ public class DefaultResourceBuilder implements ResourceBuilder {
 
     public DefaultResourceBuilder(String namespace, String defaultName, ItemGroup itemGroup) {
         validateNamespace(namespace);
-        validateName(defaultName);
         this.namespace = namespace;
         this.defaultName = defaultName;
         this.itemGroup = itemGroup;

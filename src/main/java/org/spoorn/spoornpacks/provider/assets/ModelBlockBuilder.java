@@ -208,6 +208,10 @@ public class ModelBlockBuilder implements ResourceProvider {
     public ModelBlockBuilder defaultChest() {
         return substitutePlanks();
     }
+    
+    public ModelBlockBuilder chest(String particle) {
+        return particle(particle);
+    }
 
     public ModelBlockBuilder defaultBarrel() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
@@ -290,6 +294,11 @@ public class ModelBlockBuilder implements ResourceProvider {
 
     public ModelBlockBuilder particle() {
         this.state.with("textures").put("particle", this.defaultBlockWithTypePrefix);
+        return this;
+    }
+
+    public ModelBlockBuilder particle(String particle) {
+        this.state.with("textures").put("particle", particle);
         return this;
     }
 

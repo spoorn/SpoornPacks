@@ -126,8 +126,12 @@ public class BlockLootTableBuilder implements ResourceProvider {
     }
 
     public BlockLootTableBuilder defaultChest() {
+        return chest(this.defaultPrefixWithType);
+    }
+    
+    public BlockLootTableBuilder chest(String name) {
         this.state = this.jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultPrefixWithType
+                name
         );
         return this;
     }

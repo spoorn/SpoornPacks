@@ -544,31 +544,31 @@ public class ResourceGenerator {
         }
     }
     
-    private BlockStateBuilder newBlockStateBuilder(String namespace, String name, BlockType type) {
+    public static BlockStateBuilder newBlockStateBuilder(String namespace, String name, BlockType type) {
         return new BlockStateBuilder(namespace, name, type, BLOCK_STATES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
     }
     
-    private ModelBlockBuilder newModelBlockBuilder(String namespace, String name, BlockType type) {
+    public static ModelBlockBuilder newModelBlockBuilder(String namespace, String name, BlockType type) {
         return newModelBlockBuilder(namespace, name, type, type.getName());
     }
 
-    private ModelBlockBuilder newModelBlockBuilder(String namespace, String name, BlockType type, String templateFileName) {
+    private static ModelBlockBuilder newModelBlockBuilder(String namespace, String name, BlockType type, String templateFileName) {
         return new ModelBlockBuilder(namespace, name, type, MODELS_BLOCK_TEMPLATE_PATH + templateFileName + JSONT_SUFFIX);
     }
 
-    private ModelItemBuilder newModelItemBuilder(String namespace, String name, ItemType type) {
+    public static ModelItemBuilder newModelItemBuilder(String namespace, String name, ItemType type) {
         return new ModelItemBuilder(namespace, name, type, MODELS_ITEM_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
     }
 
-    private BlockLootTableBuilder newBlockLootTableBuilder(String namespace, String name, BlockType type) {
+    public static BlockLootTableBuilder newBlockLootTableBuilder(String namespace, String name, BlockType type) {
         return newBlockLootTableBuilder(namespace, name, type, type.getName());
     }
 
-    private BlockLootTableBuilder newBlockLootTableBuilder(String namespace, String name, BlockType type, String templateFileName) {
+    private static BlockLootTableBuilder newBlockLootTableBuilder(String namespace, String name, BlockType type, String templateFileName) {
         return new BlockLootTableBuilder(namespace, name, type, BLOCK_LOOTTABLES_TEMPLATE_PATH + templateFileName + JSONT_SUFFIX);
     }
 
-    private RecipeBuilder newRecipeBuilder(String namespace, String name, ItemType type) {
+    public static RecipeBuilder newRecipeBuilder(String namespace, String name, ItemType type) {
         return new RecipeBuilder(namespace, name, type, RECIPES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
     }
 }
