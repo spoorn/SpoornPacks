@@ -1,9 +1,13 @@
 package org.spoorn.spoornpacks.impl;
 
 import lombok.Getter;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
+import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.type.BlockType;
@@ -32,6 +36,8 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     private final Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures = new HashMap<>();
     @Getter
     private final Map<String, Map<ResourceType, ResourceProvider>> customResourceProviders = new HashMap<>();
+    @Getter
+    private final Map<Pair<BlockType, String>, Pair<Block, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity>>> customBlocksWithEntity = new HashMap<>();
 
     private final Set<String> blockIds = new HashSet<>();
     private final Set<String> itemIds = new HashSet<>();
@@ -82,6 +88,19 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     @Override
     public synchronized ResourceBuilder addItem(ItemType type, String name) {
         registerItem(type, name);
+        return this;
+    }
+
+    @Override
+    public ResourceBuilder addBlock(BlockType type, String name, Block block, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> blockEntity) {
+        if (block == null || blockEntity == null) {
+            throw new IllegalArgumentException("Block and BlockEntity cannot be NULL");
+        }
+        if (type != BlockType.CHEST) {
+            throw new IllegalArgumentException("BlockType=" + type + " is not supported for this addBlock operation");
+        }
+        addBlock(type, name);
+        this.customBlocksWithEntity.put(Pair.of(type, name), Pair.of(block, blockEntity));
         return this;
     }
 

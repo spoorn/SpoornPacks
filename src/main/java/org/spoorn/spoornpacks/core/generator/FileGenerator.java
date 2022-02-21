@@ -2,6 +2,7 @@ package org.spoorn.spoornpacks.core.generator;
 
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import static org.spoorn.spoornpacks.SpoornPacks.PRETTY_PRINTER;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
@@ -123,6 +124,12 @@ public class FileGenerator {
     }
 
     private boolean writeFile(Path file, ResourceProvider resourceProvider) throws IOException {
+        ObjectNode json = resourceProvider.getJson();
+        
+        if (json == null) {
+            return false;
+        }
+        
         Files.createDirectories(file.getParent());
 
         // If file already exists, don't modify it
@@ -131,7 +138,7 @@ public class FileGenerator {
             return false;
         }
 
-        Files.writeString(file, OBJECT_MAPPER.writer(PRETTY_PRINTER).writeValueAsString(resourceProvider.getJson()), StandardCharsets.UTF_8);
+        Files.writeString(file, OBJECT_MAPPER.writer(PRETTY_PRINTER).writeValueAsString(json), StandardCharsets.UTF_8);
         return true;
     }
     

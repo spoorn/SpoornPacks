@@ -1,29 +1,36 @@
 package org.spoorn.spoornpacks.entity;
 
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.entity.boat.SPBoatEntity;
 import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
 import org.spoorn.spoornpacks.entity.chest.SPChestBlockEntity;
-import org.spoorn.spoornpacks.mixin.BlockEntityRendererFactoriesAccessor;
 import org.spoorn.spoornpacks.util.ClientSideUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class SPEntities {
+    
+    public static final Map<Class<? extends ChestBlockEntity>, Pair<String, String>> CUSTOM_CHEST_BLOCK_ENTITY_CLASSES = new HashMap<>();
 
     private final Map<String, EntityType<SPBoatEntity>> boatEntities = new HashMap<>();
     private final Map<String, BlockEntityType<SPChestBlockEntity>> chestBlockEntities = new HashMap<>();
+    private final Map<String, BlockEntityType<? extends ChestBlockEntity>> customChestBlockEntityTypes = new HashMap<>();
     
     public SPEntities() {
         
@@ -37,6 +44,27 @@ public class SPEntities {
                     EntityType.Builder.<SPBoatEntity>create((entType, world) -> new SPBoatEntity(spBoatRegistry, entType, world), SpawnGroup.MISC)
                             .setDimensions(1.375F, 0.5625F).build(namespace + ":boat"));
             boatEntities.put(namespace, entityType);
+            return entityType;
+        }
+    }
+    
+    public <T extends ChestBlockEntity> BlockEntityType<? extends ChestBlockEntity> registerCustomChestBlockEntityType(String namespace, String name, Block block, 
+            FabricBlockEntityTypeBuilder.Factory<? extends T> blockEntityFactory) {
+        // Create a dummy BlockEntity to fetch the class
+        Class<? extends ChestBlockEntity> customChestBlockEntityClass = blockEntityFactory.create(BlockPos.ORIGIN, Blocks.OAK_LOG.getDefaultState()).getClass();
+        if (CUSTOM_CHEST_BLOCK_ENTITY_CLASSES.containsKey(customChestBlockEntityClass)) {
+            throw new IllegalArgumentException("Already registered custom chest block entity " + customChestBlockEntityClass.getName());
+        }
+        CUSTOM_CHEST_BLOCK_ENTITY_CLASSES.put(customChestBlockEntityClass, Pair.of(namespace, name));
+        if (customChestBlockEntityTypes.containsKey(namespace)) {
+            return customChestBlockEntityTypes.get(namespace);
+        } else {
+            BlockEntityType<? extends ChestBlockEntity> entityType = registerBlockEntity(namespace, "chest",
+                    FabricBlockEntityTypeBuilder.create(blockEntityFactory, block).build());
+            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+                ClientSideUtils.registerBlockEntityRendererFactory(entityType, ChestBlockEntityRenderer::new);
+            }
+            customChestBlockEntityTypes.put(namespace, entityType);
             return entityType;
         }
     }

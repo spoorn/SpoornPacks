@@ -126,6 +126,16 @@ public class BlocksRegistry {
         return registerBlock(id, block);
     }
     
+    public Block registerBlockIfAbsent(String id, Block block) {
+        Identifier identifier = new Identifier(this.modid, id);
+        register.put(identifier, block);
+        if (!Registry.BLOCK.containsId(identifier)) {
+            return Registry.register(Registry.BLOCK, identifier, block);
+        } else {
+            return block;
+        }
+    }
+    
     private Block registerBlock(String id, Block block) {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);

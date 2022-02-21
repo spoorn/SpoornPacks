@@ -1,5 +1,8 @@
 package org.spoorn.spoornpacks.api;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
@@ -32,6 +35,18 @@ public interface ResourceBuilder {
     
     // More customizable APIs
 
+    /**
+     * Allows providing a custom block for this block resource.
+     * 
+     * NOTE: Currently only supports BlockType CHEST
+     * 
+     * @param type BlockType
+     * @param block Custom block to register into the Blocks registry
+     * @param blockEntity Custom BlockEntity constructor factory for the custom Block
+     * @param name Name of the resource
+     */
+    ResourceBuilder addBlock(BlockType type, String name, Block block, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> blockEntity);
+    
     // TODO: Support setting sapling namespace as well
     ResourceBuilder addLeavesWithSaplingOverride(String saplingName);
     ResourceBuilder addLeavesWithSaplingOverride(String name, String saplingName);

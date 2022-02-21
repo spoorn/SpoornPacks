@@ -2,8 +2,11 @@ package org.spoorn.spoornpacks.core.generator;
 
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -106,6 +109,8 @@ public class ResourceGenerator {
         TreeMap<String, List<String>> blocks = drb.getBlocks();
         Map<String, String> leavesToSaplingOverrides = drb.getLeavesToSaplingOverrides();
         Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures = drb.getSaplingConfiguredFeatures();
+        Map<Pair<BlockType, String>, Pair<Block, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity>>> customBlocksWithEntity
+                = drb.getCustomBlocksWithEntity();
         
         TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
@@ -134,8 +139,14 @@ public class ResourceGenerator {
             BlockType type = BlockType.fromString(entry.getKey());
             for (String name : entry.getValue()) {
                 String filename = type.getPrefix() + name + type.getSuffix();
-                Block block;
+                Block block = null;
                 
+                Pair<Block, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity>> customBlockWithEntity =
+                        customBlocksWithEntity.get(Pair.of(type, name));
+                if (customBlockWithEntity != null) {
+                    block = customBlockWithEntity.getLeft();
+                    blocksRegistry.registerBlockIfAbsent(filename, block);
+                }
                 switch (type) {
                     case LOG -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultLog());
@@ -143,7 +154,7 @@ public class ResourceGenerator {
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultLog());
                         minecraftLogs.value(namespace, name, type);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
-                        block = blocksRegistry.registerLog(filename);
+                        if (block == null)  block = blocksRegistry.registerLog(filename);
                     }
                     case WOOD -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultWood());
@@ -151,14 +162,14 @@ public class ResourceGenerator {
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultWood());
                         minecraftLogs.value(namespace, name, type);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
-                        block = blocksRegistry.registerWood(filename);
+                        if (block == null)  block = blocksRegistry.registerWood(filename);
                     }
                     case PLANKS -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultPlanks());
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultPlanks());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultPlanks());
                         minecraftPlanks.value(namespace, name, type);
-                        block = blocksRegistry.registerPlanks(filename);
+                        if (block == null)  block = blocksRegistry.registerPlanks(filename);
                     }
                     case LEAVES -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultLeaves());
@@ -171,14 +182,14 @@ public class ResourceGenerator {
                         }
                         minecraftLeaves.value(namespace, name, type);
                         hoeMineable.value(namespace, name, type);
-                        block = blocksRegistry.registerLeaves(filename);
+                        if (block == null)  block = blocksRegistry.registerLeaves(filename);
                     }
                     case SAPLING -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultSapling());
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultSapling());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultSapling());
                         minecraftSaplings.value(namespace, name, type);
-                        block = blocksRegistry.registerSapling(filename, saplingConfiguredFeatures.get(name));
+                        if (block == null)  block = blocksRegistry.registerSapling(filename, saplingConfiguredFeatures.get(name));
                         
                         // Sapling in flower pot
                         fileGenerator.generateBlockStates(namespace, POTTED_PREFIX + filename, newBlockStateBuilder(namespace, POTTED_PREFIX + name, type).defaultSapling());
@@ -196,7 +207,7 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename + "_side", newModelBlockBuilder(namespace, name, type).defaultFenceSide());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultFence());
                         minecraftWoodenFences.value(namespace, name, type);
-                        block = blocksRegistry.registerFence(filename);
+                        if (block == null)  block = blocksRegistry.registerFence(filename);
                     }
                     case FENCE_GATE -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultFenceGate());
@@ -206,7 +217,7 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename + "_wall_open", newModelBlockBuilder(namespace, name, type, type.getName() + "_wall_open").defaultFenceGateWallOpen());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultFenceGate());
                         minecraftFenceGates.value(namespace, name, type);
-                        block = blocksRegistry.registerFenceGate(filename);
+                        if (block == null)  block = blocksRegistry.registerFenceGate(filename);
                     }
                     case BUTTON -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultButton());
@@ -215,7 +226,7 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename + "_pressed", newModelBlockBuilder(namespace, name, type, type.getName() + "_pressed").defaultButtonPressed());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultButton());
                         minecraftWoodenButtons.value(namespace, name, type);
-                        block = blocksRegistry.registerButton(filename);
+                        if (block == null)  block = blocksRegistry.registerButton(filename);
                     }
                     case SLAB -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultSlab());
@@ -223,7 +234,7 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename + "_top", newModelBlockBuilder(namespace, name, type, type.getName() + "_top").defaultSlabTop());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultSlab());
                         minecraftWoodenSlabs.value(namespace, name, type);
-                        block = blocksRegistry.registerSlab(filename);
+                        if (block == null)  block = blocksRegistry.registerSlab(filename);
                     }
                     case PRESSURE_PLATE -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultPressurePlate());
@@ -231,7 +242,7 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename + "_down", newModelBlockBuilder(namespace, name, type, type.getName() + "_down").defaultPressurePlateDown());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultPressurePlate());
                         minecraftWoodenPressurePlates.value(namespace, name, type);
-                        block = blocksRegistry.registerPressurePlate(filename);
+                        if (block == null)  block = blocksRegistry.registerPressurePlate(filename);
                     }
                     case STAIRS -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultStairs());
@@ -240,7 +251,7 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename + "_outer", newModelBlockBuilder(namespace, name, type, type.getName() + "_outer").defaultStairsOuter());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultStairs());
                         minecraftWoodenStairs.value(namespace, name, type);
-                        block = blocksRegistry.registerStairs(filename, blocksRegistry.register.get(new Identifier(namespace, name + "_" + BlockType.PLANKS.getName())));
+                        if (block == null)  block = blocksRegistry.registerStairs(filename, blocksRegistry.register.get(new Identifier(namespace, name + "_" + BlockType.PLANKS.getName())));
                     }
                     case TRAPDOOR -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultTrapdoor());
@@ -249,7 +260,7 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename + "_top", newModelBlockBuilder(namespace, name, type, type.getName() + "_top").defaultTrapdoorTop());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultTrapdoor());
                         minecraftWoodenTrapdoors.value(namespace, name, type);
-                        block = blocksRegistry.registerTrapdoor(filename);
+                        if (block == null)  block = blocksRegistry.registerTrapdoor(filename);
                     }
                     case DOOR -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultDoor());
@@ -259,14 +270,14 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename + "_top_hinge", newModelBlockBuilder(namespace, name, type, type.getName() + "_top_hinge").defaultDoorPart());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultDoor());
                         minecraftWoodenDoors.value(namespace, name, type);
-                        block = blocksRegistry.registerDoor(filename);
+                        if (block == null)  block = blocksRegistry.registerDoor(filename);
                     }
                     case CRAFTING_TABLE -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultCraftingTable());
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultCraftingTable());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultCraftingTable());
                         axeMineable.value(namespace, name, type);
-                        block = blocksRegistry.registerCraftingTable(filename);
+                        if (block == null)  block = blocksRegistry.registerCraftingTable(filename);
                     }
                     case STRIPPED_LOG -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultStrippedLog());
@@ -275,7 +286,7 @@ public class ResourceGenerator {
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultStrippedLog());
                         minecraftLogs.value(namespace + ":" + filename);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
-                        block = blocksRegistry.registerLog(filename);
+                        if (block == null)  block = blocksRegistry.registerLog(filename);
                         strippedBlocks.add(Pair.of(name + type.getSuffix(), block));
                     }
                     case STRIPPED_WOOD -> {
@@ -284,15 +295,20 @@ public class ResourceGenerator {
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultStrippedWood());
                         minecraftLogs.value(namespace + ":" + filename);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
-                        block = blocksRegistry.registerLog(filename);
+                        if (block == null)  block = blocksRegistry.registerLog(filename);
                         strippedBlocks.add(Pair.of(name + type.getSuffix(), block));
                     }
                     case CHEST -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultChest());
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultChest());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultChest());
-                        block = blocksRegistry.registerChest(namespace, name, filename, this.spEntities);
-                        this.spEntities.registerChestBlockEntityType(namespace, name, block);
+                        if (block == null)  block = blocksRegistry.registerChest(namespace, name, filename, this.spEntities);
+                        if (customBlockWithEntity == null) {
+                            this.spEntities.registerChestBlockEntityType(namespace, name, block);
+                        } else {
+                            this.spEntities.registerCustomChestBlockEntityType(namespace, name, block, 
+                                    (FabricBlockEntityTypeBuilder.Factory<? extends ChestBlockEntity>) customBlockWithEntity.getRight());
+                        }
                         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
                             ClientSideUtils.registerTexturedRenderLayer(namespace, name);
                         }
@@ -306,7 +322,7 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultBarrel());
                         fileGenerator.generateModelBlock(namespace, filename + "_open", newModelBlockBuilder(namespace, name, type).defaultBarrelOpen());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultBarrel());
-                        block = blocksRegistry.registerBarrel(filename);
+                        if (block == null)  block = blocksRegistry.registerBarrel(filename);
                         axeMineable.value(namespace, name, type);
                         minecraftGuardedByPiglins.value(namespace, name, type);
                     }

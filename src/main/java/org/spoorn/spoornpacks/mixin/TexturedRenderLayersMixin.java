@@ -1,9 +1,11 @@
 package org.spoorn.spoornpacks.mixin;
 
+import static org.spoorn.spoornpacks.entity.SPEntities.CUSTOM_CHEST_BLOCK_ENTITY_CLASSES;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.util.SpriteIdentifier;
+import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,8 +23,20 @@ public class TexturedRenderLayersMixin {
     @Inject(method = "getChestTexture(Lnet/minecraft/block/entity/BlockEntity;Lnet/minecraft/block/enums/ChestType;Z)Lnet/minecraft/client/util/SpriteIdentifier;", 
             at = @At(value = "HEAD"), cancellable = true)
     private static void injectCustomChestTextures(BlockEntity blockEntity, ChestType type, boolean christmas, CallbackInfoReturnable<SpriteIdentifier> cir) {
+        String namespace = null;
+        String name = null;
+        
         if (blockEntity instanceof SPChestBlockEntity spChestBlockEntity) {
-            cir.setReturnValue(SPTexturedRenderLayers.getChest(spChestBlockEntity.namespace, spChestBlockEntity.name, type));
+            namespace = spChestBlockEntity.namespace;
+            name = spChestBlockEntity.name;
+        } else if (CUSTOM_CHEST_BLOCK_ENTITY_CLASSES.containsKey(blockEntity.getClass())) {
+            Pair<String, String> pair = CUSTOM_CHEST_BLOCK_ENTITY_CLASSES.get(blockEntity.getClass());
+            namespace = pair.getLeft();
+            name = pair.getRight();
+        }
+        
+        if (namespace != null && name != null) {
+            cir.setReturnValue(SPTexturedRenderLayers.getChest(namespace, name, type));
         }
     }
     
