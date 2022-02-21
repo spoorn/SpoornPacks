@@ -73,7 +73,7 @@ public class SPEntities {
         if (chestBlockEntities.containsKey(namespace)) {
             return chestBlockEntities.get(namespace);
         } else {
-            BlockEntityType<SPChestBlockEntity> entityType = registerBlockEntity(namespace, "chest",
+            BlockEntityType<SPChestBlockEntity> entityType = registerBlockEntity(namespace, name + "_chest",
                     BlockEntityType.Builder.<SPChestBlockEntity>create((blockPos, blockState) -> new SPChestBlockEntity(namespace, name, this, blockPos, blockState), block)
                             .build(null));
             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
