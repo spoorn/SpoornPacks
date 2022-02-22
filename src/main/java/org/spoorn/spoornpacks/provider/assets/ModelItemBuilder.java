@@ -112,8 +112,12 @@ public class ModelItemBuilder implements ResourceProvider {
     }
     
     public ModelItemBuilder defaultChest() {
+        return chest(this.namespace + ":block/" + this.name + "_" + BlockType.PLANKS.getName());
+    }
+
+    public ModelItemBuilder chest(String particle) {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.namespace + ":block/" + this.name + "_" + BlockType.PLANKS.getName()
+                particle
         );
         return this;
     }
