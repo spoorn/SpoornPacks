@@ -95,7 +95,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         if (block == null || blockEntity == null) {
             throw new IllegalArgumentException("Block and BlockEntity cannot be NULL");
         }
-        if (type != BlockType.CHEST) {
+        if (type != BlockType.CHEST && type != BlockType.BARREL) {
             throw new IllegalArgumentException("BlockType=" + type + " is not supported for this addBlock operation");
         }
         addBlock(type, name);

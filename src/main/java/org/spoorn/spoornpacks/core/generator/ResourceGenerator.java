@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.entity.EntityType;
@@ -323,6 +324,10 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename + "_open", newModelBlockBuilder(namespace, name, type).defaultBarrelOpen());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultBarrel());
                         if (block == null)  block = blocksRegistry.registerBarrel(filename);
+                        if (customBlockWithEntity != null) {
+                            this.spEntities.registerCustomBarrelBlockEntityType(namespace, name, block,
+                                    (FabricBlockEntityTypeBuilder.Factory<? extends BarrelBlockEntity>) customBlockWithEntity.getRight());
+                        }
                         axeMineable.value(namespace, name, type);
                         minecraftGuardedByPiglins.value(namespace, name, type);
                     }

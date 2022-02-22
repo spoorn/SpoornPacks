@@ -38,7 +38,7 @@ public interface ResourceBuilder {
     /**
      * Allows providing a custom block for this block resource.
      * 
-     * NOTE: Currently only supports BlockType CHEST
+     * NOTE: Currently only supports BlockType CHEST and BARREL
      * 
      * @param type BlockType
      * @param block Custom block to register into the Blocks registry

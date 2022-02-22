@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.ChestBlockEntity;
@@ -33,6 +34,7 @@ public class SPEntities {
     private final Map<String, EntityType<SPBoatEntity>> boatEntities = new HashMap<>();
     private final Map<String, BlockEntityType<SPChestBlockEntity>> chestBlockEntities = new HashMap<>();
     private final Map<String, BlockEntityType<? extends ChestBlockEntity>> customChestBlockEntityTypes = new HashMap<>();
+    private final Map<String, BlockEntityType<? extends BarrelBlockEntity>> customBarrelBlockEntityTypes = new HashMap<>();
     
     public SPEntities() {
         
@@ -46,6 +48,18 @@ public class SPEntities {
                     EntityType.Builder.<SPBoatEntity>create((entType, world) -> new SPBoatEntity(spBoatRegistry, entType, world), SpawnGroup.MISC)
                             .setDimensions(1.375F, 0.5625F).build(namespace + ":boat"));
             boatEntities.put(namespace, entityType);
+            return entityType;
+        }
+    }
+
+    public <T extends BarrelBlockEntity> BlockEntityType<? extends BarrelBlockEntity> registerCustomBarrelBlockEntityType(String namespace, String name, Block block,
+            FabricBlockEntityTypeBuilder.Factory<? extends T> blockEntityFactory) {
+        if (customBarrelBlockEntityTypes.containsKey(namespace)) {
+            return customBarrelBlockEntityTypes.get(namespace);
+        } else {
+            BlockEntityType<? extends BarrelBlockEntity> entityType = registerBlockEntity(namespace, name + "_barrel",
+                    FabricBlockEntityTypeBuilder.create(blockEntityFactory, block).build());
+            customBarrelBlockEntityTypes.put(namespace, entityType);
             return entityType;
         }
     }
