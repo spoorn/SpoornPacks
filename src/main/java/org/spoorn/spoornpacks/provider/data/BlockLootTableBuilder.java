@@ -137,8 +137,12 @@ public class BlockLootTableBuilder implements ResourceProvider {
     }
 
     public BlockLootTableBuilder defaultBarrel() {
+         return barrel(this.defaultPrefixWithType);
+    }
+
+    public BlockLootTableBuilder barrel(String name) {
         this.state = this.jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultPrefixWithType
+                name
         );
         return this;
     }
