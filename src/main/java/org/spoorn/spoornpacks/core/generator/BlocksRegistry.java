@@ -19,10 +19,13 @@ import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.util.ClientSideUtils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class BlocksRegistry {
     
+    public static Set<ChestBlock> CUSTOM_CHESTS = new HashSet<>();
 
     private final String modid;
     
@@ -129,6 +132,11 @@ public class BlocksRegistry {
     public Block registerBlockIfAbsent(String id, Block block) {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
+        
+        if (block instanceof ChestBlock) {
+            CUSTOM_CHESTS.add((ChestBlock) block);
+        }
+        
         if (!Registry.BLOCK.containsId(identifier)) {
             return Registry.register(Registry.BLOCK, identifier, block);
         } else {

@@ -1,6 +1,7 @@
 package org.spoorn.spoornpacks.mixin;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spoorn.spoornpacks.block.SPChestBlock;
+import org.spoorn.spoornpacks.core.generator.BlocksRegistry;
 
 /**
  * Renders Items with a built-in model, such as chests.
@@ -35,8 +37,8 @@ public class BuiltinModelItemRendererMixin {
             Block block = ((BlockItem) item).getBlock();
             
             // TODO: Generalize this to any block from SpoornPacks with interface
-            if (block instanceof SPChestBlock) {
-                blockEntity = ((SPChestBlock) block).createBlockEntity(BlockPos.ORIGIN, block.getDefaultState());
+            if (block instanceof SPChestBlock || BlocksRegistry.CUSTOM_CHESTS.contains(block)) {
+                blockEntity = ((ChestBlock) block).createBlockEntity(BlockPos.ORIGIN, block.getDefaultState());
             }
             
             if (blockEntity != null) {

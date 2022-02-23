@@ -23,7 +23,6 @@ public class ItemsRegistry {
         this.modid = modid;
     }
 
-    // TODO: Add item groups
     public Item registerBlockItem(String id, Block block, ItemGroup itemGroup) {
         return registerItem(id, new BlockItem(block, new FabricItemSettings().group(itemGroup)));
     }
