@@ -11,7 +11,8 @@
     "TrapdoorBlockAccessor",
     "DoorBlockAccessor",
     "FireBlockAccessor",
-    "AxeItemAccessor"
+    "AxeItemAccessor",
+    "NamespaceResourceManagerMixin"
   ],
   "client": [
     "RenderLayersAccessor",

@@ -1,11 +1,11 @@
 package org.spoorn.spoornpacks.core;
 
 import lombok.extern.log4j.Log4j2;
+import net.fabricmc.fabric.api.resource.ModResourcePack;
+import net.fabricmc.fabric.mixin.resource.loader.NamespaceResourceManagerAccessor;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
-import net.minecraft.resource.ResourceNotFoundException;
-import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourceType;
+import net.minecraft.resource.*;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.resource.metadata.ResourceMetadataReader;
 import net.minecraft.text.TranslatableText;
@@ -157,5 +157,28 @@ public class SPGroupResourcePack implements ResourcePack {
 
     @Override
     public void close() {
+    }
+
+    /**
+     * For appending resources if multiple resource packs use the same namespace, such as "minecraft" tags used in multiple
+     * SPResourcePacks.
+     * 
+     * This is copied from Fabric's {@link net.fabricmc.fabric.impl.resource.loader.GroupResourcePack}.
+     */
+    public void appendResources(NamespaceResourceManagerAccessor manager, Identifier id, List<Resource> resources) throws IOException {
+        List<SPResourcePack> packs = this.subResourcePacks.get(id.getNamespace());
+
+        if (packs == null) {
+            return;
+        }
+
+        Identifier metadataId = NamespaceResourceManagerAccessor.fabric$accessor_getMetadataPath(id);
+
+        for (SPResourcePack pack : packs) {
+            if (pack.contains(manager.getType(), id)) {
+                InputStream metadataInputStream = pack.contains(manager.getType(), metadataId) ? manager.fabric$accessor_open(metadataId, pack) : null;
+                resources.add(new ResourceImpl(pack.getName(), id, manager.fabric$accessor_open(id, pack), metadataInputStream));
+            }
+        }
     }
 }
