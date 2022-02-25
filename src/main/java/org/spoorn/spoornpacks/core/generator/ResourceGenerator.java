@@ -554,7 +554,7 @@ public class ResourceGenerator {
                     case TALL_FLOWER -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultTallFlower());
                         item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
-                        minecraftSmallFlowers.value(namespace + ":" + name);
+                        minecraftTallFlowers.value(namespace + ":" + name);
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
