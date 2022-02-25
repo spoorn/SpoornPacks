@@ -239,6 +239,20 @@ public class ModelBlockBuilder implements ResourceProvider {
         );
         return this;
     }
+
+    public ModelBlockBuilder defaultTallFlowerBottom() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockPrefix + "_bottom"
+        );
+        return this;
+    }
+
+    public ModelBlockBuilder defaultTallFlowerTop() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockPrefix + "_top"
+        );
+        return this;
+    }
     
     
     private ModelBlockBuilder substitutePlanks() {

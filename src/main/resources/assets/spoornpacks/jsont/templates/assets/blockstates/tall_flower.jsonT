@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": ${string:1}
+    },
+    "half=upper": {
+      "model": ${string:2}
+    }
+  }
+}

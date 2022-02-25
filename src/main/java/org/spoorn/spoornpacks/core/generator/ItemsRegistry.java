@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerBlock;
+import net.minecraft.block.TallFlowerBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -23,7 +24,7 @@ public class ItemsRegistry {
 
     public Item registerBlockItem(String id, Block block, ItemGroup itemGroup) {
         Item item = registerItem(id, new BlockItem(block, new FabricItemSettings().group(itemGroup)));
-        if (block instanceof FlowerBlock) {
+        if (block instanceof FlowerBlock || block instanceof TallFlowerBlock) {
             registerCompostable(item);
         }
         return item;

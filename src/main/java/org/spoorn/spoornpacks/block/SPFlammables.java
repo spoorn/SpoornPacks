@@ -36,7 +36,7 @@ public class SPFlammables {
                 case LEAVES -> {
                     registerLeaves(block);
                 }
-                case SMALL_FLOWER -> {
+                case SMALL_FLOWER, TALL_FLOWER -> {
                     registerSmallFlower(block);
                 }
                 default -> {}

@@ -59,7 +59,8 @@ public interface ResourceBuilder {
     ResourceBuilder addSapling(String name, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature);
 
     /**
-     * Adds a small flower (e.g. Minecraft's poppy) block and item.
+     * Adds a small flower (e.g. Minecraft's poppy) block and item.  Tall flowers can be added via the default
+     * {@link #addBlock(BlockType, String)} and {@link #addItem(ItemType, String)}.
      * 
      * @param suspiciousStewEffect Effect when combining the flower with a bowl to produce suspicious stew.
      *                             You can get these from {@link StatusEffect}.

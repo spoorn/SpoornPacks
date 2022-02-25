@@ -147,6 +147,11 @@ public class BlocksRegistry {
         return registerBlock(id, block);
     }
     
+    public Block registerTallFlower(String id) {
+        Block block = new TallFlowerBlock(FabricBlockSettings.copyOf(Blocks.LILAC));
+        return registerBlock(id, block);
+    }
+    
     public Block registerBlockIfAbsent(String id, Block block) {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);

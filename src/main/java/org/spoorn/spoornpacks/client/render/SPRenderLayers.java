@@ -24,7 +24,7 @@ public class SPRenderLayers {
                 case LEAVES -> {
                     RenderLayersAccessor.getBlocks().put(block, RenderLayer.getCutoutMipped());
                 }
-                case SAPLING, DOOR, TRAPDOOR, SMALL_FLOWER -> {
+                case SAPLING, DOOR, TRAPDOOR, SMALL_FLOWER, TALL_FLOWER -> {
                     RenderLayersAccessor.getBlocks().put(block, RenderLayer.getCutout());
                 }
             }

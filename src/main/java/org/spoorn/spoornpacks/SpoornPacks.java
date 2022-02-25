@@ -87,6 +87,7 @@ public class SpoornPacks implements ModInitializer {
 //                .addSmallFlower("pink_orchid3", StatusEffects.SATURATION, 5)
 //                .addSmallFlower("pink_orchid4", StatusEffects.SATURATION, 5)
 //                .addSmallFlower("pink_orchid5", StatusEffects.SATURATION, 5)
+//                .addBlock(BlockType.TALL_FLOWER, "pink_lilac").addItem(ItemType.TALL_FLOWER, "pink_lilac")
 //                ;
 //
 //        Resource resource = RESOURCE_GENERATOR.generate(rb);

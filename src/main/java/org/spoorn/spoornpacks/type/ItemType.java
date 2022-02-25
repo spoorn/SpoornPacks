@@ -23,7 +23,8 @@ public enum ItemType {
     BOAT("boat"),
     CHEST("chest"),
     BARREL("barrel"),
-    SMALL_FLOWER("small_flower", "", "");
+    SMALL_FLOWER("small_flower", "", ""),
+    TALL_FLOWER("tall_flower", "", "");
 
     private final String name;
 

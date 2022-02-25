@@ -132,6 +132,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftLavaPoolStoneCannotReplace = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftGuardedByPiglins = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftSmallFlowers = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftTallFlowers = new TagsBuilder(BLOCKS);
         TagsBuilder hoeMineable = new TagsBuilder(BLOCKS + "/mineable");
         TagsBuilder axeMineable = new TagsBuilder(BLOCKS + "/mineable");
         Map<String, List<String>> customLogs = new HashMap<>();
@@ -348,6 +349,14 @@ public class ResourceGenerator {
                         Block pottedBlock = blocksRegistry.registerFlowerPot(POTTED_PREFIX + filename, block);
                         generatedBlocks.computeIfAbsent(type, m -> new HashMap<>()).put(POTTED_PREFIX + name, pottedBlock);
                     }
+                    case TALL_FLOWER -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultTallFlower());
+                        fileGenerator.generateModelBlock(namespace, filename + "_bottom", newModelBlockBuilder(namespace, name, type, type.getName() + "_bottom").defaultTallFlowerBottom());
+                        fileGenerator.generateModelBlock(namespace, filename + "_top", newModelBlockBuilder(namespace, name, type, type.getName() + "_top").defaultTallFlowerTop());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultTallFlower());
+                        if (block == null)  block = blocksRegistry.registerTallFlower(filename);
+                        minecraftTallFlowers.value(namespace + ":" + name);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
 
@@ -381,6 +390,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "lava_pool_stone_cannot_replace", minecraftLavaPoolStoneCannotReplace);
         fileGenerator.generateTags(MINECRAFT, "guarded_by_piglins", minecraftGuardedByPiglins);
         fileGenerator.generateTags(MINECRAFT, "small_flowers", minecraftSmallFlowers);
+        fileGenerator.generateTags(MINECRAFT, "tall_flowers", minecraftSmallFlowers);
         fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
         fileGenerator.generateTags(MINECRAFT, "axe", axeMineable);
 
@@ -409,7 +419,8 @@ public class ResourceGenerator {
         TagsBuilder minecraftWoodenTrapdoors = new TagsBuilder(ITEMS);
         TagsBuilder minecraftWoodenDoors = new TagsBuilder(ITEMS);
         TagsBuilder minecraftBoats = new TagsBuilder(ITEMS);
-        TagsBuilder minecraftSmallFlowers = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftSmallFlowers = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftTallFlowers = new TagsBuilder(ITEMS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : items.entrySet()) {
@@ -540,6 +551,11 @@ public class ResourceGenerator {
                         item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                         minecraftSmallFlowers.value(namespace + ":" + name);
                     }
+                    case TALL_FLOWER -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultTallFlower());
+                        item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        minecraftSmallFlowers.value(namespace + ":" + name);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
 
@@ -564,6 +580,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "wooden_doors", minecraftWoodenDoors);
         fileGenerator.generateTags(MINECRAFT, "boats", minecraftBoats);
         fileGenerator.generateTags(MINECRAFT, "small_flowers", minecraftSmallFlowers);
+        fileGenerator.generateTags(MINECRAFT, "tall_flowers", minecraftSmallFlowers);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);

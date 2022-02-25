@@ -135,6 +135,13 @@ public class ModelItemBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelItemBuilder defaultTallFlower() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockPrefix + "_top"
+        );
+        return this;
+    }
+
     public ModelItemBuilder parent() {
         return parent(defaultBlockWithTypePrefix);
     }
