@@ -390,7 +390,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "lava_pool_stone_cannot_replace", minecraftLavaPoolStoneCannotReplace);
         fileGenerator.generateTags(MINECRAFT, "guarded_by_piglins", minecraftGuardedByPiglins);
         fileGenerator.generateTags(MINECRAFT, "small_flowers", minecraftSmallFlowers);
-        fileGenerator.generateTags(MINECRAFT, "tall_flowers", minecraftSmallFlowers);
+        fileGenerator.generateTags(MINECRAFT, "tall_flowers", minecraftTallFlowers);
         fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
         fileGenerator.generateTags(MINECRAFT, "axe", axeMineable);
 
@@ -580,7 +580,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "wooden_doors", minecraftWoodenDoors);
         fileGenerator.generateTags(MINECRAFT, "boats", minecraftBoats);
         fileGenerator.generateTags(MINECRAFT, "small_flowers", minecraftSmallFlowers);
-        fileGenerator.generateTags(MINECRAFT, "tall_flowers", minecraftSmallFlowers);
+        fileGenerator.generateTags(MINECRAFT, "tall_flowers", minecraftTallFlowers);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);
