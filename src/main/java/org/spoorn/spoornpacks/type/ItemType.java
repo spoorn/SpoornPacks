@@ -22,7 +22,8 @@ public enum ItemType {
     CRAFTING_TABLE("crafting_table"),
     BOAT("boat"),
     CHEST("chest"),
-    BARREL("barrel");
+    BARREL("barrel"),
+    SMALL_FLOWER("small_flower", "", "");
 
     private final String name;
 

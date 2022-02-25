@@ -3,6 +3,7 @@ package org.spoorn.spoornpacks.core.generator;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.ComposterBlock;
+import net.minecraft.block.FlowerBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -11,9 +12,6 @@ import net.minecraft.util.registry.Registry;
 import org.spoorn.spoornpacks.entity.SPEntities;
 import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
 import org.spoorn.spoornpacks.item.SPBoatItem;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ItemsRegistry {
     
@@ -24,7 +22,11 @@ public class ItemsRegistry {
     }
 
     public Item registerBlockItem(String id, Block block, ItemGroup itemGroup) {
-        return registerItem(id, new BlockItem(block, new FabricItemSettings().group(itemGroup)));
+        Item item = registerItem(id, new BlockItem(block, new FabricItemSettings().group(itemGroup)));
+        if (block instanceof FlowerBlock) {
+            registerCompostable(item);
+        }
+        return item;
     }
 
     public Item registerSaplingItem(String id, Block block, ItemGroup itemGroup) {

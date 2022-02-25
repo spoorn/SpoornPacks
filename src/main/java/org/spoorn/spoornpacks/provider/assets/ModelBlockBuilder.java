@@ -232,6 +232,13 @@ public class ModelBlockBuilder implements ResourceProvider {
         return this;
     }
     
+    // Same for potted
+    public ModelBlockBuilder defaultSmallFlower() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockPrefix
+        );
+        return this;
+    }
     
     
     private ModelBlockBuilder substitutePlanks() {

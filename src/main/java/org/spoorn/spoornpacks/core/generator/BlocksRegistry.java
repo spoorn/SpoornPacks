@@ -4,6 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -64,10 +66,21 @@ public class BlocksRegistry {
         return registerBlock(id, block);
     }
 
-    public Block registerFlowerPot(String id, Block saplingBlock) {
-        Block block = new FlowerPotBlock(saplingBlock, FabricBlockSettings.copyOf(Blocks.POTTED_OAK_SAPLING));
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            ClientSideUtils.registerRenderLayer(BlockType.SAPLING, block);
+    public Block registerFlowerPot(String id, Block flowerBlock) {
+        Block block;
+        boolean isClient = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+        if (flowerBlock instanceof SaplingBlock) {
+            block = new FlowerPotBlock(flowerBlock, FabricBlockSettings.copyOf(Blocks.POTTED_OAK_SAPLING));
+            if (isClient) {
+                ClientSideUtils.registerRenderLayer(BlockType.SAPLING, block);
+            }
+        } else if (flowerBlock instanceof FlowerBlock) {
+            block = new FlowerPotBlock(flowerBlock, FabricBlockSettings.copyOf(Blocks.POTTED_POPPY));
+            if (isClient) {
+                ClientSideUtils.registerRenderLayer(BlockType.SMALL_FLOWER, block);
+            }
+        } else {
+            throw new UnsupportedOperationException("Block " + flowerBlock + " for FlowerPotBlock is not supported");
         }
         return registerBlock(id, block);
     }
@@ -126,6 +139,11 @@ public class BlocksRegistry {
 
     public Block registerBarrel(String id) {
         Block block = new BarrelBlock(FabricBlockSettings.copyOf(Blocks.BARREL));
+        return registerBlock(id, block);
+    }
+    
+    public Block registerSmallFlower(String id, StatusEffect suspiciousStewEffect, int effectDuration) {
+        Block block = new FlowerBlock(suspiciousStewEffect, effectDuration, FabricBlockSettings.copyOf(Blocks.POPPY));
         return registerBlock(id, block);
     }
     

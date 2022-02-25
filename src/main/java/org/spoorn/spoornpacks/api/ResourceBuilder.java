@@ -3,6 +3,7 @@ package org.spoorn.spoornpacks.api;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
@@ -13,6 +14,9 @@ import org.spoorn.spoornpacks.type.ResourceType;
 /**
  * ResourceBuilder is used to define all the resources to generate.  This is the input to 
  * {@link org.spoorn.spoornpacks.core.generator.ResourceGenerator#generate(ResourceBuilder)}.
+ * 
+ * Most APIs will have a variant with a "name" parameter, and one without.  The variant without the "name" parameter
+ * will use the defaultName set for this ResourceBuilder.
  * 
  * TODO: Allow specifying if block is wooden or not, for the minecraft tags
  */
@@ -53,6 +57,16 @@ public interface ResourceBuilder {
 
     ResourceBuilder addSapling(ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature);
     ResourceBuilder addSapling(String name, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature);
+
+    /**
+     * Adds a small flower (e.g. Minecraft's poppy) block and item.
+     * 
+     * @param suspiciousStewEffect Effect when combining the flower with a bowl to produce suspicious stew.
+     *                             You can get these from {@link StatusEffect}.
+     * @param effectDuration Effect duration in seconds
+     */
+    ResourceBuilder addSmallFlower(StatusEffect suspiciousStewEffect, int effectDuration);
+    ResourceBuilder addSmallFlower(String name, StatusEffect suspiciousStewEffect, int effectDuration);
 
     /**
      * Adds a custom {@link ResourceProvider} for a resource's {@link ResourceType}.  Will NOT apply if the resource was

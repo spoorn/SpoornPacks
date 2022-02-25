@@ -139,14 +139,21 @@ public class BlockLootTableBuilder implements ResourceProvider {
     public BlockLootTableBuilder defaultBarrel() {
          return barrel(this.defaultPrefixWithType);
     }
-
+    
     public BlockLootTableBuilder barrel(String name) {
         this.state = this.jsonTUtil.substituteToObjectNode(templatePath,
                 name
         );
         return this;
     }
-    
+
+    public BlockLootTableBuilder defaultSmallFlower() {
+        this.state = this.jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultPrefix
+        );
+        return this;
+    }
+
     public BlockLootTableBuilder typeBlock() {
         this.state.put("type", "minecraft:block");
         return this;

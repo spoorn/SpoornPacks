@@ -36,6 +36,9 @@ public class SPFlammables {
                 case LEAVES -> {
                     registerLeaves(block);
                 }
+                case SMALL_FLOWER -> {
+                    registerSmallFlower(block);
+                }
                 default -> {}
             }
         }
@@ -71,6 +74,10 @@ public class SPFlammables {
 
     private static void registerLeaves(Block block) {
         registerFlammableBlock(block, 30, 60);
+    }
+
+    private static void registerSmallFlower(Block block) {
+        registerFlammableBlock(block, 60, 100);
     }
 
     private static void registerFlammableBlock(Block block, int burnChance, int spreadChance) {

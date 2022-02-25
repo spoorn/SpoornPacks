@@ -12,6 +12,8 @@ import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.Block;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.resource.ResourcePackSource;
@@ -55,7 +57,7 @@ public class SpoornPacks implements ModInitializer {
     }
 
 //    public static void test() {
-//        String modid = "mymodid";
+//        String modid = "spoornpink";
 //        ResourceGenerator RESOURCE_GENERATOR = SpoornPacksRegistry.registerResource(modid);
 //        String defaultName = "pink_blossom";
 //
@@ -80,6 +82,11 @@ public class SpoornPacks implements ModInitializer {
 //                .addCustomResourceProvider("stripped_pink_blossom_wood", ResourceType.ITEM_MODEL, new TestCustomResourceProvider())
 //                .addCustomResourceProvider("stripped_pink_blossom_wood", ResourceType.BLOCK_LOOT_TABLE, new TestCustomResourceProvider())
 //                .addCustomResourceProvider("stripped_pink_blossom_wood", ResourceType.RECIPE, new TestCustomResourceProvider())*/
+//                .addSmallFlower("pink_orchid", StatusEffects.SATURATION, 5)
+//                .addSmallFlower("pink_orchid2", StatusEffects.SATURATION, 5)
+//                .addSmallFlower("pink_orchid3", StatusEffects.SATURATION, 5)
+//                .addSmallFlower("pink_orchid4", StatusEffects.SATURATION, 5)
+//                .addSmallFlower("pink_orchid5", StatusEffects.SATURATION, 5)
 //                ;
 //
 //        Resource resource = RESOURCE_GENERATOR.generate(rb);

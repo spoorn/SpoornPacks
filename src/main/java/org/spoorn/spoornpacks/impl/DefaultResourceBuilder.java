@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
@@ -38,6 +39,8 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     private final Map<String, Map<ResourceType, ResourceProvider>> customResourceProviders = new HashMap<>();
     @Getter
     private final Map<Pair<BlockType, String>, Pair<Block, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity>>> customBlocksWithEntity = new HashMap<>();
+    @Getter
+    private final Map<String, Pair<StatusEffect, Integer>> flowerConfigs = new HashMap<>();
 
     private final Set<String> blockIds = new HashSet<>();
     private final Set<String> itemIds = new HashSet<>();
@@ -68,7 +71,9 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     @Override
     public synchronized ResourceBuilder addBlock(BlockType type) {
         if (type == BlockType.SAPLING) {
-            throw new IllegalArgumentException("BlockType=SAPLING should be added via #addSapling");
+            throw new IllegalArgumentException("BlockType=SAPLING should be added via ResourceBuilder#addSapling");
+        } else if (type == BlockType.SMALL_FLOWER) {
+            throw new IllegalArgumentException("BlockType=SMALL_FLOWER should be added via ResourceBuilder#addSmallFlower");
         }
         return addBlock(type, this.defaultName);
     }
@@ -86,6 +91,9 @@ public class DefaultResourceBuilder implements ResourceBuilder {
 
     @Override
     public synchronized ResourceBuilder addItem(ItemType type, String name) {
+        if (type == ItemType.SMALL_FLOWER) {
+            throw new IllegalArgumentException("ItemType=SMALL_FLOWER should be added via ResourceBuilder#addSmallFlower");
+        }
         registerItem(type, name);
         return this;
     }
@@ -128,6 +136,19 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     }
 
     @Override
+    public ResourceBuilder addSmallFlower(StatusEffect suspiciousStewEffect, int effectDuration) {
+        return addSmallFlower(this.defaultName, suspiciousStewEffect, effectDuration);
+    }
+
+    @Override
+    public ResourceBuilder addSmallFlower(String name, StatusEffect suspiciousStewEffect, int effectDuration) {
+        registerBlock(BlockType.SMALL_FLOWER, name);
+        registerItem(ItemType.SMALL_FLOWER, name);
+        this.flowerConfigs.put(name, Pair.of(suspiciousStewEffect, effectDuration));
+        return this;
+    }
+
+    @Override
     public synchronized ResourceBuilder addCustomResourceProvider(String name, ResourceType resourceType, ResourceProvider resourceProvider) {
         if (resourceProvider == null) {
             throw new IllegalArgumentException("ResourceProvider cannot be null");
@@ -137,7 +158,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         return this;
     }
 
-    private void registerBlock(BlockType type, String name) {
+    private synchronized void registerBlock(BlockType type, String name) {
         validateName(name);
         String updatedName = name;
         String typeName = type.getName();
@@ -153,7 +174,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         }
     }
 
-    private void registerItem(ItemType type, String name) {
+    private synchronized void registerItem(ItemType type, String name) {
         validateName(name);
         String updatedName = name;
         String typeName = type.getName();

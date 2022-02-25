@@ -23,7 +23,8 @@ public enum BlockType {
     DOOR("door"),
     CRAFTING_TABLE("crafting_table"),
     CHEST("chest"),
-    BARREL("barrel");
+    BARREL("barrel"),
+    SMALL_FLOWER("small_flower", "", "");
 
     private final String name;
     

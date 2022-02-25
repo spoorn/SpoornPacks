@@ -160,6 +160,11 @@ public class BlockStateBuilder implements ResourceProvider {
         );
         return this;
     }
+    
+    // Same for potted small flower
+    public BlockStateBuilder defaultSmallFlower() {
+        return emptyModel(this.defaultBlockPrefix);
+    }
 
     public BlockStateBuilder yaxis() {
         this.state.with("variants").with("axis=y")
@@ -183,7 +188,11 @@ public class BlockStateBuilder implements ResourceProvider {
     }
 
     public BlockStateBuilder emptyModel() {
-        this.state.with("variants").with("").put("model", defaultBlockWithTypePrefix);
+        return emptyModel(defaultBlockWithTypePrefix);
+    }
+
+    public BlockStateBuilder emptyModel(String model) {
+        this.state.with("variants").with("").put("model", model);
         return this;
     }
 }

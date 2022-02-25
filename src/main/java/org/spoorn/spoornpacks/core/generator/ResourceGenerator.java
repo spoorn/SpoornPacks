@@ -9,6 +9,7 @@ import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
@@ -112,6 +113,7 @@ public class ResourceGenerator {
         Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures = drb.getSaplingConfiguredFeatures();
         Map<Pair<BlockType, String>, Pair<Block, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity>>> customBlocksWithEntity
                 = drb.getCustomBlocksWithEntity();
+        Map<String, Pair<StatusEffect, Integer>> flowerConfigs = drb.getFlowerConfigs();
         
         TagsBuilder minecraftLogs = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftPlanks = new TagsBuilder(BLOCKS);
@@ -129,6 +131,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftFeaturesCannotReplace = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftLavaPoolStoneCannotReplace = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftGuardedByPiglins = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftSmallFlowers = new TagsBuilder(BLOCKS);
         TagsBuilder hoeMineable = new TagsBuilder(BLOCKS + "/mineable");
         TagsBuilder axeMineable = new TagsBuilder(BLOCKS + "/mineable");
         Map<String, List<String>> customLogs = new HashMap<>();
@@ -198,8 +201,8 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, POTTED_PREFIX + filename, newModelBlockBuilder(namespace, name, type, POTTED_PREFIX + type.getName()).defaultPottedSapling());
                         fileGenerator.generateLootTable(namespace, POTTED_PREFIX + filename, newBlockLootTableBuilder(namespace, name, type, POTTED_PREFIX + type.getName()).defaultPottedSapling());
                         minecraftFlowerPots.value(namespace, POTTED_PREFIX + name, type);
-                        Block flowerBlock = blocksRegistry.registerFlowerPot("potted_" + filename, block);
-                        generatedBlocks.computeIfAbsent(type, m -> new HashMap<>()).put("potted_" + name, flowerBlock);
+                        Block flowerBlock = blocksRegistry.registerFlowerPot(POTTED_PREFIX + filename, block);
+                        generatedBlocks.computeIfAbsent(type, m -> new HashMap<>()).put(POTTED_PREFIX + name, flowerBlock);
                     }
                     case FENCE -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultFence());
@@ -331,6 +334,20 @@ public class ResourceGenerator {
                         axeMineable.value(namespace, name, type);
                         minecraftGuardedByPiglins.value(namespace, name, type);
                     }
+                    case SMALL_FLOWER -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultSmallFlower());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultSmallFlower());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultSmallFlower());
+                        // Potted small flower
+                        fileGenerator.generateBlockStates(namespace, POTTED_PREFIX + filename, newBlockStateBuilder(namespace, POTTED_PREFIX + name, type, POTTED_PREFIX + type.getName()).defaultSmallFlower());
+                        fileGenerator.generateModelBlock(namespace, POTTED_PREFIX + filename, newModelBlockBuilder(namespace, name, type, POTTED_PREFIX + type.getName()).defaultSmallFlower());
+                        fileGenerator.generateLootTable(namespace, POTTED_PREFIX + filename, newBlockLootTableBuilder(namespace, name, type, POTTED_PREFIX + type.getName()).defaultSmallFlower());
+                        Pair<StatusEffect, Integer> flowerConfig = flowerConfigs.get(name);
+                        if (block == null)  block = blocksRegistry.registerSmallFlower(filename, flowerConfig.getLeft(), flowerConfig.getRight());
+                        minecraftSmallFlowers.value(namespace + ":" + name);
+                        Block pottedBlock = blocksRegistry.registerFlowerPot(POTTED_PREFIX + filename, block);
+                        generatedBlocks.computeIfAbsent(type, m -> new HashMap<>()).put(POTTED_PREFIX + name, pottedBlock);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
 
@@ -363,6 +380,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "features_cannot_replace", minecraftFeaturesCannotReplace);
         fileGenerator.generateTags(MINECRAFT, "lava_pool_stone_cannot_replace", minecraftLavaPoolStoneCannotReplace);
         fileGenerator.generateTags(MINECRAFT, "guarded_by_piglins", minecraftGuardedByPiglins);
+        fileGenerator.generateTags(MINECRAFT, "small_flowers", minecraftSmallFlowers);
         fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
         fileGenerator.generateTags(MINECRAFT, "axe", axeMineable);
 
@@ -391,6 +409,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftWoodenTrapdoors = new TagsBuilder(ITEMS);
         TagsBuilder minecraftWoodenDoors = new TagsBuilder(ITEMS);
         TagsBuilder minecraftBoats = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftSmallFlowers = new TagsBuilder(BLOCKS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : items.entrySet()) {
@@ -516,6 +535,11 @@ public class ResourceGenerator {
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultBarrel());
                         item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
+                    case SMALL_FLOWER -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultSmallFlower());
+                        item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        minecraftSmallFlowers.value(namespace + ":" + name);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
 
@@ -539,6 +563,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "wooden_trapdoors", minecraftWoodenTrapdoors);
         fileGenerator.generateTags(MINECRAFT, "wooden_doors", minecraftWoodenDoors);
         fileGenerator.generateTags(MINECRAFT, "boats", minecraftBoats);
+        fileGenerator.generateTags(MINECRAFT, "small_flowers", minecraftSmallFlowers);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);
@@ -550,7 +575,11 @@ public class ResourceGenerator {
     }
     
     public static BlockStateBuilder newBlockStateBuilder(String namespace, String name, BlockType type) {
-        return new BlockStateBuilder(namespace, name, type, BLOCK_STATES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
+        return newBlockStateBuilder(namespace, name, type, type.getName());
+    }
+
+    public static BlockStateBuilder newBlockStateBuilder(String namespace, String name, BlockType type, String templateFileName) {
+        return new BlockStateBuilder(namespace, name, type, BLOCK_STATES_TEMPLATE_PATH + templateFileName + JSONT_SUFFIX);
     }
     
     public static ModelBlockBuilder newModelBlockBuilder(String namespace, String name, BlockType type) {
