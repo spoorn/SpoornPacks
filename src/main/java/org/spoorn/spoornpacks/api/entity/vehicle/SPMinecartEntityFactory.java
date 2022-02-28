@@ -4,10 +4,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.world.World;
+import org.spoorn.spoornpacks.type.VehicleType;
 
 /**
  * Implement this interface if you want to add a Minecart Entity via 
- * {@link org.spoorn.spoornpacks.api.ResourceBuilder#addMinecart(String, SPMinecartEntityFactory)}
+ * {@link org.spoorn.spoornpacks.api.ResourceBuilder#addMinecart(VehicleType, SPMinecartEntityFactory)}
  * or any of the similar variants.
  */
 public interface SPMinecartEntityFactory {
@@ -22,7 +23,7 @@ public interface SPMinecartEntityFactory {
      * Example constructor implementations:
      *      See {@link net.minecraft.entity.vehicle.ChestMinecartEntity#ChestMinecartEntity(EntityType, World)}
      */
-    <T extends AbstractMinecartEntity> T create(EntityType<? extends Entity> entityType, World world);
+    AbstractMinecartEntity create(EntityType<? extends Entity> entityType, World world);
 
     /**
      * Factory constructor for creating a custom MinecartEntity object.  This is needed to replace entity spawning
@@ -34,5 +35,5 @@ public interface SPMinecartEntityFactory {
      *      See {@link AbstractMinecartEntity#create(World, double, double, double, AbstractMinecartEntity.Type)} for examples.
      *      Or See {@link net.minecraft.entity.vehicle.ChestMinecartEntity#ChestMinecartEntity(World, double, double, double)}
      */
-    <T extends AbstractMinecartEntity> T create(World world, double x, double y, double z);
+    AbstractMinecartEntity create(World world, double x, double y, double z);
 }
