@@ -605,7 +605,7 @@ public class ResourceGenerator {
     private void handleVehicles(Map<VehicleType, Map<String, Item>> generatedVehicleItems, String namespace, DefaultResourceBuilder drb, FileGenerator fileGenerator) throws IOException {
         Map<String, List<String>> vehicles = drb.getVehicles();
         ItemGroup itemGroup = drb.getItemGroup();
-        Map<String, SPMinecartEntityFactory> minecartConfigs = drb.getMinecartConfigs();
+        Map<Pair<VehicleType, String>, SPMinecartEntityFactory> minecartConfigs = drb.getMinecartConfigs();
         
         for (Entry<String, List<String>> entry : vehicles.entrySet()) {
             VehicleType type = VehicleType.fromString(entry.getKey());
@@ -616,9 +616,9 @@ public class ResourceGenerator {
                     case CHEST_MINECART -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultChestMinecart());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultChestMinecart());
-                        SPMinecartEntityFactory config = minecartConfigs.get(name);
+                        SPMinecartEntityFactory config = minecartConfigs.get(Pair.of(type, name));
                         item = itemsRegistry.registerChestMinecart(filename, itemGroup, config);
-                        this.spEntities.registerCustomMinecart(namespace, name, type, minecartConfigs.get(name));
+                        this.spEntities.registerCustomMinecart(namespace, name, type, config);
                     }
                     default -> throw new UnsupportedOperationException("VehicleType=[" + type + "] is not supported");
                 }

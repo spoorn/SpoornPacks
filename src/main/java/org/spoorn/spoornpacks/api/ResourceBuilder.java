@@ -12,6 +12,7 @@ import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
 import org.spoorn.spoornpacks.type.ResourceType;
+import org.spoorn.spoornpacks.type.VehicleType;
 
 /**
  * ResourceBuilder is used to define all the resources to generate.  This is the input to 
@@ -80,8 +81,8 @@ public interface ResourceBuilder {
      * @param name Name of the minecart (excluding any type suffix such as "_chest_minecart")
      * @param factory An SPMinecartEntityFactory that contains factory methods for constructing the custom MinecartEntity.
      */
-    ResourceBuilder addMinecart(String name, SPMinecartEntityFactory factory);
-    ResourceBuilder addMinecart(SPMinecartEntityFactory factory);
+    ResourceBuilder addMinecart(VehicleType type, String name, SPMinecartEntityFactory factory);
+    ResourceBuilder addMinecart(VehicleType type, SPMinecartEntityFactory factory);
 
     /**
      * Adds a custom {@link ResourceProvider} for a resource's {@link ResourceType}.  Will NOT apply if the resource was

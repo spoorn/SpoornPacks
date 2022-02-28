@@ -1,6 +1,7 @@
 package org.spoorn.spoornpacks.impl;
 
 import lombok.Getter;
+import lombok.NonNull;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -9,6 +10,7 @@ import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
@@ -47,7 +49,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     @Getter
     private final Map<String, Pair<StatusEffect, Integer>> flowerConfigs = new HashMap<>();
     @Getter
-    private final Map<String, SPMinecartEntityFactory> minecartConfigs = new HashMap<>();
+    private final Map<Pair<VehicleType, String>, SPMinecartEntityFactory> minecartConfigs = new HashMap<>();
 
     private final Set<String> blockIds = new HashSet<>();
     private final Set<String> itemIds = new HashSet<>();
@@ -161,18 +163,21 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     }
 
     @Override
-    public ResourceBuilder addMinecart(String name, SPMinecartEntityFactory factory) {
+    public ResourceBuilder addMinecart(VehicleType type, String name, @NonNull SPMinecartEntityFactory factory) {
+        if (type != VehicleType.CHEST_MINECART) {
+            throw new UnsupportedOperationException("VehicleType=" + type + " is not supported.  Only CHEST_MINECART is supported!");
+        }
         if (factory.getVanillaMinecartEntityType() != AbstractMinecartEntity.Type.CHEST) {
             throw new UnsupportedOperationException("AbstractMinecartEntity type=" + factory.getVanillaMinecartEntityType() + " is not supported.  Only CHEST type is supported!");
         }
-        registerVehicle(VehicleType.CHEST_MINECART, name);
-        this.minecartConfigs.put(name, factory);
+        registerVehicle(type, name);
+        this.minecartConfigs.put(Pair.of(type, name), factory);
         return this;
     }
 
     @Override
-    public ResourceBuilder addMinecart(SPMinecartEntityFactory factory) {
-        return addMinecart(this.defaultName, factory);
+    public ResourceBuilder addMinecart(VehicleType type, @NonNull SPMinecartEntityFactory factory) {
+        return addMinecart(type, this.defaultName, factory);
     }
 
     @Override
