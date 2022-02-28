@@ -18,6 +18,7 @@ import net.minecraft.world.gen.feature.FeatureConfig;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
+import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
 import org.spoorn.spoornpacks.block.SPFlammables;
 import org.spoorn.spoornpacks.block.entity.SPFurnaceBlockFuelTimes;
 import org.spoorn.spoornpacks.entity.SPEntities;
@@ -34,6 +35,8 @@ import org.spoorn.spoornpacks.provider.data.RecipeBuilder;
 import org.spoorn.spoornpacks.provider.data.TagsBuilder;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
+import org.spoorn.spoornpacks.type.Type;
+import org.spoorn.spoornpacks.type.VehicleType;
 import org.spoorn.spoornpacks.util.ClientSideUtils;
 
 import java.io.IOException;
@@ -80,7 +83,6 @@ public class ResourceGenerator {
 
         // Blocks
         final Map<BlockType, Map<String, Block>> generatedBlocks = new HashMap<>();
-        final Map<ItemType, Map<String, Item>> generatedItems = new HashMap<>();
         FileGenerator fileGenerator = new FileGenerator(modid, this.overwrite, drb.getCustomResourceProviders());
         this.overwrite = false;  // Only overwrite on the first generate for a single ResourceGenerator instance
 
@@ -92,15 +94,24 @@ public class ResourceGenerator {
         }
 
         // Items
-        final Map<String, List<String>> items = drb.getItems();
+        final Map<ItemType, Map<String, Item>> generatedItems = new HashMap<>();
         try {
-            handleItems(generatedItems, drb.getNamespace(), items, drb.getItemGroup(), fileGenerator);
+            handleItems(generatedItems, drb.getNamespace(), drb.getItems(), drb.getItemGroup(), fileGenerator);
         } catch (IOException e) {
             log.error("Could not generate resources for items", e);
             throw new RuntimeException(e);
         }
 
-        GeneratedResource gen = new GeneratedResource(drb.getNamespace(), generatedBlocks, generatedItems);
+        // Vehicles
+        final Map<VehicleType, Map<String, Item>> generatedVehicleItems = new HashMap<>();
+        try {
+            handleVehicles(generatedVehicleItems, drb.getNamespace(), drb, fileGenerator);
+        } catch (IOException e) {
+            log.error("Could not generate resources for vehicles", e);
+            throw new RuntimeException(e);
+        }
+
+        GeneratedResource gen = new GeneratedResource(drb.getNamespace(), generatedBlocks, generatedItems, generatedVehicleItems);
         log.info("Done generating some resources for {}!", this.modid);
         return gen;
     }
@@ -590,6 +601,32 @@ public class ResourceGenerator {
             fileGenerator.generateTags(namespace, entry.getKey() + "_logs", customLogTags);
         }
     }
+
+    private void handleVehicles(Map<VehicleType, Map<String, Item>> generatedVehicleItems, String namespace, DefaultResourceBuilder drb, FileGenerator fileGenerator) throws IOException {
+        Map<String, List<String>> vehicles = drb.getVehicles();
+        ItemGroup itemGroup = drb.getItemGroup();
+        Map<String, SPMinecartEntityFactory> minecartConfigs = drb.getMinecartConfigs();
+        
+        for (Entry<String, List<String>> entry : vehicles.entrySet()) {
+            VehicleType type = VehicleType.fromString(entry.getKey());
+            for (String name : entry.getValue()) {
+                String filename = type.getPrefix() + name + type.getSuffix();
+                Item item;
+                switch (type) {
+                    case CHEST_MINECART -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultChestMinecart());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultChestMinecart());
+                        SPMinecartEntityFactory config = minecartConfigs.get(name);
+                        item = itemsRegistry.registerChestMinecart(filename, itemGroup, config);
+                        this.spEntities.registerCustomMinecart(namespace, name, type, minecartConfigs.get(name));
+                    }
+                    default -> throw new UnsupportedOperationException("VehicleType=[" + type + "] is not supported");
+                }
+
+                generatedVehicleItems.computeIfAbsent(type, m -> new HashMap<>()).put(name, item);
+            }
+        }
+    }
     
     public static BlockStateBuilder newBlockStateBuilder(String namespace, String name, BlockType type) {
         return newBlockStateBuilder(namespace, name, type, type.getName());
@@ -607,7 +644,7 @@ public class ResourceGenerator {
         return new ModelBlockBuilder(namespace, name, type, MODELS_BLOCK_TEMPLATE_PATH + templateFileName + JSONT_SUFFIX);
     }
 
-    public static ModelItemBuilder newModelItemBuilder(String namespace, String name, ItemType type) {
+    public static ModelItemBuilder newModelItemBuilder(String namespace, String name, Type<?> type) {
         return new ModelItemBuilder(namespace, name, type, MODELS_ITEM_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
     }
 
@@ -619,7 +656,7 @@ public class ResourceGenerator {
         return new BlockLootTableBuilder(namespace, name, type, BLOCK_LOOTTABLES_TEMPLATE_PATH + templateFileName + JSONT_SUFFIX);
     }
 
-    public static RecipeBuilder newRecipeBuilder(String namespace, String name, ItemType type) {
+    public static RecipeBuilder newRecipeBuilder(String namespace, String name, Type<?> type) {
         return new RecipeBuilder(namespace, name, type, RECIPES_TEMPLATE_PATH + type.getName() + JSONT_SUFFIX);
     }
 }

@@ -5,14 +5,17 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.TallFlowerBlock;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
 import org.spoorn.spoornpacks.entity.SPEntities;
 import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
 import org.spoorn.spoornpacks.item.SPBoatItem;
+import org.spoorn.spoornpacks.item.SPMinecartItem;
 
 public class ItemsRegistry {
     
@@ -38,6 +41,11 @@ public class ItemsRegistry {
 
     public Item registerBoatItem(String id, SPBoatRegistry spBoatRegistry, SPBoatRegistry.BoatType boatType, SPEntities spEntities, ItemGroup itemGroup) {
         Item item = new SPBoatItem(spEntities, spBoatRegistry, boatType, new Item.Settings().maxCount(1).group(itemGroup));
+        return registerItem(id, item);
+    }
+    
+    public Item registerChestMinecart(String id, ItemGroup itemGroup, SPMinecartEntityFactory factory) {
+        Item item = new SPMinecartItem(factory, new Item.Settings().maxCount(1).group(itemGroup));
         return registerItem(id, item);
     }
     

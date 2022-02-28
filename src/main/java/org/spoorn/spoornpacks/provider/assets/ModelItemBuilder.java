@@ -2,10 +2,9 @@ package org.spoorn.spoornpacks.provider.assets;
 
 import static org.spoorn.spoornpacks.SpoornPacks.OBJECT_MAPPER;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.spoorn.spoornpacks.jsont.JsonT;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.type.BlockType;
-import org.spoorn.spoornpacks.type.ItemType;
+import org.spoorn.spoornpacks.type.Type;
 import org.spoorn.spoornpacks.util.JsonTUtil;
 
 public class ModelItemBuilder implements ResourceProvider {
@@ -14,14 +13,14 @@ public class ModelItemBuilder implements ResourceProvider {
 
     private final String namespace;
     private final String name;
-    private final ItemType type;
+    private final Type<?> type;
     private final String defaultBlockPrefix;
     private final String defaultBlockWithTypePrefix;
     private final String templatePath;
 
     private final JsonTUtil jsonTUtil = new JsonTUtil();
 
-    public ModelItemBuilder(String namespace, String name, ItemType type, String templatePath) {
+    public ModelItemBuilder(String namespace, String name, Type<?> type, String templatePath) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
@@ -138,6 +137,13 @@ public class ModelItemBuilder implements ResourceProvider {
     public ModelItemBuilder defaultTallFlower() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultBlockPrefix + "_top"
+        );
+        return this;
+    }
+
+    public ModelItemBuilder defaultChestMinecart() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.namespace + ":item/" + this.name + this.type.getSuffix()
         );
         return this;
     }

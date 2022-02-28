@@ -5,15 +5,18 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
+import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
 import org.spoorn.spoornpacks.type.ResourceType;
+import org.spoorn.spoornpacks.type.VehicleType;
 
 import java.util.*;
 
@@ -32,6 +35,8 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     @Getter
     private final Map<String, List<String>> items = new HashMap<>();
     @Getter
+    private final Map<String, List<String>> vehicles = new HashMap<>();
+    @Getter
     private final Map<String, String> leavesToSaplingOverrides = new HashMap<>();
     @Getter
     private final Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures = new HashMap<>();
@@ -41,15 +46,22 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     private final Map<Pair<BlockType, String>, Pair<Block, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity>>> customBlocksWithEntity = new HashMap<>();
     @Getter
     private final Map<String, Pair<StatusEffect, Integer>> flowerConfigs = new HashMap<>();
+    @Getter
+    private final Map<String, SPMinecartEntityFactory> minecartConfigs = new HashMap<>();
 
     private final Set<String> blockIds = new HashSet<>();
     private final Set<String> itemIds = new HashSet<>();
+    private final Set<String> vehicleIds = new HashSet<>();
 
     public DefaultResourceBuilder(String namespace, String defaultName, ItemGroup itemGroup) {
         validateNamespace(namespace);
         this.namespace = namespace;
         this.defaultName = defaultName;
-        this.itemGroup = itemGroup;
+        if (itemGroup == null) {
+            this.itemGroup = ItemGroup.MISC;
+        } else {
+            this.itemGroup = itemGroup;
+        }
     }
 
     @Override
@@ -149,6 +161,21 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     }
 
     @Override
+    public ResourceBuilder addMinecart(String name, SPMinecartEntityFactory factory) {
+        if (factory.getVanillaMinecartEntityType() != AbstractMinecartEntity.Type.CHEST) {
+            throw new UnsupportedOperationException("AbstractMinecartEntity type=" + factory.getVanillaMinecartEntityType() + " is not supported.  Only CHEST type is supported!");
+        }
+        registerVehicle(VehicleType.CHEST_MINECART, name);
+        this.minecartConfigs.put(name, factory);
+        return this;
+    }
+
+    @Override
+    public ResourceBuilder addMinecart(SPMinecartEntityFactory factory) {
+        return addMinecart(this.defaultName, factory);
+    }
+
+    @Override
     public synchronized ResourceBuilder addCustomResourceProvider(String name, ResourceType resourceType, ResourceProvider resourceProvider) {
         if (resourceProvider == null) {
             throw new IllegalArgumentException("ResourceProvider cannot be null");
@@ -160,9 +187,8 @@ public class DefaultResourceBuilder implements ResourceBuilder {
 
     private synchronized void registerBlock(BlockType type, String name) {
         validateName(name);
-        String updatedName = name;
         String typeName = type.getName();
-        updatedName += "_" + typeName;
+        String updatedName = type.getPrefix() + name + type.getSuffix();
         validateUniqueBlock(updatedName);
 
         if (!this.blocks.containsKey(typeName)) {
@@ -176,17 +202,31 @@ public class DefaultResourceBuilder implements ResourceBuilder {
 
     private synchronized void registerItem(ItemType type, String name) {
         validateName(name);
-        String updatedName = name;
         String typeName = type.getName();
-        updatedName += "_" + typeName;
+        String updatedName = type.getPrefix() + name + type.getSuffix();
         validateUniqueItem(updatedName);
 
         if (!this.items.containsKey(typeName)) {
-            List<String> blockList = new ArrayList<>();
-            blockList.add(name);
-            this.items.put(typeName, blockList);
+            List<String> itemList = new ArrayList<>();
+            itemList.add(name);
+            this.items.put(typeName, itemList);
         } else {
             this.items.get(typeName).add(name);
+        }
+    }
+
+    private synchronized void registerVehicle(VehicleType type, String name) {
+        validateName(name);
+        String typeName = type.getName();
+        String updatedName = type.getPrefix() + name + type.getSuffix();
+        validateUniqueItem(updatedName);
+
+        if (!this.vehicles.containsKey(typeName)) {
+            List<String> vehicleList = new ArrayList<>();
+            vehicleList.add(name);
+            this.vehicles.put(typeName, vehicleList);
+        } else {
+            this.vehicles.get(typeName).add(name);
         }
     }
 
@@ -203,6 +243,14 @@ public class DefaultResourceBuilder implements ResourceBuilder {
             throw new IllegalArgumentException("Item with name=[" + name + "] was already added!");
         } else {
             this.itemIds.add(name);
+        }
+    }
+
+    private void validateUniqueVehicle(String name) {
+        if (this.vehicleIds.contains(name)) {
+            throw new IllegalArgumentException("Vehicle with name=[" + name + "] was already added!");
+        } else {
+            this.vehicleIds.add(name);
         }
     }
 

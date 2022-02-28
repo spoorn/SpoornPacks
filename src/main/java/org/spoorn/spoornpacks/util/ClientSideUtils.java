@@ -4,7 +4,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import org.spoorn.spoornpacks.client.render.SPRenderLayers;
 import org.spoorn.spoornpacks.client.render.SPTexturedRenderLayers;
 import org.spoorn.spoornpacks.entity.boat.SPBoatEntity;
@@ -35,6 +38,10 @@ public class ClientSideUtils {
     
     public static void registerTexturedRenderLayer(String namespace, String name) {
         SPTexturedRenderLayers.registerChest(namespace, name);
+    }
+    
+    public static <T extends Entity> void registerEntityRendererFactory(EntityType<? extends T> entityType, EntityRendererFactory<T> factory) {
+        EntityRenderersAccessor.registerEntityRenderer(entityType, factory);
     }
     
     public static <T extends BlockEntity> void registerBlockEntityRendererFactory(BlockEntityType<? extends T> entityType, BlockEntityRendererFactory<T> factory) {

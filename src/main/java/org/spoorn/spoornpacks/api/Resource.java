@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
+import org.spoorn.spoornpacks.type.VehicleType;
 
 import java.util.Optional;
 
@@ -18,4 +19,6 @@ public interface Resource {
     Optional<Block> getBlock(BlockType type, String name);
 
     Optional<Item> getItem(ItemType type, String name);
+    
+    Optional<Item> getVehicleItem(VehicleType type, String name);
 }

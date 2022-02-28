@@ -3,7 +3,7 @@ package org.spoorn.spoornpacks.type;
 import lombok.Getter;
 
 @Getter
-public enum ItemType {
+public enum ItemType implements Type<ItemType> {
     LOG("log"),
     STRIPPED_LOG("stripped_log", "stripped_", "_log"),
     WOOD("wood"),

@@ -4,8 +4,10 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
+import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
@@ -35,8 +37,8 @@ public interface ResourceBuilder {
     ResourceBuilder addItem(ItemType type);
 
     ResourceBuilder addItem(ItemType type, String name);
-    
-    
+
+
     // More customizable APIs
 
     /**
@@ -68,6 +70,18 @@ public interface ResourceBuilder {
      */
     ResourceBuilder addSmallFlower(StatusEffect suspiciousStewEffect, int effectDuration);
     ResourceBuilder addSmallFlower(String name, StatusEffect suspiciousStewEffect, int effectDuration);
+
+    /**
+     * Add a minecart with a custom MinecartEntity factory.  This is meant for use cases where you have your own
+     * {@link AbstractMinecartEntity} and want to register/generate resources for it.
+     *
+     * NOTE: Only supported minecartType at the moment is CHEST
+     *
+     * @param name Name of the minecart (excluding any type suffix such as "_chest_minecart")
+     * @param factory An SPMinecartEntityFactory that contains factory methods for constructing the custom MinecartEntity.
+     */
+    ResourceBuilder addMinecart(String name, SPMinecartEntityFactory factory);
+    ResourceBuilder addMinecart(SPMinecartEntityFactory factory);
 
     /**
      * Adds a custom {@link ResourceProvider} for a resource's {@link ResourceType}.  Will NOT apply if the resource was

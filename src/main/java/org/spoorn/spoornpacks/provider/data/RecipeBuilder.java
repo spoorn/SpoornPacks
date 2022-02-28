@@ -8,6 +8,7 @@ import org.spoorn.spoornpacks.provider.data.RecipeParts.Ingredient;
 import org.spoorn.spoornpacks.provider.data.RecipeParts.Key;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
+import org.spoorn.spoornpacks.type.Type;
 import org.spoorn.spoornpacks.util.JsonTUtil;
 
 import java.util.List;
@@ -18,14 +19,14 @@ public class RecipeBuilder implements ResourceProvider {
 
     private final String namespace;
     private final String name;
-    private final ItemType type;
+    private final Type<?> type;
     private final String defaultPrefix;
     private final String defaultPrefixWithType;
     private final String templatePath;
 
     private final JsonTUtil jsonTUtil = new JsonTUtil();
 
-    public RecipeBuilder(String namespace, String name, ItemType type, String templatePath) {
+    public RecipeBuilder(String namespace, String name, Type<?> type, String templatePath) {
         this.namespace = namespace;
         this.name = name;
         this.type = type;
@@ -125,6 +126,17 @@ public class RecipeBuilder implements ResourceProvider {
     public RecipeBuilder defaultBarrel() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefixWithType
+        );
+        return this;
+    }
+    
+    public RecipeBuilder defaultChestMinecart() {
+        return minecart("minecraft:chest", "minecraft:minecart", this.defaultPrefixWithType);
+    }
+
+    public RecipeBuilder minecart(String chest, String minecart, String result) {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                chest, minecart, result
         );
         return this;
     }

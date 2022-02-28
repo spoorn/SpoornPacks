@@ -3,6 +3,7 @@ package org.spoorn.spoornpacks.entity;
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -11,16 +12,22 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
+import net.minecraft.client.render.entity.MinecartEntityRenderer;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.tuple.Pair;
+import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
 import org.spoorn.spoornpacks.entity.boat.SPBoatEntity;
 import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
 import org.spoorn.spoornpacks.entity.chest.SPChestBlockEntity;
+import org.spoorn.spoornpacks.type.VehicleType;
 import org.spoorn.spoornpacks.util.ClientSideUtils;
 
 import java.util.HashMap;
@@ -32,6 +39,7 @@ public class SPEntities {
     public static final Map<Class<? extends ChestBlockEntity>, Pair<String, String>> CUSTOM_CHEST_BLOCK_ENTITY_CLASSES = new HashMap<>();
 
     private final Map<String, EntityType<SPBoatEntity>> boatEntities = new HashMap<>();
+    private final Map<String, EntityType<? extends AbstractMinecartEntity>> customMinecartEntityTypes = new HashMap<>();
     private final Map<String, BlockEntityType<SPChestBlockEntity>> chestBlockEntities = new HashMap<>();
     private final Map<String, BlockEntityType<? extends ChestBlockEntity>> customChestBlockEntityTypes = new HashMap<>();
     private final Map<String, BlockEntityType<? extends BarrelBlockEntity>> customBarrelBlockEntityTypes = new HashMap<>();
@@ -48,6 +56,22 @@ public class SPEntities {
                     EntityType.Builder.<SPBoatEntity>create((entType, world) -> new SPBoatEntity(spBoatRegistry, entType, world), SpawnGroup.MISC)
                             .setDimensions(1.375F, 0.5625F).build(namespace + ":boat"));
             boatEntities.put(namespace, entityType);
+            return entityType;
+        }
+    }
+
+    public <T extends AbstractMinecartEntity> EntityType<? extends AbstractMinecartEntity> registerCustomMinecart(
+            String namespace, String name, VehicleType type, SPMinecartEntityFactory factory) {
+        if (customMinecartEntityTypes.containsKey(namespace)) {
+            return customMinecartEntityTypes.get(namespace);
+        } else {
+            // Builder configurations copied from vanilla
+            EntityType<? extends AbstractMinecartEntity> entityType = registerEntity(namespace, name + type.getSuffix(),
+                    FabricEntityTypeBuilder.<AbstractMinecartEntity>create().entityFactory(factory::create).dimensions(EntityDimensions.changing(0.98f, 0.7f)).trackRangeBlocks(8).build());
+            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+                ClientSideUtils.registerEntityRendererFactory(entityType, ctx -> new MinecartEntityRenderer<>(ctx, EntityModelLayers.CHEST_MINECART));
+            }
+            customMinecartEntityTypes.put(namespace, entityType);
             return entityType;
         }
     }
