@@ -2,7 +2,6 @@ package org.spoorn.spoornpacks.impl;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.extern.log4j.Log4j2;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -11,6 +10,7 @@ import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
@@ -22,7 +22,6 @@ import org.spoorn.spoornpacks.type.VehicleType;
 
 import java.util.*;
 
-@Log4j2
 public class DefaultResourceBuilder implements ResourceBuilder {
 
     @Getter
@@ -51,8 +50,6 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     private final Map<String, Pair<StatusEffect, Integer>> flowerConfigs = new HashMap<>();
     @Getter
     private final Map<Pair<VehicleType, String>, SPMinecartEntityFactory> minecartConfigs = new HashMap<>();
-    @Getter
-    private final Set<String> excludedItemsFromRegistry = new HashSet<>();
 
     private final Set<String> blockIds = new HashSet<>();
     private final Set<String> itemIds = new HashSet<>();
@@ -108,19 +105,10 @@ public class DefaultResourceBuilder implements ResourceBuilder {
 
     @Override
     public synchronized ResourceBuilder addItem(ItemType type, String name) {
-        return addItem(type, name, true);
-    }
-
-    @Override
-    public ResourceBuilder addItem(ItemType type, String name, boolean shouldAddToRegistry) {
         if (type == ItemType.SMALL_FLOWER) {
             throw new IllegalArgumentException("ItemType=SMALL_FLOWER should be added via ResourceBuilder#addSmallFlower");
         }
         registerItem(type, name);
-        if (!shouldAddToRegistry) {
-            this.excludedItemsFromRegistry.add(name);
-            log.info("Skipping adding item to ItemsRegistry with itemType={}, name={}", type, name);
-        }
         return this;
     }
 

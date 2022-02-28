@@ -96,7 +96,7 @@ public class ResourceGenerator {
         // Items
         final Map<ItemType, Map<String, Item>> generatedItems = new HashMap<>();
         try {
-            handleItems(generatedItems, drb, fileGenerator);
+            handleItems(generatedItems, drb.getNamespace(), drb.getItems(), drb.getItemGroup(), fileGenerator);
         } catch (IOException e) {
             log.error("Could not generate resources for items", e);
             throw new RuntimeException(e);
@@ -415,12 +415,8 @@ public class ResourceGenerator {
         }
     }
 
-    private void handleItems(Map<ItemType, Map<String, Item>> generatedItems, DefaultResourceBuilder drb, FileGenerator fileGenerator) throws IOException {
-        String namespace = drb.getNamespace();
-        Map<String, List<String>> items = drb.getItems(); 
-        ItemGroup itemGroup = drb.getItemGroup();
-        Set<String> excludedItemsFromRegistry = drb.getExcludedItemsFromRegistry();
-        
+    private void handleItems(Map<ItemType, Map<String, Item>> generatedItems, String namespace, 
+                             Map<String, List<String>> items, ItemGroup itemGroup, FileGenerator fileGenerator) throws IOException {
         TagsBuilder minecraftLogs = new TagsBuilder(ITEMS);
         TagsBuilder minecraftPlanks = new TagsBuilder(ITEMS);
         TagsBuilder minecraftLeaves = new TagsBuilder(ITEMS);
@@ -442,97 +438,97 @@ public class ResourceGenerator {
             ItemType type = ItemType.fromString(entry.getKey());
             for (String name : entry.getValue()) {
                 String filename = type.getPrefix() + name + type.getSuffix();
-                Item item = null;
+                Item item;
                 switch (type) {
                     case LOG -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultLog());
                         minecraftLogs.value(namespace, name, type);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case WOOD -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultWood());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultWood());
                         minecraftLogs.value(namespace, name, type);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case PLANKS -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultPlanks());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultPlanks());
                         minecraftPlanks.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case LEAVES -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultLeaves());
                         minecraftLeaves.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case SAPLING -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultSapling());
                         minecraftSaplings.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerSaplingItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerSaplingItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case FENCE -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultFence());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultFence());
                         minecraftWoodenFences.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     } 
                     case FENCE_GATE -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultFenceGate());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultFenceGate());
                         minecraftFenceGates.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case BUTTON -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultButton());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultButton());
                         // TODO: allow specifying if button is wooden or not
                         minecraftWoodenButtons.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case SLAB -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultSlab());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultSlab());
                         minecraftWoodenSlabs.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case PRESSURE_PLATE -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultPressurePlate());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultPressurePlate());
                         minecraftWoodenPressurePlates.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case STAIRS -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultStairs());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultStairs());
                         minecraftWoodenStairs.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case TRAPDOOR -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultTrapdoor());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultTrapdoor());
                         minecraftWoodenTrapdoors.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case DOOR -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultDoor());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultDoor());
                         minecraftWoodenDoors.value(namespace, name, type);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case CRAFTING_TABLE -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultCraftingTable());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultCraftingTable());
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case BOAT -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultBoat());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultBoat());
                         minecraftBoats.value(namespace, name, type);
                         SPBoatRegistry.BoatType boatType = this.spBoatRegistry.registerBoat(namespace, name);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBoatItem(filename, this.spBoatRegistry, boatType, this.spEntities, itemGroup);
+                        item = itemsRegistry.registerBoatItem(filename, this.spBoatRegistry, boatType, this.spEntities, itemGroup);
                         EntityType<SPBoatEntity> boatEntityType = this.spEntities.registerBoatEntityType(namespace, this.spBoatRegistry);
                         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
                             ClientSideUtils.registerBoatEntity(boatEntityType, spBoatRegistry);
@@ -542,43 +538,41 @@ public class ResourceGenerator {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultStrippedLog());
                         minecraftLogs.value(namespace + ":" + filename);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case STRIPPED_WOOD -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultStrippedWood());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultStrippedWood());
                         minecraftLogs.value(namespace + ":" + filename);
                         customLogs.computeIfAbsent(name, m -> new ArrayList<>()).add(namespace + ":" + filename);
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename, blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case CHEST -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultChest());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultChest());
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case BARREL -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultBarrel());
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultBarrel());
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     case SMALL_FLOWER -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultSmallFlower());
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                         minecraftSmallFlowers.value(namespace + ":" + name);
                     }
                     case TALL_FLOWER -> {
                         fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultTallFlower());
-                        if (!excludedItemsFromRegistry.contains(name))  item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                         minecraftTallFlowers.value(namespace + ":" + name);
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
 
                 // Register furnace fuel times for items
-                if (item != null) {
-                    SPFurnaceBlockFuelTimes.registerFurnaceBlockFuelTime(type, item);
-                    generatedItems.computeIfAbsent(type, m -> new HashMap<>()).put(name, item);
-                }
+                SPFurnaceBlockFuelTimes.registerFurnaceBlockFuelTime(type, item);
+                generatedItems.computeIfAbsent(type, m -> new HashMap<>()).put(name, item);
             }
         }
 

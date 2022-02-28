@@ -39,19 +39,6 @@ public interface ResourceBuilder {
 
     ResourceBuilder addItem(ItemType type, String name);
 
-    /**
-     * This allows you to set whether an item should be added to Minecraft's {@link net.minecraft.util.registry.Registry.ITEM}
-     * or not.  Sometimes, you may want to generate resource files, but not register the item into the system.
-     * An example would be if you don't want your item to show up as an item in the game (i.e. creative menu/JEI/REI),
-     * but need the resource files for some BuiltInModel rendering such as for chests.
-     * 
-     * @param type ItemType
-     * @param name Item name
-     * @param shouldAddToRegistry False to skip adding the item to Items registry.  True to add to the registry.  
-     *                            If you are setting this to true, you may as well use {@link #addItem(ItemType, String)}.
-     */
-    ResourceBuilder addItem(ItemType type, String name, boolean shouldAddToRegistry);
-
 
     // More customizable APIs
 
