@@ -12,8 +12,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
-import net.minecraft.client.render.entity.MinecartEntityRenderer;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -69,7 +67,7 @@ public class SPEntities {
             EntityType<? extends AbstractMinecartEntity> entityType = registerEntity(namespace, name + type.getSuffix(),
                     FabricEntityTypeBuilder.<AbstractMinecartEntity>create().entityFactory(factory::create).dimensions(EntityDimensions.changing(0.98f, 0.7f)).trackRangeBlocks(8).build());
             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                ClientSideUtils.registerEntityRendererFactory(entityType, ctx -> new MinecartEntityRenderer<>(ctx, EntityModelLayers.CHEST_MINECART));
+                ClientSideUtils.registerMinecartEntityRendererFactory(entityType);
             }
             customMinecartEntityTypes.put(namespace, entityType);
             return entityType;
