@@ -5,7 +5,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.TallFlowerBlock;
-import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;

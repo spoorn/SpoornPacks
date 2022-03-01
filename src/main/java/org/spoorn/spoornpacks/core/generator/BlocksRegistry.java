@@ -5,12 +5,11 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.FeatureConfig;
 import org.spoorn.spoornpacks.block.SPChestBlock;
 import org.spoorn.spoornpacks.block.SPCraftingTableBlock;
 import org.spoorn.spoornpacks.block.SPSaplingBlock;
@@ -61,7 +60,7 @@ public class BlocksRegistry {
         return registerBlock(id, block);
     }
 
-    public Block registerSapling(String id, ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) {
+    public Block registerSapling(String id, RegistryEntry<? extends ConfiguredFeature<?, ?>> configuredFeature) {
         Block block = new SPSaplingBlock(new SPSaplingGenerator(configuredFeature), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING));
         return registerBlock(id, block);
     }

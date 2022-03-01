@@ -13,8 +13,8 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.FeatureConfig;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.api.Resource;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
@@ -121,7 +121,7 @@ public class ResourceGenerator {
         String namespace = drb.getNamespace();
         TreeMap<String, List<String>> blocks = drb.getBlocks();
         Map<String, String> leavesToSaplingOverrides = drb.getLeavesToSaplingOverrides();
-        Map<String, ConfiguredFeature<? extends FeatureConfig, ?>> saplingConfiguredFeatures = drb.getSaplingConfiguredFeatures();
+        Map<String, RegistryEntry<? extends ConfiguredFeature<?, ?>>> saplingConfiguredFeatures = drb.getSaplingConfiguredFeatures();
         Map<Pair<BlockType, String>, Pair<Block, FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity>>> customBlocksWithEntity
                 = drb.getCustomBlocksWithEntity();
         Map<String, Pair<StatusEffect, Integer>> flowerConfigs = drb.getFlowerConfigs();

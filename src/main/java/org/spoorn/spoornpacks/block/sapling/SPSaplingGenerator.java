@@ -1,23 +1,21 @@
 package org.spoorn.spoornpacks.block.sapling;
 
 import net.minecraft.block.sapling.SaplingGenerator;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.FeatureConfig;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
 public class SPSaplingGenerator extends SaplingGenerator {
 
-    private final ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature;
+    private final RegistryEntry<? extends ConfiguredFeature<?, ?>> configuredFeature;
 
-    public SPSaplingGenerator(ConfiguredFeature<? extends FeatureConfig, ?> configuredFeature) {
+    public SPSaplingGenerator(RegistryEntry<? extends ConfiguredFeature<?, ?>> configuredFeature) {
         this.configuredFeature = configuredFeature;
     }
 
-    @Nullable
     @Override
-    protected ConfiguredFeature<?, ?> getTreeFeature(Random random, boolean bees) {
+    protected RegistryEntry<? extends ConfiguredFeature<?, ?>> getTreeFeature(Random random, boolean bees) {
         return configuredFeature;
     }
 }
