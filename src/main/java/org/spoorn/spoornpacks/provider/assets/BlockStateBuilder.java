@@ -175,7 +175,7 @@ public class BlockStateBuilder implements ResourceProvider {
     }
 
     public BlockStateBuilder defaultShulkerBox() {
-        return emptyModel(this.defaultBlockPrefix);
+        return emptyModel(this.defaultBlockWithTypePrefix);
     }
 
     public BlockStateBuilder yaxis() {
