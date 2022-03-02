@@ -25,7 +25,8 @@ public enum BlockType {
     CHEST("chest"),
     BARREL("barrel"),
     SMALL_FLOWER("small_flower", "", ""),
-    TALL_FLOWER("tall_flower", "", "");
+    TALL_FLOWER("tall_flower", "", ""),
+    SHULKER_BOX("shulker_box");
 
     private final String name;
     

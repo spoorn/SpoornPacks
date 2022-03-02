@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "-",
+    "#",
+    "-"
+  ],
+  "key": {
+    "#": {
+      "item": ${string:1}
+    },
+    "-": {
+      "item": ${string:2}
+    }
+  },
+  "result": {
+    "item": ${string:3}
+}

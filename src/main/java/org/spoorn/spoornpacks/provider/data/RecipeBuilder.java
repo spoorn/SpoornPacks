@@ -140,6 +140,17 @@ public class RecipeBuilder implements ResourceProvider {
         );
         return this;
     }
+    
+    public RecipeBuilder defaultShulkerBox() {
+        return shulkerBox("minecraft:chest", "minecraft:shulker_shell", this.defaultPrefixWithType);
+    }
+    
+    public RecipeBuilder shulkerBox(String midItem, String shellItem, String result) {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                midItem, shellItem, result
+        );
+        return this;
+    }
 
     private RecipeBuilder fromPlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,

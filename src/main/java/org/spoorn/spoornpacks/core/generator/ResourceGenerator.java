@@ -144,6 +144,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftGuardedByPiglins = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftSmallFlowers = new TagsBuilder(BLOCKS);
         TagsBuilder minecraftTallFlowers = new TagsBuilder(BLOCKS);
+        TagsBuilder minecraftShulkerBoxes = new TagsBuilder(BLOCKS);
         TagsBuilder hoeMineable = new TagsBuilder(BLOCKS + "/mineable");
         TagsBuilder axeMineable = new TagsBuilder(BLOCKS + "/mineable");
         Map<String, List<String>> customLogs = new HashMap<>();
@@ -368,6 +369,13 @@ public class ResourceGenerator {
                         if (block == null)  block = blocksRegistry.registerTallFlower(filename);
                         minecraftTallFlowers.value(namespace + ":" + name);
                     }
+                    case SHULKER_BOX -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultShulkerBox());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultShulkerBox());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultShulkerBox());
+                        if (block == null)  block = blocksRegistry.registerShulkerBox(filename);
+                        minecraftShulkerBoxes.value(namespace, name, type);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
 
@@ -402,6 +410,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "guarded_by_piglins", minecraftGuardedByPiglins);
         fileGenerator.generateTags(MINECRAFT, "small_flowers", minecraftSmallFlowers);
         fileGenerator.generateTags(MINECRAFT, "tall_flowers", minecraftTallFlowers);
+        fileGenerator.generateTags(MINECRAFT, "shulker_boxes", minecraftShulkerBoxes);
         fileGenerator.generateTags(MINECRAFT, "hoe", hoeMineable);
         fileGenerator.generateTags(MINECRAFT, "axe", axeMineable);
 
@@ -432,6 +441,7 @@ public class ResourceGenerator {
         TagsBuilder minecraftBoats = new TagsBuilder(ITEMS);
         TagsBuilder minecraftSmallFlowers = new TagsBuilder(ITEMS);
         TagsBuilder minecraftTallFlowers = new TagsBuilder(ITEMS);
+        TagsBuilder minecraftShulkerBoxes = new TagsBuilder(ITEMS);
         Map<String, List<String>> customLogs = new HashMap<>();
 
         for (Entry<String, List<String>> entry : items.entrySet()) {
@@ -567,6 +577,12 @@ public class ResourceGenerator {
                         item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                         minecraftTallFlowers.value(namespace + ":" + name);
                     }
+                    case SHULKER_BOX -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultShulkerBox());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultShulkerBox());
+                        item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
+                        minecraftShulkerBoxes.value(namespace, name, type);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
 
@@ -592,6 +608,7 @@ public class ResourceGenerator {
         fileGenerator.generateTags(MINECRAFT, "boats", minecraftBoats);
         fileGenerator.generateTags(MINECRAFT, "small_flowers", minecraftSmallFlowers);
         fileGenerator.generateTags(MINECRAFT, "tall_flowers", minecraftTallFlowers);
+        fileGenerator.generateTags(MINECRAFT, "shulker_boxes", minecraftShulkerBoxes);
 
         for (Entry<String, List<String>> entry : customLogs.entrySet()) {
             TagsBuilder customLogTags = new TagsBuilder(ITEMS);

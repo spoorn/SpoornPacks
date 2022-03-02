@@ -152,6 +152,11 @@ public class BlocksRegistry {
         return registerBlock(id, block);
     }
     
+    public Block registerShulkerBox(String id) {
+        Block block = new ShulkerBoxBlock(null, FabricBlockSettings.copyOf(Blocks.SHULKER_BOX));
+        return registerBlock(id, block);
+    }
+    
     public Block registerBlockIfAbsent(String id, Block block) {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
