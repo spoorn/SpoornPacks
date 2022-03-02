@@ -12,6 +12,7 @@ import java.util.Map;
 public class SPTexturedRenderLayers {
 
     public static Map<Pair<String, String>, Map<ChestType, SpriteIdentifier>>  TEXTURED_RENDER_LAYERS = new HashMap<>();
+    public static Map<Pair<String, String>, SpriteIdentifier> STANDARD_TEXTURED_RENDER_LAYERS = new HashMap<>();
     
     public static void registerChest(String namespace, String name) {
         Pair<String, String> key = Pair.of(namespace, name);
@@ -26,6 +27,15 @@ public class SPTexturedRenderLayers {
         TEXTURED_RENDER_LAYERS.put(key, spriteIdentifiers);
     }
     
+    public static void registerShulkerBox(String namespace, String name) {
+        Pair<String, String> key = Pair.of(namespace, name);
+        if (STANDARD_TEXTURED_RENDER_LAYERS.containsKey(key)) {
+            throw new IllegalArgumentException("SPTexturedRenderLayer namespace=" + namespace + ", name=" + name + " was already registered!");
+        }
+
+        STANDARD_TEXTURED_RENDER_LAYERS.put(key, new SpriteIdentifier(TexturedRenderLayers.SHULKER_BOXES_ATLAS_TEXTURE, new Identifier(namespace, "entity/shulker/" + name)));
+    }
+    
     public static SpriteIdentifier getChest(String namespace, String name, ChestType chestType) {
         Map<ChestType, SpriteIdentifier> spriteIdentifiers = TEXTURED_RENDER_LAYERS.get(Pair.of(namespace, name));
         if (spriteIdentifiers == null || spriteIdentifiers.isEmpty()) {
@@ -34,5 +44,14 @@ public class SPTexturedRenderLayers {
         }
         
         return spriteIdentifiers.get(chestType);
+    }
+    
+    public static SpriteIdentifier getStandardSprite(String namespace, String name) {
+        SpriteIdentifier spriteIdentifier = STANDARD_TEXTURED_RENDER_LAYERS.get(Pair.of(namespace, name));
+        if (spriteIdentifier == null) {
+            throw new RuntimeException("Expected SpriteIdentifier for namespace=" + namespace + ", name=" +
+                    name + " in SPTexturedRenderLayers, but was not found!");
+        }
+        return spriteIdentifier;
     }
 }

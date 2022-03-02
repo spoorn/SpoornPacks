@@ -327,7 +327,7 @@ public class ResourceGenerator {
                                     (FabricBlockEntityTypeBuilder.Factory<? extends ChestBlockEntity>) customBlockWithEntity.getRight());
                         }
                         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                            ClientSideUtils.registerTexturedRenderLayer(namespace, name);
+                            ClientSideUtils.registerChestTexturedRenderLayer(namespace, name);
                         }
                         axeMineable.value(namespace, name, type);
                         minecraftFeaturesCannotReplace.value(namespace, name, type);
@@ -374,6 +374,9 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultShulkerBox());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultShulkerBox());
                         if (block == null)  block = blocksRegistry.registerShulkerBox(filename);
+                        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+                            ClientSideUtils.registerShulkerTexturedRenderLayer(namespace, name);
+                        }
                         minecraftShulkerBoxes.value(namespace, name, type);
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");

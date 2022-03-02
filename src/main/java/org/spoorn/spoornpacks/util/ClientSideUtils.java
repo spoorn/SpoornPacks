@@ -38,8 +38,12 @@ public class ClientSideUtils {
         SPRenderLayers.registerRenderLayer(type, block);
     }
     
-    public static void registerTexturedRenderLayer(String namespace, String name) {
+    public static void registerChestTexturedRenderLayer(String namespace, String name) {
         SPTexturedRenderLayers.registerChest(namespace, name);
+    }
+
+    public static void registerShulkerTexturedRenderLayer(String namespace, String name) {
+        SPTexturedRenderLayers.registerShulkerBox(namespace, name);
     }
     
     public static <T extends AbstractMinecartEntity> void registerMinecartEntityRendererFactory(EntityType<? extends T> entityType) {
