@@ -15,4 +15,5 @@
   },
   "result": {
     "item": ${string:3}
+  }
 }
