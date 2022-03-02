@@ -174,6 +174,10 @@ public class BlockStateBuilder implements ResourceProvider {
         return this;
     }
 
+    public BlockStateBuilder defaultShulkerBox() {
+        return emptyModel(this.defaultBlockWithTypePrefix);
+    }
+
     public BlockStateBuilder yaxis() {
         this.state.with("variants").with("axis=y")
                 .put("model", defaultBlockWithTypePrefix);

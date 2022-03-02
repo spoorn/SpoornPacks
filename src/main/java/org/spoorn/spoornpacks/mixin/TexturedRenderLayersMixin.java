@@ -5,6 +5,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,6 +52,13 @@ public class TexturedRenderLayersMixin {
     @Inject(method = "addDefaultTextures", at = @At(value = "TAIL"))
     private static void injectDefaultTextures(Consumer<SpriteIdentifier> adder, CallbackInfo ci) {
         for (Map<ChestType, SpriteIdentifier> spriteIdentifiers : SPTexturedRenderLayers.TEXTURED_RENDER_LAYERS.values()) {
+            for (SpriteIdentifier spriteIdentifier : spriteIdentifiers.values()) {
+                log.info("Injecting SpriteIdentifier={} into default textures", spriteIdentifier.getTextureId());
+                adder.accept(spriteIdentifier);
+            }
+        }
+        
+        for (Map<Identifier, SpriteIdentifier> spriteIdentifiers : SPTexturedRenderLayers.STANDARD_TEXTURED_RENDER_LAYERS.values()) {
             for (SpriteIdentifier spriteIdentifier : spriteIdentifiers.values()) {
                 log.info("Injecting SpriteIdentifier={} into default textures", spriteIdentifier.getTextureId());
                 adder.accept(spriteIdentifier);

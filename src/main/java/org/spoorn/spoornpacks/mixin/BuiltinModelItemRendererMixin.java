@@ -1,7 +1,7 @@
 package org.spoorn.spoornpacks.mixin;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ChestBlock;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
@@ -21,12 +21,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spoorn.spoornpacks.block.SPChestBlock;
 import org.spoorn.spoornpacks.core.generator.BlocksRegistry;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Renders Items with a built-in model, such as chests.
  */
 @Mixin(BuiltinModelItemRenderer.class)
 public class BuiltinModelItemRendererMixin {
 
+    private static final Map<Block, BlockEntity> blockEntityCache = new HashMap<>();
+    
     @Shadow @Final private BlockEntityRenderDispatcher blockEntityRenderDispatcher;
 
     @Inject(method = "render", at = @At(value = "HEAD"), cancellable = true)
@@ -37,8 +42,13 @@ public class BuiltinModelItemRendererMixin {
             Block block = ((BlockItem) item).getBlock();
             
             // TODO: Generalize this to any block from SpoornPacks with interface
-            if (block instanceof SPChestBlock || BlocksRegistry.CUSTOM_CHESTS.contains(block)) {
-                blockEntity = ((ChestBlock) block).createBlockEntity(BlockPos.ORIGIN, block.getDefaultState());
+            if (block instanceof SPChestBlock || BlocksRegistry.CUSTOM_CHESTS.contains(block) || BlocksRegistry.CUSTOM_SHULKER_BOXES.contains(block)) {
+                if (blockEntityCache.containsKey(block)) {
+                    blockEntity = blockEntityCache.get(block);
+                } else {
+                    blockEntity = ((BlockEntityProvider) block).createBlockEntity(BlockPos.ORIGIN, block.getDefaultState());
+                    blockEntityCache.put(block, blockEntity);
+                }
             }
             
             if (blockEntity != null) {

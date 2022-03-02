@@ -88,6 +88,9 @@ public class DefaultResourceBuilder implements ResourceBuilder {
             throw new IllegalArgumentException("BlockType=SAPLING should be added via ResourceBuilder#addSapling");
         } else if (type == BlockType.SMALL_FLOWER) {
             throw new IllegalArgumentException("BlockType=SMALL_FLOWER should be added via ResourceBuilder#addSmallFlower");
+        } else if (type == BlockType.SHULKER_BOX) {
+            throw new UnsupportedOperationException("BlockType=SHULKER_BOX is not yet supported for the default addBlock.  " +
+                    "Please use the addBlock() with a custom Block and BlockEntity Factory");
         }
         return addBlock(type, this.defaultName);
     }
@@ -117,7 +120,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         if (block == null || blockEntity == null) {
             throw new IllegalArgumentException("Block and BlockEntity cannot be NULL");
         }
-        if (type != BlockType.CHEST && type != BlockType.BARREL) {
+        if (type != BlockType.CHEST && type != BlockType.BARREL && type != BlockType.SHULKER_BOX) {
             throw new IllegalArgumentException("BlockType=" + type + " is not supported for this addBlock operation");
         }
         addBlock(type, name);

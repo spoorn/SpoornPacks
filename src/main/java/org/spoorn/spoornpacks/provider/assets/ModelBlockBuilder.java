@@ -254,6 +254,10 @@ public class ModelBlockBuilder implements ResourceProvider {
         return this;
     }
     
+    public ModelBlockBuilder defaultShulkerBox() {
+        return particle(this.defaultBlockWithTypePrefix);
+    }
+    
     
     private ModelBlockBuilder substitutePlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,

@@ -148,6 +148,13 @@ public class ModelItemBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelItemBuilder defaultShulkerBox() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix
+        );
+        return this;
+    }
+
     public ModelItemBuilder parent() {
         return parent(defaultBlockWithTypePrefix);
     }

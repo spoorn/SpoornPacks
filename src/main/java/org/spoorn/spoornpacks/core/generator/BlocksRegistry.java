@@ -27,6 +27,7 @@ import java.util.Set;
 public class BlocksRegistry {
     
     public static Set<ChestBlock> CUSTOM_CHESTS = new HashSet<>();
+    public static Set<ShulkerBoxBlock> CUSTOM_SHULKER_BOXES = new HashSet<>();
 
     private final String modid;
     
@@ -151,12 +152,21 @@ public class BlocksRegistry {
         return registerBlock(id, block);
     }
     
+    public Block registerShulkerBox(String id) {
+        Block block = new ShulkerBoxBlock(null, FabricBlockSettings.copyOf(Blocks.SHULKER_BOX));
+        return registerBlock(id, block);
+    }
+    
     public Block registerBlockIfAbsent(String id, Block block) {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
         
         if (block instanceof ChestBlock) {
             CUSTOM_CHESTS.add((ChestBlock) block);
+        }
+        
+        if (block instanceof ShulkerBoxBlock) {
+            CUSTOM_SHULKER_BOXES.add((ShulkerBoxBlock) block);
         }
         
         if (!Registry.BLOCK.containsId(identifier)) {
