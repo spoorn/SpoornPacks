@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -28,6 +27,7 @@ import java.util.Set;
 public class BlocksRegistry {
     
     public static Set<ChestBlock> CUSTOM_CHESTS = new HashSet<>();
+    public static Set<ShulkerBoxBlock> CUSTOM_SHULKER_BOXES = new HashSet<>();
 
     private final String modid;
     
@@ -153,7 +153,8 @@ public class BlocksRegistry {
     }
     
     public Block registerShulkerBox(String id) {
-        Block block = new ShulkerBoxBlock(null, FabricBlockSettings.copyOf(Blocks.SHULKER_BOX));
+        ShulkerBoxBlock block = new ShulkerBoxBlock(null, FabricBlockSettings.copyOf(Blocks.SHULKER_BOX));
+        CUSTOM_SHULKER_BOXES.add(block);
         return registerBlock(id, block);
     }
     

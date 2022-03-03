@@ -1,7 +1,7 @@
 package org.spoorn.spoornpacks.mixin;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ChestBlock;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
@@ -37,8 +37,8 @@ public class BuiltinModelItemRendererMixin {
             Block block = ((BlockItem) item).getBlock();
             
             // TODO: Generalize this to any block from SpoornPacks with interface
-            if (block instanceof SPChestBlock || BlocksRegistry.CUSTOM_CHESTS.contains(block)) {
-                blockEntity = ((ChestBlock) block).createBlockEntity(BlockPos.ORIGIN, block.getDefaultState());
+            if (block instanceof SPChestBlock || BlocksRegistry.CUSTOM_CHESTS.contains(block) || BlocksRegistry.CUSTOM_SHULKER_BOXES.contains(block)) {
+                blockEntity = ((BlockEntityProvider) block).createBlockEntity(BlockPos.ORIGIN, block.getDefaultState());
             }
             
             if (blockEntity != null) {
