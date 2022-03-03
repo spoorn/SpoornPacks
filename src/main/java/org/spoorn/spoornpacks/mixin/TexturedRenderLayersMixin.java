@@ -56,5 +56,10 @@ public class TexturedRenderLayersMixin {
                 adder.accept(spriteIdentifier);
             }
         }
+        
+        for (SpriteIdentifier spriteIdentifier : SPTexturedRenderLayers.STANDARD_TEXTURED_RENDER_LAYERS.values()) {
+            log.info("Injecting SpriteIdentifier={} into default textures", spriteIdentifier.getTextureId());
+            adder.accept(spriteIdentifier);
+        }
     }
 }
