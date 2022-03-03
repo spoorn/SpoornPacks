@@ -153,8 +153,7 @@ public class BlocksRegistry {
     }
     
     public Block registerShulkerBox(String id) {
-        ShulkerBoxBlock block = new ShulkerBoxBlock(null, FabricBlockSettings.copyOf(Blocks.SHULKER_BOX));
-        CUSTOM_SHULKER_BOXES.add(block);
+        Block block = new ShulkerBoxBlock(null, FabricBlockSettings.copyOf(Blocks.SHULKER_BOX));
         return registerBlock(id, block);
     }
     
@@ -164,6 +163,10 @@ public class BlocksRegistry {
         
         if (block instanceof ChestBlock) {
             CUSTOM_CHESTS.add((ChestBlock) block);
+        }
+        
+        if (block instanceof ShulkerBoxBlock) {
+            CUSTOM_SHULKER_BOXES.add((ShulkerBoxBlock) block);
         }
         
         if (!Registry.BLOCK.containsId(identifier)) {
