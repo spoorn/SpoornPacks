@@ -21,12 +21,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spoorn.spoornpacks.block.SPChestBlock;
 import org.spoorn.spoornpacks.core.generator.BlocksRegistry;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Renders Items with a built-in model, such as chests.
  */
 @Mixin(BuiltinModelItemRenderer.class)
 public class BuiltinModelItemRendererMixin {
 
+    private static final Map<Block, BlockEntity> blockEntityCache = new HashMap<>();
+    
     @Shadow @Final private BlockEntityRenderDispatcher blockEntityRenderDispatcher;
 
     @Inject(method = "render", at = @At(value = "HEAD"), cancellable = true)
@@ -38,7 +43,12 @@ public class BuiltinModelItemRendererMixin {
             
             // TODO: Generalize this to any block from SpoornPacks with interface
             if (block instanceof SPChestBlock || BlocksRegistry.CUSTOM_CHESTS.contains(block) || BlocksRegistry.CUSTOM_SHULKER_BOXES.contains(block)) {
-                blockEntity = ((BlockEntityProvider) block).createBlockEntity(BlockPos.ORIGIN, block.getDefaultState());
+                if (blockEntityCache.containsKey(block)) {
+                    blockEntity = blockEntityCache.get(block);
+                } else {
+                    blockEntity = ((BlockEntityProvider) block).createBlockEntity(BlockPos.ORIGIN, block.getDefaultState());
+                    blockEntityCache.put(block, blockEntity);
+                }
             }
             
             if (blockEntity != null) {
