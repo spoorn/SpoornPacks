@@ -7,11 +7,9 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BarrelBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.ChestBlockEntity;
+import net.minecraft.block.entity.*;
 import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
+import net.minecraft.client.render.block.entity.ShulkerBoxBlockEntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -41,6 +39,7 @@ public class SPEntities {
     private final Map<String, BlockEntityType<SPChestBlockEntity>> chestBlockEntities = new HashMap<>();
     private final Map<String, BlockEntityType<? extends ChestBlockEntity>> customChestBlockEntityTypes = new HashMap<>();
     private final Map<String, BlockEntityType<? extends BarrelBlockEntity>> customBarrelBlockEntityTypes = new HashMap<>();
+    private final Map<String, BlockEntityType<? extends ShulkerBoxBlockEntity>> customShulkerBoxBlockEntityTypes = new HashMap<>();
     
     public SPEntities() {
         
@@ -103,6 +102,21 @@ public class SPEntities {
                 ClientSideUtils.registerBlockEntityRendererFactory(entityType, ChestBlockEntityRenderer::new);
             }
             customChestBlockEntityTypes.put(namespace, entityType);
+            return entityType;
+        }
+    }
+
+    public <T extends ShulkerBoxBlockEntity> BlockEntityType<? extends ShulkerBoxBlockEntity> registerCustomShulkerBoxBlockEntityType(String namespace, String name, Block block,
+                                                                                                                       FabricBlockEntityTypeBuilder.Factory<? extends T> blockEntityFactory) {
+        if (customShulkerBoxBlockEntityTypes.containsKey(namespace)) {
+            return customShulkerBoxBlockEntityTypes.get(namespace);
+        } else {
+            BlockEntityType<? extends ShulkerBoxBlockEntity> entityType = registerBlockEntity(namespace, name + "_shulker_box",
+                    FabricBlockEntityTypeBuilder.create(blockEntityFactory, block).build());
+            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+                ClientSideUtils.registerBlockEntityRendererFactory(entityType, ShulkerBoxBlockEntityRenderer::new);
+            }
+            customShulkerBoxBlockEntityTypes.put(namespace, entityType);
             return entityType;
         }
     }

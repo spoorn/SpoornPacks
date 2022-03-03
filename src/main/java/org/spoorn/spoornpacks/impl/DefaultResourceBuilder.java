@@ -10,7 +10,6 @@ import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.FeatureConfig;
-import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
@@ -88,6 +87,9 @@ public class DefaultResourceBuilder implements ResourceBuilder {
             throw new IllegalArgumentException("BlockType=SAPLING should be added via ResourceBuilder#addSapling");
         } else if (type == BlockType.SMALL_FLOWER) {
             throw new IllegalArgumentException("BlockType=SMALL_FLOWER should be added via ResourceBuilder#addSmallFlower");
+        } else if (type == BlockType.SHULKER_BOX) {
+            throw new UnsupportedOperationException("BlockType=SHULKER_BOX is not yet supported for the default addBlock.  " +
+                    "Please use the addBlock() with a custom Block and BlockEntity Factory");
         }
         return addBlock(type, this.defaultName);
     }

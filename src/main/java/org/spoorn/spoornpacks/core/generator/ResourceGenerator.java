@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
+import net.minecraft.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
@@ -374,6 +375,14 @@ public class ResourceGenerator {
                         fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultShulkerBox());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultShulkerBox());
                         if (block == null)  block = blocksRegistry.registerShulkerBox(filename);
+                        if (customBlockWithEntity == null) {
+                            // TODO: support default shulker boxes
+                            //this.spEntities.registerChestBlockEntityType(namespace, name, block);
+                            throw new UnsupportedOperationException("Only custom ShulkerBoxes with a custom ShulkerBoxBlock and ShulkerBoxBlockEntity are supported at the moment");
+                        } else {
+                            this.spEntities.registerCustomShulkerBoxBlockEntityType(namespace, name, block,
+                                    (FabricBlockEntityTypeBuilder.Factory<? extends ShulkerBoxBlockEntity>) customBlockWithEntity.getRight());
+                        }
                         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
                             ClientSideUtils.registerShulkerTexturedRenderLayer(namespace, name);
                         }
