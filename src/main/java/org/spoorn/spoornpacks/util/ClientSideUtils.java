@@ -54,10 +54,6 @@ public class ClientSideUtils {
         EntityRenderersAccessor.registerEntityRenderer(entityType, factory);
     }
     
-    public static <T extends AbstractMinecartEntity> void registerMinecartEntityRendererFactory(EntityType<? extends AbstractMinecartEntity> entityType) {
-        registerEntityRendererFactory(entityType, ctx -> new MinecartEntityRenderer<>(ctx, EntityModelLayers.CHEST_MINECART));
-    }
-    
     public static <T extends BlockEntity> void registerBlockEntityRendererFactory(BlockEntityType<? extends T> entityType, BlockEntityRendererFactory<T> factory) {
         BlockEntityRendererFactoriesAccessor.register(entityType, factory);
     }
