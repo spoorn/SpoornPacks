@@ -5,6 +5,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.MinecartEntityRenderer;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
@@ -46,6 +48,10 @@ public class ClientSideUtils {
     
     public static <T extends Entity> void registerEntityRendererFactory(EntityType<? extends T> entityType, EntityRendererFactory<T> factory) {
         EntityRenderersAccessor.registerEntityRenderer(entityType, factory);
+    }
+    
+    public static <T extends AbstractMinecartEntity> void registerMinecartEntityRendererFactory(EntityType<? extends AbstractMinecartEntity> entityType) {
+        registerEntityRendererFactory(entityType, ctx -> new MinecartEntityRenderer<>(ctx, EntityModelLayers.CHEST_MINECART));
     }
     
     public static <T extends BlockEntity> void registerBlockEntityRendererFactory(BlockEntityType<? extends T> entityType, BlockEntityRendererFactory<T> factory) {
