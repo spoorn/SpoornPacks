@@ -25,7 +25,8 @@ public enum ItemType implements Type<ItemType> {
     BARREL("barrel"),
     SMALL_FLOWER("small_flower", "", ""),
     TALL_FLOWER("tall_flower", "", ""),
-    SHULKER_BOX("shulker_box");
+    SHULKER_BOX("shulker_box"),
+    LEAF_PILE("leaf_pile");
 
     private final String name;
 

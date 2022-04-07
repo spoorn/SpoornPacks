@@ -152,6 +152,14 @@ public class RecipeBuilder implements ResourceProvider {
         return this;
     }
 
+    public RecipeBuilder defaultLeafPile() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultPrefix + BlockType.LEAVES.getSuffix(),
+                this.defaultPrefixWithType
+        );
+        return this;
+    }
+
     private RecipeBuilder fromPlanks() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
                 this.defaultPrefix + "_" + BlockType.PLANKS.getName(),

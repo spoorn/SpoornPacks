@@ -12,7 +12,8 @@
     "DoorBlockAccessor",
     "FireBlockAccessor",
     "AxeItemAccessor",
-    "NamespaceResourceManagerMixin"
+    "NamespaceResourceManagerMixin",
+    "BlockMixin"
   ],
   "client": [
     "RenderLayersAccessor",
@@ -20,7 +21,8 @@
     "EntityRenderersAccessor",
     "TexturedRenderLayersMixin",
     "BlockEntityRendererFactoriesAccessor",
-    "BuiltinModelItemRendererMixin"
+    "BuiltinModelItemRendererMixin",
+    "RenderLayersMixin"
   ],
   "injectors": {
     "defaultRequire": 1

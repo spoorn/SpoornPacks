@@ -155,6 +155,10 @@ public class ModelItemBuilder implements ResourceProvider {
         return this;
     }
 
+    public ModelItemBuilder defaultLeafPile() {
+        return parent();
+    }
+
     public ModelItemBuilder parent() {
         return parent(defaultBlockWithTypePrefix);
     }

@@ -388,6 +388,12 @@ public class ResourceGenerator {
                         }
                         minecraftShulkerBoxes.value(namespace, name, type);
                     }
+                    case LEAF_PILE -> {
+                        fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultLeafPile());
+                        fileGenerator.generateModelBlock(namespace, filename, newModelBlockBuilder(namespace, name, type).defaultLeafPile());
+                        fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultLeafPile());
+                        if (block == null)  block = blocksRegistry.registerLeafPileBlock(filename);
+                    }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }
 
@@ -594,6 +600,11 @@ public class ResourceGenerator {
                         fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultShulkerBox());
                         item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                         minecraftShulkerBoxes.value(namespace, name, type);
+                    }
+                    case LEAF_PILE -> {
+                        fileGenerator.generateModelItem(namespace, filename, newModelItemBuilder(namespace, name, type).defaultLeafPile());
+                        fileGenerator.generateRecipe(namespace, filename, newRecipeBuilder(namespace, name, type).defaultLeafPile());
+                        item = itemsRegistry.registerBlockItem(filename,  blocksRegistry.register.get(new Identifier(namespace, filename)), itemGroup);
                     }
                     default -> throw new UnsupportedOperationException("BlockType=[" + type + "] is not supported");
                 }

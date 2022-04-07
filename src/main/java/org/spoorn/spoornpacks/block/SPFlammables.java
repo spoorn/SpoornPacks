@@ -33,7 +33,7 @@ public class SPFlammables {
                 case FENCE_GATE -> {
                     registerFenceGate(block);
                 }
-                case LEAVES -> {
+                case LEAVES, LEAF_PILE -> {
                     registerLeaves(block);
                 }
                 case SMALL_FLOWER, TALL_FLOWER -> {

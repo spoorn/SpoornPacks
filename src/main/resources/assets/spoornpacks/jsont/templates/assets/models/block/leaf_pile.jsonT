@@ -1,0 +1,6 @@
+{
+  "parent": "spoornpacks:block/leaf_pile",
+  "textures": {
+    "pile": ${string:1}
+  }
+}

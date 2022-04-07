@@ -177,6 +177,13 @@ public class BlockStateBuilder implements ResourceProvider {
     public BlockStateBuilder defaultShulkerBox() {
         return emptyModel(this.defaultBlockWithTypePrefix);
     }
+    
+    public BlockStateBuilder defaultLeafPile() {
+        this.state = jsonTUtil.substituteToObjectNode(templatePath,
+                this.defaultBlockWithTypePrefix
+        );
+        return this;
+    }
 
     public BlockStateBuilder yaxis() {
         this.state.with("variants").with("axis=y")

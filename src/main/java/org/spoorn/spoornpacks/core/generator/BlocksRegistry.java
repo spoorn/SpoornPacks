@@ -12,6 +12,7 @@ import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import org.spoorn.spoornpacks.block.SPChestBlock;
 import org.spoorn.spoornpacks.block.SPCraftingTableBlock;
+import org.spoorn.spoornpacks.block.SPLeafPileBlock;
 import org.spoorn.spoornpacks.block.SPSaplingBlock;
 import org.spoorn.spoornpacks.block.sapling.SPSaplingGenerator;
 import org.spoorn.spoornpacks.entity.SPEntities;
@@ -156,7 +157,12 @@ public class BlocksRegistry {
         Block block = new ShulkerBoxBlock(null, FabricBlockSettings.copyOf(Blocks.SHULKER_BOX));
         return registerBlock(id, block);
     }
-    
+
+    public Block registerLeafPileBlock(String id) {
+        Block block = new SPLeafPileBlock(AbstractBlock.Settings.of(Material.CARPET, MapColor.WHITE).strength(0.1f).sounds(BlockSoundGroup.GRASS).nonOpaque());
+        return registerBlock(id, block);
+    }
+
     public Block registerBlockIfAbsent(String id, Block block) {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
