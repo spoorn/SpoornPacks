@@ -39,6 +39,8 @@ public class SPLeafPileBlock extends Block {
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return !world.isAir(pos.down());
+        BlockPos down = pos.down();
+        BlockState downBlockState = world.getBlockState(down);
+        return Block.isFaceFullSquare(downBlockState.getCollisionShape(world, down), Direction.UP);
     }
 }
