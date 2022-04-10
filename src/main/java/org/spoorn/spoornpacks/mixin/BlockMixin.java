@@ -11,7 +11,7 @@ import org.spoorn.spoornpacks.block.SPLeafPileBlock;
 @Mixin(Block.class)
 public class BlockMixin {
     
-    @Inject(method = "cannotConnect", at = @At(value = "HEAD"))
+    @Inject(method = "cannotConnect", at = @At(value = "HEAD"), cancellable = true)
     private static void cannotConnectLeafPiles(BlockState state, CallbackInfoReturnable<Boolean> cir) {
         if (state.getBlock() instanceof SPLeafPileBlock) {
             cir.setReturnValue(true);
