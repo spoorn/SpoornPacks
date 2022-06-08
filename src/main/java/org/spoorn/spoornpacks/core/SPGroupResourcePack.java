@@ -1,14 +1,18 @@
 package org.spoorn.spoornpacks.core;
 
 import lombok.extern.log4j.Log4j2;
-import net.fabricmc.fabric.api.resource.ModResourcePack;
+import net.fabricmc.fabric.impl.resource.loader.FabricNamespaceResourceManagerEntry;
+import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.fabricmc.fabric.mixin.resource.loader.NamespaceResourceManagerAccessor;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
-import net.minecraft.resource.*;
+import net.minecraft.resource.NamespaceResourceManager;
+import net.minecraft.resource.ResourceNotFoundException;
+import net.minecraft.resource.ResourcePack;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.resource.metadata.ResourceMetadataReader;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +29,7 @@ import java.util.function.Predicate;
 public class SPGroupResourcePack implements ResourcePack {
 
     private static final String NAME = "spoornpacks";
-    private static final PackResourceMetadata DEFAULT_PACK_METADATA = new PackResourceMetadata(new TranslatableText("spoornpack.metadata.description"), ResourceType.CLIENT_RESOURCES.getPackVersion(SharedConstants.getGameVersion()));
+    private static final PackResourceMetadata DEFAULT_PACK_METADATA = new PackResourceMetadata(Text.translatable("spoornpack.metadata.description"), ResourceType.CLIENT_RESOURCES.getPackVersion(SharedConstants.getGameVersion()));
 
     private final ResourceType resourceType;
     private final Path basePath;
@@ -116,7 +120,7 @@ public class SPGroupResourcePack implements ResourcePack {
     }
 
     @Override
-    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
+    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, Predicate<Identifier> pathFilter) {
         List<SPResourcePack> subPacks = this.subResourcePacks.get(namespace);
 
         if (subPacks == null) {
@@ -127,7 +131,7 @@ public class SPGroupResourcePack implements ResourcePack {
 
         for (int i = subPacks.size() - 1; i >= 0; i--) {
             ResourcePack pack = subPacks.get(i);
-            Collection<Identifier> modResources = pack.findResources(type, namespace, prefix, maxDepth, pathFilter);
+            Collection<Identifier> modResources = pack.findResources(type, namespace, prefix, pathFilter);
 
             resources.addAll(modResources);
         }
@@ -165,7 +169,7 @@ public class SPGroupResourcePack implements ResourcePack {
      * 
      * This is copied from Fabric's {@link net.fabricmc.fabric.impl.resource.loader.GroupResourcePack}.
      */
-    public void appendResources(NamespaceResourceManagerAccessor manager, Identifier id, List<Resource> resources) throws IOException {
+    public void appendResources(NamespaceResourceManagerAccessor manager, Identifier id, List<NamespaceResourceManager.Entry> resources) throws IOException {
         List<SPResourcePack> packs = this.subResourcePacks.get(id.getNamespace());
 
         if (packs == null) {
@@ -176,8 +180,9 @@ public class SPGroupResourcePack implements ResourcePack {
 
         for (SPResourcePack pack : packs) {
             if (pack.contains(manager.getType(), id)) {
-                InputStream metadataInputStream = pack.contains(manager.getType(), metadataId) ? manager.fabric$accessor_open(metadataId, pack) : null;
-                resources.add(new ResourceImpl(pack.getName(), id, manager.fabric$accessor_open(id, pack), metadataInputStream));
+                final NamespaceResourceManager.Entry entry = ((NamespaceResourceManager) manager).new Entry(id, metadataId, pack);
+                ((FabricNamespaceResourceManagerEntry) entry).setFabricPackSource(ModResourcePackCreator.RESOURCE_PACK_SOURCE);
+                resources.add(entry);
             }
         }
     }

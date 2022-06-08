@@ -24,8 +24,8 @@ import java.util.List;
 @Mixin(NamespaceResourceManager.class)
 public class NamespaceResourceManagerMixin {
 
-    @Shadow @Final protected List<ResourcePack> packList;
-    private final ThreadLocal<List<Resource>> fabric$getAllResources$resources = new ThreadLocal<>();
+    @Shadow @Final protected List<NamespaceResourceManager.FilterablePack> packList;
+    private final ThreadLocal<List<NamespaceResourceManager.Entry>> fabric$getAllResources$resources = new ThreadLocal<>();
 
     /**
      * Capture local variable resources List in {@link NamespaceResourceManager#getAllResources}.
@@ -33,7 +33,7 @@ public class NamespaceResourceManagerMixin {
     @Inject(method = "getAllResources", at = @At(value = "INVOKE", 
             target = "Lnet/minecraft/resource/NamespaceResourceManager;getMetadataPath(Lnet/minecraft/util/Identifier;)Lnet/minecraft/util/Identifier;"),
             locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onGetAllResources(Identifier id, CallbackInfoReturnable<List<Resource>> cir, List<Resource> resources) {
+    private void onGetAllResources(Identifier id, CallbackInfoReturnable<List<Resource>> cir, List<NamespaceResourceManager.Entry> resources) {
         this.fabric$getAllResources$resources.set(resources);
     }
 
@@ -44,7 +44,8 @@ public class NamespaceResourceManagerMixin {
      */
     @Inject(method = "getAllResources", at = @At(value = "RETURN"))
     private void onResourceAdd(Identifier id, CallbackInfoReturnable<List<Resource>> cir) throws IOException {
-        for (ResourcePack pack : this.packList) {
+        for (int i = 0; i < packList.size(); i++) {
+            ResourcePack pack = packList.get(i).underlying();
             if (pack instanceof SPGroupResourcePack) {
                 ((SPGroupResourcePack) pack).appendResources((NamespaceResourceManagerAccessor) this, id, this.fabric$getAllResources$resources.get());
             }

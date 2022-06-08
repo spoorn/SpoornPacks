@@ -133,8 +133,8 @@ public class ModelBlockBuilder implements ResourceProvider {
     // This is the same for door_bottom/bottom_hinge/top/top_hinge
     public ModelBlockBuilder defaultDoorPart() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockWithTypePrefix + "_top",
-                this.defaultBlockWithTypePrefix + "_bottom"
+                this.defaultBlockWithTypePrefix + "_bottom",
+                this.defaultBlockWithTypePrefix + "_top"
         );
         return this;
     }

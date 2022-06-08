@@ -9,7 +9,7 @@ import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.resource.metadata.ResourceMetadataReader;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import org.jetbrains.annotations.Nullable;
@@ -17,9 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -31,7 +30,7 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
     private static final String NAME = "spoornpacks";
     private static final String MINECRAFT_NAMESPACE = "minecraft";
     private static final Pattern RESOURCE_PACK_PATH = Pattern.compile("[a-z0-9-_]+");
-    private static final PackResourceMetadata DEFAULT_PACK_METADATA = new PackResourceMetadata(new TranslatableText("spoornpack.metadata.description"), ResourceType.CLIENT_RESOURCES.getPackVersion(SharedConstants.getGameVersion()));
+    private static final PackResourceMetadata DEFAULT_PACK_METADATA = new PackResourceMetadata(Text.translatable("spoornpack.metadata.description"), ResourceType.CLIENT_RESOURCES.getPackVersion(SharedConstants.getGameVersion()));
 
     private final ResourceType resourceType;
     private final String id;
@@ -85,7 +84,7 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
     }
 
     @Override
-    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
+    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, Predicate<Identifier> pathFilter) {
         //System.out.println("### findresources " + namespace + "/" + prefix);
         List<Identifier> ids = new ArrayList<>();
         String path = prefix.replace("/", separator);
@@ -97,25 +96,27 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
             Path searchPath = namespacePath.resolve(path).toAbsolutePath().normalize();
             //System.out.println("### searchpath: " + searchPath);
 
+            /**
+             * Copied from {@link net.fabricmc.fabric.impl.resource.loader.ModNioResourcePack#findResources(ResourceType, String, String, Predicate).} 
+             */
             if (Files.exists(searchPath)) {
                 try {
-                    Files.walk(searchPath, maxDepth)
-                            .filter(Files::isRegularFile)
-                            .filter((p) -> {
-                                String filename = p.getFileName().toString();
-                                //System.out.println("### filename: " + filename);
-                                return !filename.endsWith(".mcmeta") && pathFilter.test(filename);
-                            })
-                            .map(namespacePath::relativize)
-                            .map((p) -> p.toString().replace(separator, "/"))
-                            .forEach((s) -> {
-                                try {
-                                    //System.out.println("### path: " + s);
-                                    ids.add(new Identifier(namespace, s));
-                                } catch (InvalidIdentifierException e) {
-                                    log.error(e.getMessage(), e);
-                                }
-                            });
+                    Files.walkFileTree(searchPath, new SimpleFileVisitor<Path>() {
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                            String fileName = file.getFileName().toString();
+                            if (fileName.endsWith(".mcmeta")) return FileVisitResult.CONTINUE;
+
+                            try {
+                                Identifier id = new Identifier(namespace, namespacePath.relativize(file).toString().replace(separator, "/"));
+                                if (pathFilter.test(id)) ids.add(id);
+                            } catch (InvalidIdentifierException e) {
+                                log.error(e.getMessage());
+                            }
+
+                            return FileVisitResult.CONTINUE;
+                        }
+                    });
                 } catch (IOException e) {
                     log.warn("findResources at " + path + " in namespace " + namespace + " failed!", e);
                 }

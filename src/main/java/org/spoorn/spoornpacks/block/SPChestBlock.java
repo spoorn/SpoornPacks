@@ -12,7 +12,6 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -51,9 +50,9 @@ public class SPChestBlock extends ChestBlock {
                     }
                     if (chestBlockEntity instanceof SPChestBlockEntity spChestBlockEntity) {
                         // Allow custom double chest names
-                        return new TranslatableText("container." + spChestBlockEntity.namespace + "." + spChestBlockEntity.name + ".doubleChest");
+                        return Text.translatable("container." + spChestBlockEntity.namespace + "." + spChestBlockEntity.name + ".doubleChest");
                     } else {
-                        return new TranslatableText("container.chestDouble");
+                        return Text.translatable("container.chestDouble");
                     }
                 }
             });

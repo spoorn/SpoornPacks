@@ -3,7 +3,6 @@ package org.spoorn.spoornpacks.entity.chest;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import org.spoorn.spoornpacks.entity.SPEntities;
 
@@ -20,6 +19,6 @@ public class SPChestBlockEntity extends ChestBlockEntity {
 
     @Override
     protected Text getContainerName() {
-        return new TranslatableText("container." + namespace + "." + name + "_chest");
+        return Text.translatable("container." + namespace + "." + name + "_chest");
     }
 }

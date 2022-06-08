@@ -282,10 +282,14 @@ public class ResourceGenerator {
                     }
                     case DOOR -> {
                         fileGenerator.generateBlockStates(namespace, filename, newBlockStateBuilder(namespace, name, type).defaultDoor());
-                        fileGenerator.generateModelBlock(namespace, filename + "_bottom", newModelBlockBuilder(namespace, name, type, type.getName() + "_bottom").defaultDoorPart());
-                        fileGenerator.generateModelBlock(namespace, filename + "_bottom_hinge", newModelBlockBuilder(namespace, name, type, type.getName() + "_bottom_hinge").defaultDoorPart());
-                        fileGenerator.generateModelBlock(namespace, filename + "_top", newModelBlockBuilder(namespace, name, type, type.getName() + "_top").defaultDoorPart());
-                        fileGenerator.generateModelBlock(namespace, filename + "_top_hinge", newModelBlockBuilder(namespace, name, type, type.getName() + "_top_hinge").defaultDoorPart());
+                        fileGenerator.generateModelBlock(namespace, filename + "_bottom_left", newModelBlockBuilder(namespace, name, type, type.getName() + "_bottom_left").defaultDoorPart());
+                        fileGenerator.generateModelBlock(namespace, filename + "_bottom_left_open", newModelBlockBuilder(namespace, name, type, type.getName() + "_bottom_left_open").defaultDoorPart());
+                        fileGenerator.generateModelBlock(namespace, filename + "_bottom_right", newModelBlockBuilder(namespace, name, type, type.getName() + "_bottom_right").defaultDoorPart());
+                        fileGenerator.generateModelBlock(namespace, filename + "_bottom_right_open", newModelBlockBuilder(namespace, name, type, type.getName() + "_bottom_right_open").defaultDoorPart());
+                        fileGenerator.generateModelBlock(namespace, filename + "_top_left", newModelBlockBuilder(namespace, name, type, type.getName() + "_top_left").defaultDoorPart());
+                        fileGenerator.generateModelBlock(namespace, filename + "_top_left_open", newModelBlockBuilder(namespace, name, type, type.getName() + "_top_left_open").defaultDoorPart());
+                        fileGenerator.generateModelBlock(namespace, filename + "_top_right", newModelBlockBuilder(namespace, name, type, type.getName() + "_top_right").defaultDoorPart());
+                        fileGenerator.generateModelBlock(namespace, filename + "_top_right_open", newModelBlockBuilder(namespace, name, type, type.getName() + "_top_right_open").defaultDoorPart());
                         fileGenerator.generateLootTable(namespace, filename, newBlockLootTableBuilder(namespace, name, type).defaultDoor());
                         minecraftWoodenDoors.value(namespace, name, type);
                         if (block == null)  block = blocksRegistry.registerDoor(filename);

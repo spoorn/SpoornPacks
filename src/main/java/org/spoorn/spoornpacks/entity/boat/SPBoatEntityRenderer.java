@@ -31,7 +31,7 @@ public class SPBoatEntityRenderer extends EntityRenderer<SPBoatEntity> {
         this.texturesAndModels = spBoatRegistry.getBoatRegistry().stream().collect(ImmutableMap.toImmutableMap(
                 (type) -> type,
                 (type) -> {
-                    return Pair.of(new Identifier(type.getNamespace(), "textures/entity/boat/" + type.getName() + ".png"), new BoatEntityModel(ctx.getPart(createBoat(type))));
+                    return Pair.of(new Identifier(type.getNamespace(), "textures/entity/boat/" + type.getName() + ".png"), new BoatEntityModel(ctx.getPart(createBoat(type)), false));
                 }));
     }
 

@@ -8,24 +8,24 @@
       "y": 90
     },
     "facing=east,half=lower,hinge=right,open=false": {
-      "model": ${string:2}
+      "model": ${string:3}
     },
     "facing=east,half=lower,hinge=right,open=true": {
-      "model": ${string:1},
+      "model": ${string:4},
       "y": 270
     },
     "facing=east,half=upper,hinge=left,open=false": {
-      "model": ${string:3}
+      "model": ${string:5}
     },
     "facing=east,half=upper,hinge=left,open=true": {
-      "model": ${string:4},
+      "model": ${string:6},
       "y": 90
     },
     "facing=east,half=upper,hinge=right,open=false": {
-      "model": ${string:4}
+      "model": ${string:7}
     },
     "facing=east,half=upper,hinge=right,open=true": {
-      "model": ${string:3},
+      "model": ${string:8},
       "y": 270
     },
     "facing=north,half=lower,hinge=left,open=false": {
@@ -36,26 +36,26 @@
       "model": ${string:2}
     },
     "facing=north,half=lower,hinge=right,open=false": {
-      "model": ${string:2},
+      "model": ${string:3},
       "y": 270
     },
     "facing=north,half=lower,hinge=right,open=true": {
-      "model": ${string:1},
+      "model": ${string:4},
       "y": 180
     },
     "facing=north,half=upper,hinge=left,open=false": {
-      "model": ${string:3},
+      "model": ${string:5},
       "y": 270
     },
     "facing=north,half=upper,hinge=left,open=true": {
-      "model": ${string:4}
+      "model": ${string:6}
     },
     "facing=north,half=upper,hinge=right,open=false": {
-      "model": ${string:4},
+      "model": ${string:7},
       "y": 270
     },
     "facing=north,half=upper,hinge=right,open=true": {
-      "model": ${string:3},
+      "model": ${string:8},
       "y": 180
     },
     "facing=south,half=lower,hinge=left,open=false": {
@@ -67,26 +67,26 @@
       "y": 180
     },
     "facing=south,half=lower,hinge=right,open=false": {
-      "model": ${string:2},
-      "y": 90
-    },
-    "facing=south,half=lower,hinge=right,open=true": {
-      "model": ${string:1}
-    },
-    "facing=south,half=upper,hinge=left,open=false": {
       "model": ${string:3},
       "y": 90
     },
+    "facing=south,half=lower,hinge=right,open=true": {
+      "model": ${string:4}
+    },
+    "facing=south,half=upper,hinge=left,open=false": {
+      "model": ${string:5},
+      "y": 90
+    },
     "facing=south,half=upper,hinge=left,open=true": {
-      "model": ${string:4},
+      "model": ${string:6},
       "y": 180
     },
     "facing=south,half=upper,hinge=right,open=false": {
-      "model": ${string:4},
+      "model": ${string:7},
       "y": 90
     },
     "facing=south,half=upper,hinge=right,open=true": {
-      "model": ${string:3}
+      "model": ${string:8}
     },
     "facing=west,half=lower,hinge=left,open=false": {
       "model": ${string:1},
@@ -97,27 +97,27 @@
       "y": 270
     },
     "facing=west,half=lower,hinge=right,open=false": {
-      "model": ${string:2},
+      "model": ${string:3},
       "y": 180
     },
     "facing=west,half=lower,hinge=right,open=true": {
-      "model": ${string:1},
+      "model": ${string:4},
       "y": 90
     },
     "facing=west,half=upper,hinge=left,open=false": {
-      "model": ${string:3},
+      "model": ${string:5},
       "y": 180
     },
     "facing=west,half=upper,hinge=left,open=true": {
-      "model": ${string:4},
+      "model": ${string:6},
       "y": 270
     },
     "facing=west,half=upper,hinge=right,open=false": {
-      "model": ${string:4},
+      "model": ${string:7},
       "y": 180
     },
     "facing=west,half=upper,hinge=right,open=true": {
-      "model": ${string:3},
+      "model": ${string:8},
       "y": 90
     }
   }

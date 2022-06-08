@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_left",
+  "textures": {
+    "bottom": ${string:1},
+    "top": ${string:2}
+  }
+}

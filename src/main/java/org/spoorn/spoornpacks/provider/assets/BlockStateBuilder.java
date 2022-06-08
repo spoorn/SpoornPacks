@@ -122,10 +122,14 @@ public class BlockStateBuilder implements ResourceProvider {
 
     public BlockStateBuilder defaultDoor() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultBlockWithTypePrefix + "_bottom",
-                this.defaultBlockWithTypePrefix + "_bottom_hinge",
-                this.defaultBlockWithTypePrefix + "_top",
-                this.defaultBlockWithTypePrefix + "_top_hinge"
+                this.defaultBlockWithTypePrefix + "_bottom_left",
+                this.defaultBlockWithTypePrefix + "_bottom_left_open",
+                this.defaultBlockWithTypePrefix + "_bottom_right",
+                this.defaultBlockWithTypePrefix + "_bottom_right_open",
+                this.defaultBlockWithTypePrefix + "_top_left",
+                this.defaultBlockWithTypePrefix + "_top_left_open",
+                this.defaultBlockWithTypePrefix + "_top_right",
+                this.defaultBlockWithTypePrefix + "_top_right_open"
         );
         return this;
     }
