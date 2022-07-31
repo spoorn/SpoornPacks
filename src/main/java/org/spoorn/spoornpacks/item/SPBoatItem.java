@@ -31,7 +31,7 @@ import java.util.function.Predicate;
  */
 public class SPBoatItem extends Item {
 
-    private static final Predicate<Entity> RIDERS = EntityPredicates.EXCEPT_SPECTATOR.and(Entity::collides);
+    private static final Predicate<Entity> RIDERS = EntityPredicates.EXCEPT_SPECTATOR.and(Entity::canHit);
     private final SPBoatRegistry.BoatType type;
     private final SPEntities spEntities;
     private final SPBoatRegistry spBoatRegistry;
