@@ -12,6 +12,7 @@
     "DoorBlockAccessor",
     "FireBlockAccessor",
     "AxeItemAccessor",
+    "NamespaceResourceManagerAccessor",
     "NamespaceResourceManagerMixin",
     "BlockMixin"
   ],

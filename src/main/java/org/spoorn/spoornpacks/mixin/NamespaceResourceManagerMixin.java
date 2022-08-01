@@ -1,6 +1,5 @@
 package org.spoorn.spoornpacks.mixin;
 
-import net.fabricmc.fabric.mixin.resource.loader.NamespaceResourceManagerAccessor;
 import net.minecraft.resource.NamespaceResourceManager;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourcePack;

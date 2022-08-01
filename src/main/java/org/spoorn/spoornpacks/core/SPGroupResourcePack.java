@@ -1,8 +1,6 @@
 package org.spoorn.spoornpacks.core;
 
 import lombok.extern.log4j.Log4j2;
-import net.fabricmc.fabric.api.resource.ModResourcePack;
-import net.fabricmc.fabric.mixin.resource.loader.NamespaceResourceManagerAccessor;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
 import net.minecraft.resource.*;
@@ -12,6 +10,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
+import org.spoorn.spoornpacks.mixin.NamespaceResourceManagerAccessor;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -172,12 +171,12 @@ public class SPGroupResourcePack implements ResourcePack {
             return;
         }
 
-        Identifier metadataId = NamespaceResourceManagerAccessor.fabric$accessor_getMetadataPath(id);
+        Identifier metadataId = NamespaceResourceManagerAccessor.spoorn$accessor_getMetadataPath(id);
 
         for (SPResourcePack pack : packs) {
             if (pack.contains(manager.getType(), id)) {
-                InputStream metadataInputStream = pack.contains(manager.getType(), metadataId) ? manager.fabric$accessor_open(metadataId, pack) : null;
-                resources.add(new ResourceImpl(pack.getName(), id, manager.fabric$accessor_open(id, pack), metadataInputStream));
+                InputStream metadataInputStream = pack.contains(manager.getType(), metadataId) ? manager.spoorn$accessor_open(metadataId, pack) : null;
+                resources.add(new ResourceImpl(pack.getName(), id, manager.spoorn$accessor_open(id, pack), metadataInputStream));
             }
         }
     }
