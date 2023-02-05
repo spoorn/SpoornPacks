@@ -7,10 +7,10 @@
   ],
   "key": {
     "P": {
-      "tag": "minecraft:planks"
+      "tag": ${string:2}
     },
     "S": {
-      "tag": "minecraft:wooden_slabs"
+      "tag": ${string:3}
     }
   },
   "result": {

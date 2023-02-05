@@ -125,7 +125,9 @@ public class RecipeBuilder implements ResourceProvider {
 
     public RecipeBuilder defaultBarrel() {
         this.state = jsonTUtil.substituteToObjectNode(templatePath,
-                this.defaultPrefixWithType
+                this.defaultPrefixWithType,
+                this.defaultPrefix + ItemType.PLANKS.getSuffix(),
+                this.defaultPrefix + ItemType.SLAB.getSuffix()
         );
         return this;
     }
