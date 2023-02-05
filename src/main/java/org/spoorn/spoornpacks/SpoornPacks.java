@@ -10,13 +10,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.block.Block;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.resource.ResourcePackSource;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
 import org.spoorn.spoornpacks.api.Resource;
@@ -38,7 +39,18 @@ public class SpoornPacks implements ModInitializer {
     public static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static DefaultPrettyPrinter PRETTY_PRINTER = new DefaultPrettyPrinter();
 
-    public static ResourcePackSource RESOURCE_PACK_SOURCE = ResourcePackSource.nameAndSource("pack.source.spoornpacks");
+    public static Text RESOURCE_PACK_SOURCE_TEXT = Text.translatable("pack.source.spoornpacks");
+    public static final ResourcePackSource RESOURCE_PACK_SOURCE = new ResourcePackSource() {
+        @Override
+        public Text decorate(Text packName) {
+            return RESOURCE_PACK_SOURCE_TEXT;
+        }
+
+        @Override
+        public boolean canBeEnabledLater() {
+            return true;
+        }
+    };
 
     static {
         OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -61,10 +73,10 @@ public class SpoornPacks implements ModInitializer {
 //        ResourceGenerator RESOURCE_GENERATOR = SpoornPacksRegistry.registerResource(modid);
 //        String defaultName = "pink_blossom";
 //
-//        ItemGroup itemGroup = FabricItemGroupBuilder.build(
-//                new Identifier(modid, "general"),
+//        ItemGroup itemGroup = FabricItemGroup.builder(
+//                new Identifier(modid, "general")).icon(
 //                ResourceFactory.fetchItemGroupSupplierFromBlock(modid, "pink_blossom_sapling")
-//        );
+//        ).build();
 //
 //        ResourceBuilder rb = ResourceFactory.create(modid, defaultName, itemGroup)
 //                .addBlocks(BlockType.LOG, BlockType.WOOD, BlockType.PLANKS, BlockType.FENCE, BlockType.FENCE_GATE, 

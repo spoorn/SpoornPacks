@@ -9,9 +9,10 @@ import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.spoorn.spoornpacks.SpoornPacks;
 import org.spoorn.spoornpacks.entity.SPEntities;
@@ -41,7 +42,7 @@ public class SPBoatEntity extends BoatEntity {
     public Item asItem() {
         BoatType boatType = this.getSPBoatType();
         // Add boat suffix when fetching the item, as the entity type, model, renderer, etc. does not include the suffix
-        return Registry.ITEM.get(new Identifier(boatType.getNamespace(), boatType.getName() + "_boat"));
+        return Registries.ITEM.get(new Identifier(boatType.getNamespace(), boatType.getName() + "_boat"));
     }
 
     public BoatType getSPBoatType() {
@@ -75,7 +76,7 @@ public class SPBoatEntity extends BoatEntity {
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
+    public Packet<ClientPlayPacketListener> createSpawnPacket() {
         return new EntitySpawnS2CPacket(this);
     }
 }

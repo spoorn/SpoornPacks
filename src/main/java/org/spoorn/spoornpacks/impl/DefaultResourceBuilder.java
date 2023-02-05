@@ -8,9 +8,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.FeatureConfig;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.api.ResourceBuilder;
 import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
@@ -41,7 +41,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     @Getter
     private final Map<String, String> leavesToSaplingOverrides = new HashMap<>();
     @Getter
-    private final Map<String, RegistryEntry<? extends ConfiguredFeature<?, ?>>> saplingConfiguredFeatures = new HashMap<>();
+    private final Map<String, RegistryKey<ConfiguredFeature<?, ?>>> saplingConfiguredFeatures = new HashMap<>();
     @Getter
     private final Map<String, Map<ResourceType, ResourceProvider>> customResourceProviders = new HashMap<>();
     @Getter
@@ -60,7 +60,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         this.namespace = namespace;
         this.defaultName = defaultName;
         if (itemGroup == null) {
-            this.itemGroup = ItemGroup.MISC;
+            this.itemGroup = ItemGroups.TOOLS;
         } else {
             this.itemGroup = itemGroup;
         }
@@ -141,12 +141,12 @@ public class DefaultResourceBuilder implements ResourceBuilder {
     }
 
     @Override
-    public synchronized ResourceBuilder addSapling(RegistryEntry<? extends ConfiguredFeature<?, ?>> configuredFeature) {
+    public synchronized ResourceBuilder addSapling(RegistryKey<ConfiguredFeature<?, ?>> configuredFeature) {
         return addSapling(this.defaultName, configuredFeature);
     }
 
     @Override
-    public synchronized ResourceBuilder addSapling(String name, RegistryEntry<? extends ConfiguredFeature<?, ?>> configuredFeature) {
+    public synchronized ResourceBuilder addSapling(String name, RegistryKey<ConfiguredFeature<?, ?>> configuredFeature) {
         registerBlock(BlockType.SAPLING, name);
         this.saplingConfiguredFeatures.put(name, configuredFeature);
         return this;

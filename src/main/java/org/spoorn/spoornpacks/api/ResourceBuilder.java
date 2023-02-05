@@ -5,7 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
-import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
 import org.spoorn.spoornpacks.provider.ResourceProvider;
@@ -58,8 +58,8 @@ public interface ResourceBuilder {
     ResourceBuilder addLeavesWithSaplingOverride(String saplingName);
     ResourceBuilder addLeavesWithSaplingOverride(String name, String saplingName);
 
-    ResourceBuilder addSapling(RegistryEntry<? extends ConfiguredFeature<?, ?>> configuredFeature);
-    ResourceBuilder addSapling(String name, RegistryEntry<? extends ConfiguredFeature<?, ?>> configuredFeature);
+    ResourceBuilder addSapling(RegistryKey<ConfiguredFeature<?, ?>> configuredFeature);
+    ResourceBuilder addSapling(String name, RegistryKey<ConfiguredFeature<?, ?>> configuredFeature);
 
     /**
      * Adds a small flower (e.g. Minecraft's poppy) block and item.  Tall flowers can be added via the default

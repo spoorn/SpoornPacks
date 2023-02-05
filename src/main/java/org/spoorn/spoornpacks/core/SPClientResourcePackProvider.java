@@ -19,19 +19,20 @@ public class SPClientResourcePackProvider implements ResourcePackProvider {
     }
 
     @Override
-    public void register(Consumer<ResourcePackProfile> profileAdder, ResourcePackProfile.Factory factory) {
-        ResourcePackProfile profile = ResourcePackProfile.of(
+    public void register(Consumer<ResourcePackProfile> profileAdder) {
+        ResourcePackProfile profile = ResourcePackProfile.create(
                 SpoornPacks.MODID,
+                SpoornPacks.RESOURCE_PACK_SOURCE_TEXT,
                 true,
-                () -> spGroupResourcePack,
-                factory,
+                factory -> spGroupResourcePack,
+                ResourceType.CLIENT_RESOURCES,
                 ResourcePackProfile.InsertionPosition.BOTTOM,
                 SpoornPacks.RESOURCE_PACK_SOURCE
         );
 
         log.info("Registering client-side SpoornPacks ResourcePackProfile={}", profile);
 
-        profileAdder.accept(new SPResourcePackProfile(profile));
+        profileAdder.accept(profile);
     }
 
     public void addSubResourcePacks() {

@@ -5,10 +5,12 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import org.spoorn.spoornpacks.block.SPChestBlock;
 import org.spoorn.spoornpacks.block.SPCraftingTableBlock;
@@ -62,7 +64,7 @@ public class BlocksRegistry {
         return registerBlock(id, block);
     }
 
-    public Block registerSapling(String id, RegistryEntry<? extends ConfiguredFeature<?, ?>> configuredFeature) {
+    public Block registerSapling(String id, RegistryKey<ConfiguredFeature<?, ?>> configuredFeature) {
         Block block = new SPSaplingBlock(new SPSaplingGenerator(configuredFeature), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING));
         return registerBlock(id, block);
     }
@@ -92,12 +94,12 @@ public class BlocksRegistry {
     }
 
     public Block registerFenceGate(String id) {
-        Block block = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
+        Block block = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), SoundEvents.BLOCK_FENCE_GATE_CLOSE, SoundEvents.BLOCK_FENCE_GATE_OPEN);
         return registerBlock(id, block);
     }
 
     public Block registerButton(String id) {
-        Block block = WoodenButtonBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON));
+        Block block = ButtonBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON), 30, true, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_OFF, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_ON);
         return registerBlock(id, block);
     }
 
@@ -107,7 +109,7 @@ public class BlocksRegistry {
     }
 
     public Block registerPressurePlate(String id) {
-        Block block = PressurePlateBlockAccessor.create(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE));
+        Block block = PressurePlateBlockAccessor.create(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE), SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_ON);
         return registerBlock(id, block);
     }
 
@@ -118,12 +120,12 @@ public class BlocksRegistry {
     }
 
     public Block registerTrapdoor(String id) {
-        Block block = TrapdoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
+        Block block = TrapdoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), SoundEvents.BLOCK_WOODEN_TRAPDOOR_CLOSE, SoundEvents.BLOCK_WOODEN_TRAPDOOR_OPEN);
         return registerBlock(id, block);
     }
 
     public Block registerDoor(String id) {
-        Block block = DoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_DOOR));
+        Block block = DoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_DOOR), SoundEvents.BLOCK_WOODEN_DOOR_CLOSE, SoundEvents.BLOCK_WOODEN_DOOR_OPEN);
         return registerBlock(id, block);
     }
 
@@ -175,8 +177,8 @@ public class BlocksRegistry {
             CUSTOM_SHULKER_BOXES.add((ShulkerBoxBlock) block);
         }
         
-        if (!Registry.BLOCK.containsId(identifier)) {
-            return Registry.register(Registry.BLOCK, identifier, block);
+        if (!Registries.BLOCK.containsId(identifier)) {
+            return Registry.register(Registries.BLOCK, identifier, block);
         } else {
             return block;
         }
@@ -185,6 +187,6 @@ public class BlocksRegistry {
     private Block registerBlock(String id, Block block) {
         Identifier identifier = new Identifier(this.modid, id);
         register.put(identifier, block);
-        return Registry.register(Registry.BLOCK, identifier, block);
+        return Registry.register(Registries.BLOCK, identifier, block);
     }
 }

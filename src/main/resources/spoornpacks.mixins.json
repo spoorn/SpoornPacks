@@ -4,26 +4,26 @@
   "package": "org.spoorn.spoornpacks.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ResourcePackManagerMixin",
-    "WoodenButtonBlockAccessor",
-    "PressurePlateBlockAccessor",
-    "StairsBlockAccessor",
-    "TrapdoorBlockAccessor",
+    "AxeItemAccessor",
+    "BlockMixin",
+    "ButtonBlockAccessor",
     "DoorBlockAccessor",
     "FireBlockAccessor",
-    "AxeItemAccessor",
     "NamespaceResourceManagerAccessor",
     "NamespaceResourceManagerMixin",
-    "BlockMixin"
+    "PressurePlateBlockAccessor",
+    "ResourcePackManagerMixin",
+    "StairsBlockAccessor",
+    "TrapdoorBlockAccessor"
   ],
   "client": [
-    "RenderLayersAccessor",
-    "EntityModelsMixin",
-    "EntityRenderersAccessor",
-    "TexturedRenderLayersMixin",
     "BlockEntityRendererFactoriesAccessor",
     "BuiltinModelItemRendererMixin",
-    "RenderLayersMixin"
+    "EntityModelsMixin",
+    "EntityRenderersAccessor",
+    "RenderLayersAccessor",
+    "RenderLayersMixin",
+    "TexturedRenderLayersMixin"
   ],
   "injectors": {
     "defaultRequire": 1

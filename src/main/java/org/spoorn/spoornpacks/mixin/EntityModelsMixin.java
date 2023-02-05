@@ -21,10 +21,10 @@ public class EntityModelsMixin {
     /**
      * ordinal = 0 as there are multiple getTexturedModelData calls in getModels
      */
-    @Inject(method = "getModels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/BoatEntityModel;getTexturedModelData(Z)Lnet/minecraft/client/model/TexturedModelData;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "getModels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/BoatEntityModel;getTexturedModelData()Lnet/minecraft/client/model/TexturedModelData;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void createSPBoatTypeModelRoots(CallbackInfoReturnable<Map<EntityModelLayer, TexturedModelData>> cir, ImmutableMap.Builder<EntityModelLayer, TexturedModelData> builder) {
         for (SPBoatRegistry.BoatType type : SPBoatRegistry.GLOBAL_SP_BOAT_REGISTRY) {
-            builder.put(SPBoatEntityRenderer.createBoat(type), BoatEntityModel.getTexturedModelData(false));
+            builder.put(SPBoatEntityRenderer.createBoat(type), BoatEntityModel.getTexturedModelData());
         }
     }
 }

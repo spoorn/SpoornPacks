@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
  * Copy of {@link net.fabricmc.fabric.mixin.resource.loader.NamespaceResourceManagerAccessor}.
  * 
  * Copied to support Quilt.
+ * 
+ * TODO: Remove
  */
 @Mixin(NamespaceResourceManager.class)
 public interface NamespaceResourceManagerAccessor {

@@ -3,7 +3,6 @@ package org.spoorn.spoornpacks.mixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resource.ResourcePackManager;
-import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackProvider;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,8 +25,8 @@ public class ResourcePackManagerMixin {
     /**
      * Injects our custom resource pack provider.
      */
-    @Inject(method = "<init>(Lnet/minecraft/resource/ResourcePackProfile$Factory;[Lnet/minecraft/resource/ResourcePackProvider;)V", at = @At(value = "RETURN"))
-    private <E> void injectSPResourcePack(ResourcePackProfile.Factory profileFactory, ResourcePackProvider[] resourcePackProviders, CallbackInfo ci) {
+    @Inject(method = "<init>", at = @At(value = "RETURN"))
+    private <E> void injectSPResourcePack(ResourcePackProvider[] resourcePackProviders, CallbackInfo ci) {
         providers = new HashSet<>(providers);
         
         boolean isClient = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;

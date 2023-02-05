@@ -15,9 +15,10 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spoorn.spoornpacks.api.entity.vehicle.SPMinecartEntityFactory;
 import org.spoorn.spoornpacks.entity.boat.SPBoatEntity;
@@ -146,11 +147,11 @@ public class SPEntities {
 
     private static <E extends Entity, ET extends EntityType<E>> ET registerEntity(String namespace, String id, ET entityType) {
         log.info("Registering EntityType with namespace={}, name={}", namespace, id);
-        return Registry.register(Registry.ENTITY_TYPE, new Identifier(namespace, id), entityType);
+        return Registry.register(Registries.ENTITY_TYPE, new Identifier(namespace, id), entityType);
     }
 
     private static <E extends BlockEntity, ET extends BlockEntityType<E>> ET registerBlockEntity(String namespace, String id, ET entityType) {
         log.info("Registering BlockEntityType with namespace={}, name={}", namespace, id);
-        return Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(namespace, id), entityType);
+        return Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(namespace, id), entityType);
     }
 }

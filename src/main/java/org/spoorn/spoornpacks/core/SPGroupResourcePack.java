@@ -1,29 +1,22 @@
 package org.spoorn.spoornpacks.core;
 
 import lombok.extern.log4j.Log4j2;
-import net.fabricmc.fabric.impl.resource.loader.FabricNamespaceResourceManagerEntry;
-import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
-import net.minecraft.resource.NamespaceResourceManager;
-import net.minecraft.resource.ResourceNotFoundException;
-import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourceType;
+import net.minecraft.resource.*;
 import net.minecraft.resource.metadata.PackResourceMetadata;
+import net.minecraft.resource.metadata.ResourceMetadata;
 import net.minecraft.resource.metadata.ResourceMetadataReader;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
-import org.spoorn.spoornpacks.mixin.NamespaceResourceManagerAccessor;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Predicate;
 
 @Log4j2
 public class SPGroupResourcePack implements ResourcePack {
@@ -68,75 +61,51 @@ public class SPGroupResourcePack implements ResourcePack {
 
     @Nullable
     @Override
-    public InputStream openRoot(String fileName) throws IOException {
+    public InputSupplier<InputStream> openRoot(String... pathSegments) {
+        String fileName = String.join("/", pathSegments);
+        
         if (PACK_METADATA_NAME.equals(fileName)) {
             String description = "SpoornPacks resources";
             String pack = String.format("{\"pack\":{\"pack_format\":" + resourceType.getPackVersion(SharedConstants.getGameVersion()) + ",\"description\":\"%s\"}}", description);
-            return IOUtils.toInputStream(pack, StandardCharsets.UTF_8);
+            return () -> IOUtils.toInputStream(pack, StandardCharsets.UTF_8);
         }
 
-        // handle pack.png filename
+        // TODO: handle pack.png filename
 
-        // ReloadableResourceManagerImpl gets away with FileNotFoundException.
-        throw new FileNotFoundException("\"" + fileName + "\" in SpoornPacks group resource pack");
+        return null;
     }
 
     @Override
-    public InputStream open(ResourceType type, Identifier id) throws IOException {
+    public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
         List<SPResourcePack> subPacks = this.subResourcePacks.get(id.getNamespace());
 
         if (subPacks != null) {
             for (int i = subPacks.size() - 1; i >= 0; i--) {
                 ResourcePack pack = subPacks.get(i);
+                InputSupplier<InputStream> supplier = pack.open(type, id);
 
-                if (pack.contains(type, id)) {
-                    return pack.open(type, id);
+                if (supplier != null) {
+                    return supplier;
                 }
             }
         }
 
-        log.error("Could not open file for Identifier={}", id);
-        throw new ResourceNotFoundException(null,
-                String.format("%s/%s/%s", type.getDirectory(), id.getNamespace(), id.getPath()));
+        //log.error("Could not open file for Identifier={}", id);
+        return null;
     }
 
     @Override
-    public boolean contains(ResourceType type, Identifier id) {
-        List<SPResourcePack> subPacks = this.subResourcePacks.get(id.getNamespace());
-
-        if (subPacks == null) {
-            return false;
-        }
-
-        for (int i = subPacks.size() - 1; i >= 0; i--) {
-            ResourcePack pack = subPacks.get(i);
-
-            if (pack.contains(type, id)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, Predicate<Identifier> pathFilter) {
+    public void findResources(ResourceType type, String namespace, String prefix, ResultConsumer visitor) {
         List<SPResourcePack> subPacks = this.subResourcePacks.get(namespace);
 
         if (subPacks == null) {
-            return Collections.emptyList();
+            return;
         }
-
-        Set<Identifier> resources = new HashSet<>();
 
         for (int i = subPacks.size() - 1; i >= 0; i--) {
             ResourcePack pack = subPacks.get(i);
-            Collection<Identifier> modResources = pack.findResources(type, namespace, prefix, pathFilter);
-
-            resources.addAll(modResources);
+            pack.findResources(type, namespace, prefix, visitor);
         }
-
-        return resources;
     }
 
     @Override
@@ -169,20 +138,25 @@ public class SPGroupResourcePack implements ResourcePack {
      * 
      * This is copied from Fabric's {@link net.fabricmc.fabric.impl.resource.loader.GroupResourcePack}.
      */
-    public void appendResources(NamespaceResourceManagerAccessor manager, Identifier id, List<NamespaceResourceManager.Entry> resources) throws IOException {
+    public void appendResources(ResourceType type, Identifier id, List<Resource> resources) throws IOException {
         List<SPResourcePack> packs = this.subResourcePacks.get(id.getNamespace());
 
         if (packs == null) {
             return;
         }
 
-        Identifier metadataId = NamespaceResourceManagerAccessor.spoorn$accessor_getMetadataPath(id);
+        Identifier metadataId = NamespaceResourceManager.getMetadataPath(id);
 
         for (SPResourcePack pack : packs) {
-            if (pack.contains(manager.getType(), id)) {
-                final NamespaceResourceManager.Entry entry = ((NamespaceResourceManager) manager).new Entry(id, metadataId, pack);
-                ((FabricNamespaceResourceManagerEntry) entry).setFabricPackSource(ModResourcePackCreator.RESOURCE_PACK_SOURCE);
-                resources.add(entry);
+            InputSupplier<InputStream> supplier = pack.open(type, id);
+
+            if (supplier != null) {
+                InputSupplier<ResourceMetadata> metadataSupplier = () -> {
+                    InputSupplier<InputStream> rawMetadataSupplier = pack.open(type, metadataId);
+                    return rawMetadataSupplier != null ? NamespaceResourceManager.loadMetadata(rawMetadataSupplier) : ResourceMetadata.NONE;
+                };
+
+                resources.add(new Resource(pack, supplier, metadataSupplier));
             }
         }
     }

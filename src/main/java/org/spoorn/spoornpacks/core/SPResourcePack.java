@@ -5,6 +5,7 @@ import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.SharedConstants;
 import net.minecraft.resource.AbstractFileResourcePack;
+import net.minecraft.resource.InputSupplier;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.PackResourceMetadata;
@@ -12,6 +13,7 @@ import net.minecraft.resource.metadata.ResourceMetadataReader;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
+import net.minecraft.util.PathUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -39,7 +41,7 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
     private final Path basePath;
 
     public SPResourcePack(String id, ResourceType resourceType, Path basePath) {
-        super(null);
+        super(NAME, true);
         this.id = id;
         this.resourceType = resourceType;
         this.basePath = basePath.resolve(id).resolve("resources").toAbsolutePath().normalize();
@@ -56,37 +58,39 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
         }
     }
 
-    @Override
-    protected boolean containsFile(String filename) {
-        // Pack Metadata is always available
-        if (PACK_METADATA_NAME.equals(filename)) {
-            return true;
-        }
-
-        Path path = getPath(filename);
-        return path != null && Files.isRegularFile(path);
-    }
-
-    @Override
-    protected InputStream openFile(String fileName) throws IOException {
+    private InputSupplier<InputStream> openFile(String fileName) {
         Path path = getPath(fileName);
 
         if (path != null && Files.isRegularFile(path)) {
-            return Files.newInputStream(path);
+            return () -> Files.newInputStream(path);
         }
 
         // This should never be reached as SPResourcePack is not directly added as a resource pack
         if (PACK_METADATA_NAME.equals(fileName)) {
-            return new ByteArrayInputStream(OBJECT_MAPPER.writeValueAsBytes(DEFAULT_PACK_METADATA));
+            return () -> new ByteArrayInputStream(OBJECT_MAPPER.writeValueAsBytes(DEFAULT_PACK_METADATA));
         }
 
-        return InputStream.nullInputStream();
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public InputSupplier<InputStream> openRoot(String... segments) {
+        PathUtil.validatePath(segments);
+
+        return this.openFile(String.join("/", segments));
+    }
+
+    @Nullable
+    @Override
+    public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
+        final Path path = getPath(type.getDirectory() + "/" + id.getNamespace());
+        return path == null ? null : InputSupplier.create(path);
     }
 
     @Override
-    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, Predicate<Identifier> pathFilter) {
+    public void findResources(ResourceType type, String namespace, String prefix, ResultConsumer visitor) {
         //System.out.println("### findresources " + namespace + "/" + prefix);
-        List<Identifier> ids = new ArrayList<>();
         String path = prefix.replace("/", separator);
 
         Path namespacePath = getPath(type.getDirectory() + "/" + namespace);
@@ -109,7 +113,7 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
 
                             try {
                                 Identifier id = new Identifier(namespace, namespacePath.relativize(file).toString().replace(separator, "/"));
-                                if (pathFilter.test(id)) ids.add(id);
+                                visitor.accept(id, InputSupplier.create(file));
                             } catch (InvalidIdentifierException e) {
                                 log.error(e.getMessage());
                             }
@@ -122,8 +126,6 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
                 }
             }
         }
-
-        return ids;
     }
 
     @Override

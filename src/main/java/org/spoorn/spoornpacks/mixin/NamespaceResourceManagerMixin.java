@@ -3,6 +3,7 @@ package org.spoorn.spoornpacks.mixin;
 import net.minecraft.resource.NamespaceResourceManager;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourcePack;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,15 +25,16 @@ import java.util.List;
 public class NamespaceResourceManagerMixin {
 
     @Shadow @Final protected List<NamespaceResourceManager.FilterablePack> packList;
-    private final ThreadLocal<List<NamespaceResourceManager.Entry>> fabric$getAllResources$resources = new ThreadLocal<>();
+    @Shadow @Final public ResourceType type;
+    private final ThreadLocal<List<Resource>> fabric$getAllResources$resources = new ThreadLocal<>();
 
     /**
      * Capture local variable resources List in {@link NamespaceResourceManager#getAllResources}.
      */
-    @Inject(method = "getAllResources", at = @At(value = "INVOKE", 
-            target = "Lnet/minecraft/resource/NamespaceResourceManager;getMetadataPath(Lnet/minecraft/util/Identifier;)Lnet/minecraft/util/Identifier;"),
+    @Inject(method = "getAllResources",
+            at = @At(value = "INVOKE", target = "Ljava/util/List;size()I"),
             locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onGetAllResources(Identifier id, CallbackInfoReturnable<List<Resource>> cir, List<NamespaceResourceManager.Entry> resources) {
+    private void onGetAllResources(Identifier id, CallbackInfoReturnable<List<Resource>> cir, Identifier metadataId, List<Resource> resources) {
         this.fabric$getAllResources$resources.set(resources);
     }
 
@@ -46,7 +48,7 @@ public class NamespaceResourceManagerMixin {
         for (int i = 0; i < packList.size(); i++) {
             ResourcePack pack = packList.get(i).underlying();
             if (pack instanceof SPGroupResourcePack) {
-                ((SPGroupResourcePack) pack).appendResources((NamespaceResourceManagerAccessor) this, id, this.fabric$getAllResources$resources.get());
+                ((SPGroupResourcePack) pack).appendResources(this.type, id, this.fabric$getAllResources$resources.get());
             }
         }
     }
