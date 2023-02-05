@@ -12,7 +12,6 @@ import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.block.Block;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -28,7 +27,6 @@ import org.spoorn.spoornpacks.provider.ResourceProvider;
 import org.spoorn.spoornpacks.registry.SpoornPacksRegistry;
 import org.spoorn.spoornpacks.type.BlockType;
 import org.spoorn.spoornpacks.type.ItemType;
-import org.spoorn.spoornpacks.type.ResourceType;
 
 import java.util.Optional;
 

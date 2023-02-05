@@ -84,8 +84,12 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
     @Nullable
     @Override
     public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
-        final Path path = getPath(type.getDirectory() + "/" + id.getNamespace());
+        final Path path = getPath(getFilename(type, id));
         return path == null ? null : InputSupplier.create(path);
+    }
+
+    private static String getFilename(ResourceType type, Identifier id) {
+        return String.format(Locale.ROOT, "%s/%s/%s", type.getDirectory(), id.getNamespace(), id.getPath());
     }
 
     @Override
