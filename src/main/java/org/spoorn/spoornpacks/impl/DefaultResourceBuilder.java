@@ -9,6 +9,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import org.apache.commons.lang3.tuple.Pair;
@@ -60,7 +61,7 @@ public class DefaultResourceBuilder implements ResourceBuilder {
         this.namespace = namespace;
         this.defaultName = defaultName;
         if (itemGroup == null) {
-            this.itemGroup = ItemGroups.TOOLS;
+            this.itemGroup = Registries.ITEM_GROUP.get(ItemGroups.TOOLS);
         } else {
             this.itemGroup = itemGroup;
         }

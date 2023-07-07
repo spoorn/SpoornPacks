@@ -11,7 +11,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
@@ -62,6 +61,7 @@ public class SPBoatItem extends Item {
             }
         }
         if (((HitResult)hitResult).getType() == HitResult.Type.BLOCK) {
+            // Replace the BoatEntity with our custom one
             SPBoatEntity boatEntity = new SPBoatEntity(this.spEntities, spBoatRegistry, this.type, world, hitResult.getPos().x, hitResult.getPos().y, hitResult.getPos().z);
             boatEntity.setSPBoatType(this.type);
             boatEntity.setYaw(user.getYaw());
@@ -70,7 +70,7 @@ public class SPBoatItem extends Item {
             }
             if (!world.isClient) {
                 world.spawnEntity(boatEntity);
-                world.emitGameEvent((Entity)user, GameEvent.ENTITY_PLACE, new BlockPos(hitResult.getPos()));
+                world.emitGameEvent((Entity)user, GameEvent.ENTITY_PLACE, hitResult.getPos());
                 if (!user.getAbilities().creativeMode) {
                     itemStack.decrement(1);
                 }

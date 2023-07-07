@@ -25,7 +25,7 @@ public class TexturedRenderLayersMixin {
     
     private static final Logger log = LogManager.getLogger("TexturedRenderLayersMixin");
     
-    @Inject(method = "getChestTexture(Lnet/minecraft/block/entity/BlockEntity;Lnet/minecraft/block/enums/ChestType;Z)Lnet/minecraft/client/util/SpriteIdentifier;", 
+    @Inject(method = "getChestTextureId(Lnet/minecraft/block/entity/BlockEntity;Lnet/minecraft/block/enums/ChestType;Z)Lnet/minecraft/client/util/SpriteIdentifier;", 
             at = @At(value = "HEAD"), cancellable = true)
     private static void injectCustomChestTextures(BlockEntity blockEntity, ChestType type, boolean christmas, CallbackInfoReturnable<SpriteIdentifier> cir) {
         if (blockEntity == null) {

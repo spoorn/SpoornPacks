@@ -18,6 +18,8 @@ import org.spoorn.spoornpacks.entity.boat.SPBoatRegistry;
 import org.spoorn.spoornpacks.item.SPBoatItem;
 import org.spoorn.spoornpacks.item.SPMinecartItem;
 
+import java.util.NoSuchElementException;
+
 public class ItemsRegistry {
     
     private final String modid;
@@ -31,34 +33,26 @@ public class ItemsRegistry {
         if (block instanceof FlowerBlock || block instanceof TallFlowerBlock) {
             registerCompostable(item);
         }
-        ItemGroupEvents.modifyEntriesEvent(itemGroup).register(entries -> {
-            entries.add(item);
-        });
+        addItemEntry(itemGroup, item);
         return item;
     }
 
     public Item registerSaplingItem(String id, Block block, ItemGroup itemGroup) {
         Item item = new BlockItem(block, new FabricItemSettings());
-        ItemGroupEvents.modifyEntriesEvent(itemGroup).register(entries -> {
-            entries.add(item);
-        });
+        addItemEntry(itemGroup, item);
         registerCompostable(item);
         return registerItem(id, item);
     }
 
     public Item registerBoatItem(String id, SPBoatRegistry spBoatRegistry, SPBoatRegistry.BoatType boatType, SPEntities spEntities, ItemGroup itemGroup) {
         Item item = new SPBoatItem(spEntities, spBoatRegistry, boatType, new Item.Settings().maxCount(1));
-        ItemGroupEvents.modifyEntriesEvent(itemGroup).register(entries -> {
-            entries.add(item);
-        });
+        addItemEntry(itemGroup, item);
         return registerItem(id, item);
     }
     
     public Item registerChestMinecart(String id, ItemGroup itemGroup, SPMinecartEntityFactory factory) {
         Item item = new SPMinecartItem(factory, new Item.Settings().maxCount(1));
-        ItemGroupEvents.modifyEntriesEvent(itemGroup).register(entries -> {
-            entries.add(item);
-        });
+        addItemEntry(itemGroup, item);
         return registerItem(id, item);
     }
     
@@ -69,5 +63,13 @@ public class ItemsRegistry {
     // Update vanilla's composter block
     private void registerCompostable(Item item) {
         ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(item.asItem(), 0.3f);
+    }
+    
+    private void addItemEntry(ItemGroup itemGroup, Item item) {
+        ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(itemGroup)
+                .orElseThrow(() -> new NoSuchElementException("ItemGroup " + itemGroup.getDisplayName() + " was not registered!")))
+                .register(entries -> {
+                    entries.add(item);
+                });
     }
 }

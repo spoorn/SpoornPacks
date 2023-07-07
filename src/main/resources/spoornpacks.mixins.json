@@ -6,15 +6,10 @@
   "mixins": [
     "AxeItemAccessor",
     "BlockMixin",
-    "ButtonBlockAccessor",
-    "DoorBlockAccessor",
     "FireBlockAccessor",
     "NamespaceResourceManagerAccessor",
     "NamespaceResourceManagerMixin",
-    "PressurePlateBlockAccessor",
-    "ResourcePackManagerMixin",
-    "StairsBlockAccessor",
-    "TrapdoorBlockAccessor"
+    "ResourcePackManagerMixin"
   ],
   "client": [
     "BlockEntityRendererFactoriesAccessor",

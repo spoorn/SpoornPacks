@@ -22,7 +22,7 @@ import java.util.*;
 public class SPGroupResourcePack implements ResourcePack {
 
     private static final String NAME = "spoornpacks";
-    private static final PackResourceMetadata DEFAULT_PACK_METADATA = new PackResourceMetadata(Text.translatable("spoornpack.metadata.description"), ResourceType.CLIENT_RESOURCES.getPackVersion(SharedConstants.getGameVersion()));
+    private static final PackResourceMetadata DEFAULT_PACK_METADATA = new PackResourceMetadata(Text.translatable("spoornpack.metadata.description"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES));
 
     private final ResourceType resourceType;
     private final Path basePath;
@@ -66,7 +66,7 @@ public class SPGroupResourcePack implements ResourcePack {
         
         if (PACK_METADATA_NAME.equals(fileName)) {
             String description = "SpoornPacks resources";
-            String pack = String.format("{\"pack\":{\"pack_format\":" + resourceType.getPackVersion(SharedConstants.getGameVersion()) + ",\"description\":\"%s\"}}", description);
+            String pack = String.format("{\"pack\":{\"pack_format\":" + SharedConstants.getGameVersion().getResourceVersion(resourceType) + ",\"description\":\"%s\"}}", description);
             return () -> IOUtils.toInputStream(pack, StandardCharsets.UTF_8);
         }
 

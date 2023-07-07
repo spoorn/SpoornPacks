@@ -32,7 +32,7 @@ public class SPResourcePack extends AbstractFileResourcePack implements Resource
     private static final String NAME = "spoornpacks";
     private static final String MINECRAFT_NAMESPACE = "minecraft";
     private static final Pattern RESOURCE_PACK_PATH = Pattern.compile("[a-z0-9-_]+");
-    private static final PackResourceMetadata DEFAULT_PACK_METADATA = new PackResourceMetadata(Text.translatable("spoornpack.metadata.description"), ResourceType.CLIENT_RESOURCES.getPackVersion(SharedConstants.getGameVersion()));
+    private static final PackResourceMetadata DEFAULT_PACK_METADATA = new PackResourceMetadata(Text.translatable("spoornpack.metadata.description"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES));
 
     private final ResourceType resourceType;
     private final String id;

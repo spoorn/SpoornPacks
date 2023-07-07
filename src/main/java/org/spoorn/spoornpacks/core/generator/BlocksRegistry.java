@@ -41,7 +41,7 @@ public class BlocksRegistry {
     }
 
     public Block registerLog(String id) {
-        Block block = new PillarBlock(FabricBlockSettings.of(Material.WOOD).strength(2.0f).sounds(BlockSoundGroup.WOOD));
+        Block block = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG));
         return registerBlock(id, block);
     }
 
@@ -94,12 +94,12 @@ public class BlocksRegistry {
     }
 
     public Block registerFenceGate(String id) {
-        Block block = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), SoundEvents.BLOCK_FENCE_GATE_CLOSE, SoundEvents.BLOCK_FENCE_GATE_OPEN);
+        Block block = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), WoodType.OAK);
         return registerBlock(id, block);
     }
 
     public Block registerButton(String id) {
-        Block block = ButtonBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON), 30, true, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_OFF, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_ON);
+        Block block = new ButtonBlock(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON), BlockSetType.OAK, 30, true);
         return registerBlock(id, block);
     }
 
@@ -109,23 +109,23 @@ public class BlocksRegistry {
     }
 
     public Block registerPressurePlate(String id) {
-        Block block = PressurePlateBlockAccessor.create(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE), SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_ON);
+        Block block = new PressurePlateBlock(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE), BlockSetType.OAK);
         return registerBlock(id, block);
     }
 
     // TODO: Allow different types for the settings part of stairs block
     public Block registerStairs(String id, Block defaultBlock) {
-        Block block = StairsBlockAccessor.create(defaultBlock.getDefaultState(), FabricBlockSettings.copyOf(defaultBlock));
+        Block block = new StairsBlock(defaultBlock.getDefaultState(), FabricBlockSettings.copyOf(defaultBlock));
         return registerBlock(id, block);
     }
 
     public Block registerTrapdoor(String id) {
-        Block block = TrapdoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), SoundEvents.BLOCK_WOODEN_TRAPDOOR_CLOSE, SoundEvents.BLOCK_WOODEN_TRAPDOOR_OPEN);
+        Block block = new TrapdoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), BlockSetType.OAK);
         return registerBlock(id, block);
     }
 
     public Block registerDoor(String id) {
-        Block block = DoorBlockAccessor.create(FabricBlockSettings.copyOf(Blocks.OAK_DOOR), SoundEvents.BLOCK_WOODEN_DOOR_CLOSE, SoundEvents.BLOCK_WOODEN_DOOR_OPEN);
+        Block block = new DoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_DOOR), BlockSetType.OAK);
         return registerBlock(id, block);
     }
 
@@ -161,7 +161,7 @@ public class BlocksRegistry {
     }
 
     public Block registerLeafPileBlock(String id) {
-        Block block = new SPLeafPileBlock(AbstractBlock.Settings.of(Material.CARPET, MapColor.WHITE).strength(0.1f).sounds(BlockSoundGroup.GRASS).nonOpaque());
+        Block block = new SPLeafPileBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES));
         return registerBlock(id, block);
     }
 
