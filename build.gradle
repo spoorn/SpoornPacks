@@ -29,9 +29,9 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    include implementation('com.fasterxml.jackson.core:jackson-core:2.13.1')
-    include implementation('com.fasterxml.jackson.core:jackson-annotations:2.13.1')
-    include implementation('com.fasterxml.jackson.core:jackson-databind:2.13.1')
+    include api('com.fasterxml.jackson.core:jackson-core:2.13.1')
+    include api('com.fasterxml.jackson.core:jackson-annotations:2.13.1')
+    include api('com.fasterxml.jackson.core:jackson-databind:2.13.1')
 }
 
 processResources {
